@@ -1,4 +1,4 @@
-![Tests](https://github.com/cardikit/cardikit/actions/workflows/tests.yml/badge.svg)
+![Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
 
 # CardiKit
 
