@@ -2,11 +2,9 @@
 
 use App\Core\Router;
 use App\Controllers\PingController;
-use App\Core\Config;
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../bootstrap.php';
 
-Config::load(__DIR__ . '/../.env');
 session_start();
 
 Router::get('/ping/:id', [PingController::class, 'show']);

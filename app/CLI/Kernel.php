@@ -6,7 +6,8 @@ class Kernel
 {
     protected array $commands = [
         'test' => Commands\TestCommand::class,
-        // add more here
+        'migrate' => Commands\MigrateCommand::class,
+        'rollback' => Commands\RollbackCommand::class,
     ];
 
     public function handle(array $argv): void
