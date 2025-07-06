@@ -4,6 +4,15 @@
 require_once __DIR__ . '/bootstrap.php';
 
 use Cardikit\CLI\Kernel;
+use App\Core\Config;
+
+if (Config::get('USE_DOCKER', 'false') === 'true' && !file_exists('/.dockerenv')) {
+    $args = array_map('escapeshellarg', array_slice($argv, 1));
+    $cmd = implode(' ', $args);
+    $container = Config::get('DOCKER_CONTAINER', 'cardikit_server');
+    passthru("docker exec -it $container ./cardikit $cmd");
+    exit;
+}
 
 $kernel = new Kernel();
 $kernel->handle($argv);

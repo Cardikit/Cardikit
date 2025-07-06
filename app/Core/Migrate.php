@@ -2,8 +2,22 @@
 
 namespace App\Core;
 
+/**
+* Runs migration utilities on all migration files.
+*
+* @package App\Core
+*
+* @since 0.0.1
+*/
 class Migrate
 {
+    /**
+    * Runs all up methods in migration files.
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     public static function run(): void
     {
         $migrations = glob(__DIR__ . '/../../database/migration/*.php');
@@ -18,6 +32,13 @@ class Migrate
         }
     }
 
+    /**
+    * Runs all down methods in migration files.
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     public static function rollback(): void
     {
         $migrations = glob(__DIR__ . '../../database/migrations/*.php');
