@@ -3,7 +3,13 @@
     "description": "The number one open source digital business card maker.",
     "autoload": {
         "psr-4": {
-            "Cardikit\\Cardikit\\": "src/"
+            "App\\": "app/",
+            "Cardikit\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
         }
     },
     "authors": [
@@ -12,5 +18,12 @@
             "email": "voshall@yahoo.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "pestphp/pest": "^3.8"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }
