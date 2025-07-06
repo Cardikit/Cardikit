@@ -2,18 +2,45 @@
 
 namespace App\Core;
 
+/**
+* Validator class contains methods to validate user input.
+*
+* @package App\Core
+*
+* @since 0.0.1
+*/
 class Validator
 {
+    /**
+    * Collection of validation errors.
+    *
+    * @var array
+    *
+    * @since 0.0.1
+    */
     protected array $errors = [];
 
+    /**
+    * Validates user input based on provided rules.
+    *
+    * @param array $data
+    * @param array $rules
+    *
+    * @return bool
+    *
+    * @since 0.0.1
+    */
     public function validate(array $data, array $rules): bool
     {
+        // reset errors
         $this->errors = [];
 
+        // separate string of rules
         foreach ($rules as $field => $ruleList) {
             $rules = explode('|', $ruleList);
             $value = $data[$field] ?? null;
 
+            // loop through rules
             foreach ($rules as $rule) {
                 if ($rule === 'required') {
                     $this->required($field, $value);
@@ -51,6 +78,16 @@ class Validator
         return empty($this->errors);
     }
 
+    /**
+    * Adds error message if value is empty.
+    *
+    * @param string $field
+    * @param mixed $value
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function required(string $field, mixed $value): void
     {
         if (empty($value)) {
@@ -58,6 +95,17 @@ class Validator
         }
     }
 
+    /**
+    * Adds error message if value is not
+    * a valid email address.
+    *
+    * @param string $field
+    * @param mixed $value
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function email(string $field, mixed $value): void
     {
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
@@ -65,6 +113,18 @@ class Validator
         }
     }
 
+    /**
+    * Adds error message if value is
+    * shorter than specified length.
+    *
+    * @param string $field
+    * @param mixed $value
+    * @param int $length
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function min(string $field, mixed $value, int $length): void
     {
         if (strlen((string) $value) < $length) {
@@ -72,6 +132,18 @@ class Validator
         }
     }
 
+    /**
+    * Adds error message if value is
+    * longer than specified length.
+    *
+    * @param string $field
+    * @param mixed $value
+    * @param int $length
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function max(string $field, mixed $value, int $length): void
     {
         if (strlen((string) $value) > $length) {
@@ -79,6 +151,18 @@ class Validator
         }
     }
 
+    /**
+    * Adds error message if value is
+    * not of the specified type.
+    *
+    * @param string $field
+    * @param mixed $value
+    * @param string $type
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function type(string $field, mixed $value, string $type): void
     {
         $isValid = match ($type) {
@@ -94,6 +178,17 @@ class Validator
         }
     }
 
+    /**
+    * Adds error message if value does not
+    * match the confirmation field value.
+    *
+    * @param string $field
+    * @param array $data
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function confirmed(string $field, array $data): void
     {
         $confirmationField = $field . '_confirmation';
@@ -102,6 +197,19 @@ class Validator
         }
     }
 
+    /**
+    * $rule is in the format 'table:column'.
+    * If no column is specified, it defaults to $field value.
+    * Adds error if value is found in the database.
+    *
+    * @param string $field
+    * @param mixed $value
+    * @param string $rule
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function unique(string $field, mixed $value, string $rule): void
     {
         [$_, $table, $column] = explode(':', $rule . ':' . $field); // fallback to $field as column
@@ -115,11 +223,28 @@ class Validator
         }
     }
 
+    /**
+    * Returns array of errors created by validations.
+    *
+    * @return array
+    *
+    * @since 0.0.1
+    */
     public function errors(): array
     {
         return $this->errors;
     }
 
+    /**
+    * Adds error message to errors array.
+    *
+    * @param string $field
+    * @param string $message
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     protected function addError(string $field, string $message): void
     {
         $this->errors[$field][] = ucfirst($field) . ' ' . $message;

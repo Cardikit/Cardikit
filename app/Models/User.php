@@ -5,8 +5,24 @@ namespace App\Models;
 use App\Core\Database;
 use PDO;
 
+/**
+* User model contains methods to interact with the users table.
+*
+* @package App\Models
+*
+* @since 0.0.1
+*/
 class User
 {
+    /**
+    * Stores user data in the database.
+    *
+    * @param array $data
+    *
+    * @return bool
+    *
+    * @since 0.0.1
+    */
     public static function create(array $data): bool
     {
         $pdo = Database::connect();
@@ -20,6 +36,15 @@ class User
         ]);
     }
 
+    /**
+    * Finds a user by email.
+    *
+    * @param string $email
+    *
+    * @return array|null
+    *
+    * @since 0.0.1
+    */
     public static function findByEmail(string $email): ?array
     {
         $pdo = Database::connect();
