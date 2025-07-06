@@ -3,10 +3,10 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Core\Router;
-use App\Core\Response;
+use App\Controllers\PingController;
 
-Router::get('/ping', function () {
-    Response::json(['message' => 'pong']);
-});
+Router::get('/ping/:id', [PingController::class, 'show']);
+
+Router::post('/users', [PingController::class, 'create']);
 
 Router::dispatch();
