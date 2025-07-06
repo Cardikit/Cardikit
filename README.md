@@ -1,5 +1,5 @@
 ![Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 # CardiKit
 
