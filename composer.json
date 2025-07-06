@@ -1,0 +1,16 @@
+{
+    "name": "cardikit/cardikit",
+    "description": "The number one open source digital business card maker.",
+    "autoload": {
+        "psr-4": {
+            "Cardikit\\Cardikit\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "DamoFD",
+            "email": "voshall@yahoo.com"
+        }
+    ],
+    "require": {}
+}
