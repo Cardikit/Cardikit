@@ -33,4 +33,45 @@ class AuthController
             'message' => 'User registered successfully'
         ], 201);
     }
+
+    public function login(Request $request): void
+    {
+        $data = $request->body();
+
+        $validator = new Validator();
+        $valid = $validator->validate($data, [
+            'email' => 'required|email',
+            'password' => 'required|type:string'
+        ]);
+
+        if (!$valid) {
+            Response::json([
+                'errors' => $validator->errors()
+            ], 422);
+            return;
+        }
+
+        $user = User::findByEmail($data['email']);
+
+        if (!$user || !password_verify($data['password'], $user['password'])) {
+            Response::json([
+                'message' => 'Invalid credentials'
+            ], 401);
+            return;
+        }
+
+        $_SESSION['user_id'] = $user['id'];
+
+        Response::json(['message' => 'Logged in successfully']);
+    }
+
+    public function logout(): void
+    {
+        session_unset();
+        session_destroy();
+
+        setcookie(session_name(), '', time() - 3600, '/');
+
+        Response::json(['message' => 'Logged out successfully']);
+    }
 }

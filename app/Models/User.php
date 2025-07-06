@@ -19,4 +19,16 @@ class User
             'password' => password_hash($data['password'], PASSWORD_DEFAULT),
         ]);
     }
+
+    public static function findByEmail(string $email): ?array
+    {
+        $pdo = Database::connect();
+
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
+        $stmt->execute(['email' => $email]);
+
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $user ?: null;
+    }
 }
