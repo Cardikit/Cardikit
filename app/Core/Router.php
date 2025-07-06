@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Core\Response;
+
 /**
 * Handles incoming requests and dispatches them to the appropriate handlers based on the HTTP method and URI.
 *
@@ -123,8 +125,7 @@ class Router
 
                 // If handler returns array, return as JSON
                 if (is_array($response)) {
-                    header('Content-Type: application/json');
-                    echo json_encode($response);
+                    Response::json($response);
                 } elseif ($response !== null) {
                     echo $response;
                 }
@@ -134,7 +135,6 @@ class Router
         }
 
         // If no route matched, return a 404 with JSON error
-        http_response_code(404);
-        echo json_encode(['error' => 'Route not found']);
+        Response::json(['error' => 'Route not found'], 404);
     }
 }
