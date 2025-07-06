@@ -118,7 +118,8 @@ class Router
                 if (is_array($action)) {
                     [$controller, $method] = $action;
                     $controllerInstance = new $controller;
-                    $response =  call_user_func_array([$controllerInstance, $method], $matches);
+                    $request = new Request();
+                    $response =  call_user_func_array([$controllerInstance, $method], array_merge([$request], $matches));
                 } else {
                     $response = call_user_func_array($action, $matches);
                 }
