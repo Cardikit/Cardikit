@@ -1,7 +1,5 @@
-```md
 - [Home](/)
 - [Routing](routing.md)
 - [Controllers](controllers.md)
 - [Database](database.md)
 - [Migrations](migrations.md)
-```
