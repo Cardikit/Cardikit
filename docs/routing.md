@@ -1,3 +1,9 @@
+---
+title: Routing
+nav_order: 2
+---
+
 # Routing
 
-Cardikit uses a simple static `Router` class.
+Here’s how routing works...
+

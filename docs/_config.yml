@@ -1,0 +1,13 @@
+title: Cardikit Docs
+description: Documentation for the Cardikit PHP framework
+theme: just-the-docs
+
+url: "https://carditkit.github.io"
+
+# Optional: Color and logo customization
+color_scheme: dark
+# logo: "/assets/logo.png"
+
+# Enable navigation
+nav_sort: case_insensitive
+
