@@ -22,6 +22,8 @@ class Router
     */
     protected static array $routes = [];
 
+    protected static array $middleware = [];
+
     /**
     * Handles GET requests.
     *
@@ -32,9 +34,10 @@ class Router
     *
     * @since 0.0.1
     */
-    public static function get(string $uri, callable|array $action): void
+    public static function get(string $uri, callable|array $action, array $middleware = []): void
     {
         self::$routes['GET'][$uri] = $action;
+        self::$middleware['GET'][$uri] = $middleware;
     }
 
     /**
@@ -47,9 +50,10 @@ class Router
     *
     * @since 0.0.1
     */
-    public static function post(string $uri, callable|array $action): void
+    public static function post(string $uri, callable|array $action, array $middleware = []): void
     {
         self::$routes['POST'][$uri] = $action;
+        self::$middleware['POST'][$uri] = $middleware;
     }
 
     /**
@@ -62,9 +66,10 @@ class Router
     *
     * @since 0.0.1
     */
-    public static function delete(string $uri, callable|array $action): void
+    public static function delete(string $uri, callable|array $action, array $middleware = []): void
     {
         self::$routes['DELETE'][$uri] = $action;
+        self::$middleware['DELETE'][$uri] = $middleware;
     }
 
     /**
@@ -77,9 +82,10 @@ class Router
     *
     * @since 0.0.1
     */
-    public static function put(string $uri, callable|array $action): void
+    public static function put(string $uri, callable|array $action, array $middleware = []): void
     {
         self::$routes['PUT'][$uri] = $action;
+        self::$middleware['PUT'][$uri] = $middleware;
     }
 
     /**
@@ -103,6 +109,7 @@ class Router
 
         // Get the routes for the current method
         $routes = self::$routes[$method] ?? [];
+        $middlewareMap = self::$middleware[$method] ?? [];
 
         // Iterate over registered routes to find a match
         foreach ($routes as $route => $action) {
@@ -114,14 +121,24 @@ class Router
             if (preg_match($pattern, $uri, $matches)) {
                 array_shift($matches); // Remove full match
 
+                $middlewareList = $middlewareMap[$route] ?? [];
+                $request = new Request();
+
+                foreach ($middlewareList as $middleware) {
+                    if (is_object($middleware) && method_exists($middleware, 'handle')) {
+                        if (!$middleware->handle($request)) {
+                            return;
+                        }
+                    }
+                }
+
                 // If route uses controller syntax [Controller::class, 'method']
                 if (is_array($action)) {
                     [$controller, $method] = $action;
                     $controllerInstance = new $controller;
-                    $request = new Request();
                     $response =  call_user_func_array([$controllerInstance, $method], array_merge([$request], $matches));
                 } else {
-                    $response = call_user_func_array($action, $matches);
+                    $response = call_user_func_array($action, array_merge([$request], $matches));
                 }
 
                 // If handler returns array, return as JSON

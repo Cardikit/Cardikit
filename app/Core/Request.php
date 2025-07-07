@@ -104,6 +104,10 @@ class Request
     */
     protected function parseInput(): array
     {
+        if (isset($GLOBALS['__test_body'])) {
+            return $GLOBALS['__test_body'];
+        }
+
         $input = file_get_contents('php://input');
         $contentType = $this->headers['Content-Type'] ?? '';
 
@@ -173,5 +177,17 @@ class Request
     public function headers(): array
     {
         return $this->headers;
+    }
+
+    /**
+    * Get the ip address of the user
+    *
+    * @return string|null
+    *
+    * @since 0.0.1
+    */
+    public function ip(): ?string
+    {
+        return $_SERVER['REMOTE_ADDR'] ?? null;
     }
 }
