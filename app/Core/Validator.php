@@ -21,6 +21,28 @@ class Validator
     protected array $errors = [];
 
     /**
+    * Collection of models for unique validation.
+    *
+    * @var array
+    *
+    * @since 0.0.1
+    */
+    protected array $models = [];
+
+    /**
+    * Injects models for unique validation.
+    * Takes models as an array. Ex: ['App\Models\User' => $userModel]
+    *
+    * @param array $models
+    *
+    * @since 0.0.1
+    */
+    public function __construct(array $models = [])
+    {
+        $this->models = $models;
+    }
+
+    /**
     * Validates user input based on provided rules.
     *
     * @param array $data
@@ -198,7 +220,7 @@ class Validator
     }
 
     /**
-    * $rule is in the format 'table:column'.
+    * $rule is in the format 'App\Models\YourModel:column'.
     * If no column is specified, it defaults to $field value.
     * Adds error if value is found in the database.
     *
@@ -212,14 +234,13 @@ class Validator
     */
     protected function unique(string $field, mixed $value, string $rule): void
     {
-        [$_, $table, $column] = explode(':', $rule . ':' . $field); // fallback to $field as column
+        [$_, $modelName, $column] = explode(':', $rule . ':' . $field); // fallback to $field as column
+        $model = $this->models[$modelName] ?? null;
 
-        $pdo = Database::connect();
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM {$table} WHERE {$column} = :value");
-        $stmt->execute(['value' => $value]);
-
-        if ($stmt->fetchColumn() > 0) {
-            $this->addError($field, 'is already taken');
+        if ($model && method_exists($model, 'findBy')) {
+            if ($model->findBy($column, $value)) {
+                $this->addError($field, 'is already taken');
+            }
         }
     }
 

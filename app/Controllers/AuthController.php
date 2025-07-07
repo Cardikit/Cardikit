@@ -32,10 +32,10 @@ class AuthController
         $data = $request->body();
 
         // validate user input
-        $validator = new Validator();
+        $validator = new Validator([User::class => new User()]);
         $valid = $validator->validate($data, [
             'name' => 'required|min:2|max:10|type:string',
-            'email' => 'required|email|unique:users:email',
+            'email' => 'required|email|unique:App\Models\User:email',
             'password' => 'required|min:8|type:string|confirmed'
         ]);
 

@@ -12,8 +12,10 @@ use PDO;
 *
 * @since 0.0.1
 */
-class User
+class User extends Model
 {
+    protected string $table = 'users';
+
     /**
     * Stores user data in the database.
     *
@@ -47,13 +49,6 @@ class User
     */
     public static function findByEmail(string $email): ?array
     {
-        $pdo = Database::connect();
-
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
-        $stmt->execute(['email' => $email]);
-
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $user ?: null;
+        return (new static())->findBy('email', $email);
     }
 }
