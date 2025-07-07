@@ -1,13 +1,26 @@
-title: Cardikit Docs
+title: Cardikit
 description: Documentation for the Cardikit PHP framework
 theme: just-the-docs
 
-url: "https://carditkit.github.io"
+# IMPORTANT: this is your repo name if you're using GitHub Pages from a project repo
+baseurl: "/Cardikit"
+url: "https://cardikit.github.io"
 
-# Optional: Color and logo customization
+# Optional visual settings
 color_scheme: dark
 # logo: "/assets/logo.png"
 
-# Enable navigation
+# Navigation sorting
 nav_sort: case_insensitive
+
+# Enable local navigation via folders and files
+aux_links:
+  GitHub Repo: https://github.com/Cardikit/Cardikit
+
+# Needed if you want to disable GitHub’s default Jekyll
+# (but not always necessary since Pages knows Just the Docs)
+# include: ["_pages"]
+
+# Set the destination path (auto-handled by GitHub, but here for clarity)
+destination: ./_site
 
