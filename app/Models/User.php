@@ -51,4 +51,38 @@ class User extends Model
     {
         return (new static())->findBy('email', $email);
     }
+
+    /**
+    * Finds the logged in user.
+    *
+    * @return array|null
+    *
+    * @since 0.0.1
+    */
+    public static function findLoggedInUser(): ?array
+    {
+        $user = (new static())->findBy('id', $_SESSION['user_id']);
+
+        return [
+            'id' => $user['id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'created_at' => $user['created_at'],
+            'updated_at' => $user['updated_at']
+        ];
+    }
+
+    /**
+    * Finds a user by id.
+    *
+    * @param int $id
+    *
+    * @return array|null
+    *
+    * @since 0.0.1
+    */
+    public static function findById(int $id): ?array
+    {
+        return (new static())->findBy('id', $id);
+    }
 }
