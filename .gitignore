@@ -1,2 +1,15 @@
 /vendor/
 .env
+
+/web-frontend/node_modules/
+/web-frontend/logs
+/web-frontend/*.log
+/web-frontend/npm-debug.log*
+/web-frontend/yarn-debug.log*
+/web-frontend/yarn-error.log*
+/web-frontend/pnpm-debug.log*
+/web-frontend/lerna-debug.log*
+
+/web-frontend/dist
+/web-frontend/dist-ssr
+/web-frontend/*.local
