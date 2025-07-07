@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Router;
+use App\Core\Request;
 
 /**
 * Simulates requests to the router
@@ -13,24 +14,25 @@ use App\Core\Router;
 *
 * @since 0.0.1
 */
-function simulateRequest(string $method, string $uri, array $jsonBody = []): string
+function simulateRequest(string $method, string $uri, array $body = []): string
 {
     $_SERVER['REQUEST_METHOD'] = $method;
     $_SERVER['REQUEST_URI'] = $uri;
+    $_SERVER['CONTENT_TYPE'] = 'application/json'; // simulate JSON content-type
+    $_GET = [];
+    $_POST = [];
 
-    if (!empty($jsonBody)) {
-        $json = json_encode($jsonBody);
-        stream_wrapper_unregister("php");
-        stream_wrapper_register("php", \Tests\PhpInputStream::class);
-        \Tests\PhpInputStream::$mock = $json;
-    }
+    $GLOBALS['__test_body'] = $body;
 
     ob_start();
     \App\Core\Router::dispatch();
     $output = ob_get_clean();
 
+    unset($GLOBALS['__test_body']);
+
     return $output;
 }
+
 
 // Reset routes between tests
 beforeEach(function () {
@@ -48,7 +50,7 @@ test('GET /ping return pong', function () {
 
 // GET request with a param
 test('GET /users/123 passes param to handler', function () {
-    Router::get('/users/:id', fn ($id) => "User $id");
+    Router::get('/users/:id', fn (Request $request, $id) => "User $id");
 
     $output = simulateRequest('GET', '/users/123');
 
@@ -57,9 +59,8 @@ test('GET /users/123 passes param to handler', function () {
 
 // Basic POST request
 test('POST /echo returns posted data', function () {
-    Router::post('/echo', function () {
-        $input = json_decode(file_get_contents('php://input'), true);
-        return $input;
+    Router::post('/echo', function (Request $request) {
+        return $request->body();
     });
 
     $output = simulateRequest('POST', '/echo', ['foo' => 'bar']);
@@ -69,19 +70,18 @@ test('POST /echo returns posted data', function () {
 
 // Basic PUT request
 test('PUT /update returns updated data', function () {
-    Router::put('/update', function () {
-        $input = json_decode(file_get_contents('php://input'), true);
-        return ['updated' => $input];
+    Router::put('/update', function (Request $request) {
+        return $request->body();
     });
 
     $output = simulateRequest('PUT', '/update', ['id' => 1, 'name' => 'Cardikit']);
 
-    expect($output)->toBe(json_encode(['updated' => ['id' => 1, 'name' => 'Cardikit']]));
+    expect($output)->toBe(json_encode(['id' => 1, 'name' => 'Cardikit']));
 });
 
 // Basic DELETE request
 test('DELETE /resource/42 returns deleted confirmation', function () {
-    Router::delete('/resource/:id', function ($id) {
+    Router::delete('/resource/:id', function (Request $request, $id) {
         return ['deleted' => (int) $id];
     });
 
@@ -100,7 +100,7 @@ test('GET /missing returns 404 response', function () {
 
 // Multiple params
 test('GET /posts/:postId/comments/:commentId parses multiple params', function () {
-    Router::get('/posts/:postId/comments/:commentId', fn ($postId, $commentId) => "$postId-$commentId");
+    Router::get('/posts/:postId/comments/:commentId', fn (Request $request, $postId, $commentId) => "$postId-$commentId");
 
     $output = simulateRequest('GET', '/posts/5/comments/8');
 

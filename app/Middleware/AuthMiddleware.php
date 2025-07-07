@@ -2,9 +2,16 @@
 
 namespace App\Middleware;
 
-use App\Core\Request;
 use App\Core\Response;
 
+/**
+* Allows acces to the route if the
+* user is authenticated
+*
+* @package App\Middleware
+*
+* @since 0.0.1
+*/
 class AuthMiddleware
 {
     public function handle(): bool

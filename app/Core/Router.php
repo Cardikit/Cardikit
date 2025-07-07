@@ -121,12 +121,14 @@ class Router
             if (preg_match($pattern, $uri, $matches)) {
                 array_shift($matches); // Remove full match
 
-                // Handle any route-specific middleware
                 $middlewareList = $middlewareMap[$route] ?? [];
-                foreach ($middlewareList as $middlewareClass) {
-                    $middleware = new $middlewareClass();
-                    if (!$middleware->handle(new Request())) {
-                        return;
+                $request = new Request();
+
+                foreach ($middlewareList as $middleware) {
+                    if (is_object($middleware) && method_exists($middleware, 'handle')) {
+                        if (!$middleware->handle($request)) {
+                            return;
+                        }
                     }
                 }
 
@@ -134,10 +136,9 @@ class Router
                 if (is_array($action)) {
                     [$controller, $method] = $action;
                     $controllerInstance = new $controller;
-                    $request = new Request();
                     $response =  call_user_func_array([$controllerInstance, $method], array_merge([$request], $matches));
                 } else {
-                    $response = call_user_func_array($action, $matches);
+                    $response = call_user_func_array($action, array_merge([$request], $matches));
                 }
 
                 // If handler returns array, return as JSON
