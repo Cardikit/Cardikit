@@ -12,7 +12,7 @@ require __DIR__ . '/../bootstrap.php';
 
 session_start();
 
-Router::get('/ping/:id', [PingController::class, 'show']);
+Router::get('/api/ping/:id', [PingController::class, 'show']);
 Router::get('/db', [PingController::class, 'db']);
 
 Router::post('/register', [AuthController::class, 'register'], [new RateLimitMiddleware(5, 60)]);

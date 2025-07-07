@@ -5,13 +5,26 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '${SERVER_PORT:-80}:80'
+      - '8080:80'  # expose PHP server on 8080
     volumes:
       - .:/var/www/html
     networks:
       - cardikit
     depends_on:
       - db
+
+  web-frontend:
+    container_name: cardikit_web_frontend
+    build:
+      context: ./web-frontend
+      dockerfile: react.Dockerfile
+    ports:
+      - '80:5173'  # vite dev server on 5173
+    volumes:
+      - ./web-frontend:/app
+      - /app/node_modules
+    networks:
+      - cardikit
 
   db:
     container_name: cardikit_db
@@ -41,7 +54,7 @@ services:
     container_name: cardikit_phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
-      - 8080:80
+      - 3000:80
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
@@ -57,3 +70,4 @@ volumes:
 
 networks:
   cardikit:
+
