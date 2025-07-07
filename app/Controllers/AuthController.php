@@ -123,4 +123,21 @@ class AuthController
         // return success message
         Response::json(['message' => 'Logged out successfully']);
     }
+
+    /**
+    * Generates a CSRF token.
+    * Sets the token in the session.
+    * Returns the token as a JSON response.
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
+    public function csrfToken(): void
+    {
+        $token = bin2hex(random_bytes(32));
+        $_SESSION['csrf_token'] = $token;
+
+        Response::json(['csrf_token' => $token]);
+    }
 }

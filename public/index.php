@@ -5,6 +5,7 @@ use App\Controllers\PingController;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Middleware\AuthMiddleware;
+use App\Middleware\CsrfMiddleware;
 use App\Middleware\RateLimitMiddleware;
 
 require __DIR__ . '/../bootstrap.php';
@@ -18,8 +19,10 @@ Router::post('/register', [AuthController::class, 'register'], [new RateLimitMid
 
 Router::post('/login', [AuthController::class, 'login'], [new RateLimitMiddleware(5, 60)]);
 
-Router::post('/logout', [AuthController::class, 'logout']);
+Router::post('/logout', [AuthController::class, 'logout'], [new AuthMiddleware(), new CsrfMiddleware()]);
 
-Router::get('/@me', [UserController::class, 'me'], [AuthMiddleware::class]);
+Router::get('/@me', [UserController::class, 'me'], [new AuthMiddleware()]);
+
+Router::get('/csrf-token', [AuthController::class, 'csrfToken']);
 
 Router::dispatch();

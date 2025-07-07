@@ -80,7 +80,7 @@ class Request
     *
     * @since 0.0.1
     */
-    protected function getHeaders(): array
+    public function getHeaders(): array
     {
         if (function_exists('getallheaders')) {
             return getallheaders();
