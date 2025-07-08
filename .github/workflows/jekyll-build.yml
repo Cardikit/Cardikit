@@ -12,9 +12,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # To allow actions to push to the gh-pages branch (if used)
-      pages: write     # To allow actions/deploy-pages
-      id-token: write  # For actions/deploy-pages to authenticate
+      contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -23,19 +23,31 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3' # IMPORTANT: Match this to your local Ruby version if possible.
-                              # GitHub Pages default environment might be 3.3 or 3.4.
-                              # If your local is 3.4, use '3.4'.
-          bundler-cache: true # Caches and installs gems from Gemfile.lock
+          ruby-version: '3.3' # IMPORTANT: Ensure this matches your local Ruby version from `ruby -v` or `rbenv version`. If your local is 3.4, use '3.4'.
+          bundler-cache: true # Installs gems from Gemfile.lock (and caches them)
 
       - name: Build Jekyll site
+        # Combine the `cd docs`, `bundle install` configuration, and `jekyll build`
+        # into a single `run` block. This ensures the shell environment
+        # (including PATH updates from bundler) is consistent for all commands.
         run: |
-          # Navigate into the docs directory before building
+          echo "Current working directory: $(pwd)"
+          echo "Navigating to docs directory..."
           cd docs
+          echo "New working directory: $(pwd)"
+
+          echo "Configuring Bundler to install gems to vendor/bundle..."
+          # Configure bundler to install gems to vendor/bundle within the action's environment
+          bundle config set --local path vendor/bundle
+          echo "Installing gems from Gemfile.lock..."
+          bundle install --jobs 4 --retry 3 # Install gems (this will use your Gemfile.lock)
+          echo "Gem installation complete."
+
+          echo "Building Jekyll site..."
           # Build the site into a '_site' folder *outside* the docs directory
-          # This prepares it for the 'upload-pages-artifact' which expects
-          # the artifact path relative to the repo root.
+          # This is relative to the *original* repo root, so we go up one level.
           bundle exec jekyll build --baseurl "/Cardikit" --destination ../_site
+          echo "Jekyll build complete."
         env:
           JEKYLL_ENV: production # Build in production mode
 
