@@ -8,4 +8,4 @@ nav_order: 1
 
 Cardikit is a minimal PHP framework.
 
-Use the sidebar to explore the docs.
+Use the sidebar to explore the docs. Trigger workflow.
