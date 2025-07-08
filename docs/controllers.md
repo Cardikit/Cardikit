@@ -1,4 +1,5 @@
 ---
+layout: home
 title: Controllers
 nav_order: 2
 ---
