@@ -1,4 +1,5 @@
 ---
+layout: home
 title: Routing
 nav_order: 2
 ---

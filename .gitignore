@@ -1,6 +1,12 @@
 /vendor/
 .env
 
+/docs/_site/
+/docs/_build/
+/docs/.bundle/
+/docs/.jekyll-cache/
+/docs/vendor/
+
 /web-frontend/node_modules/
 /web-frontend/logs
 /web-frontend/*.log
