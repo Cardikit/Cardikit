@@ -1,0 +1,49 @@
+# .github/workflows/jekyll-build.yml
+name: Deploy Jekyll site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main # Change to 'master' if your main branch is master
+    paths:
+      - 'docs/**' # Trigger this workflow only when changes happen in the docs/ folder
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # To allow actions to push to the gh-pages branch (if used)
+      pages: write     # To allow actions/deploy-pages
+      id-token: write  # For actions/deploy-pages to authenticate
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3' # IMPORTANT: Match this to your local Ruby version if possible.
+                              # GitHub Pages default environment might be 3.3 or 3.4.
+                              # If your local is 3.4, use '3.4'.
+          bundler-cache: true # Caches and installs gems from Gemfile.lock
+
+      - name: Build Jekyll site
+        run: |
+          # Navigate into the docs directory before building
+          cd docs
+          # Build the site into a '_site' folder *outside* the docs directory
+          # This prepares it for the 'upload-pages-artifact' which expects
+          # the artifact path relative to the repo root.
+          bundle exec jekyll build --baseurl "/Cardikit" --destination ../_site
+        env:
+          JEKYLL_ENV: production # Build in production mode
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site # The path to the built site, relative to the repository root
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
