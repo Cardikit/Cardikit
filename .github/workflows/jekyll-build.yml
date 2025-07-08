@@ -3,10 +3,8 @@ name: Deploy Jekyll site to GitHub Pages
 
 on:
   push:
-    branches:
-      - main # Change to 'master' if your main branch is master
-    paths:
-      - 'docs/**' # Trigger this workflow only when changes happen in the docs/ folder
+    branches: [main]
+    paths: ["docs/**"]
 
 jobs:
   build-and-deploy:
@@ -20,44 +18,25 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Ruby environment
+      - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3' # IMPORTANT: Confirm this matches your local Ruby version (e.g., from `ruby -v` or `rbenv version`). If your local is 3.4, use '3.4'.
-          # bundler-cache: false # Let's explicitly manage install in the next step for clarity
-                                # Removing this means bundle install will be run directly
+          ruby-version: '3.3'
 
-      - name: Install dependencies and Build Jekyll site
-        # All Jekyll-related commands in one block for consistent environment
+      - name: Install and Build Jekyll site
         run: |
-          echo "Current working directory before cd: $(pwd)"
-          echo "Navigating to docs directory..."
           cd docs
-          echo "New working directory: $(pwd)"
-
-          echo "Installing RubyGems dependencies..."
-          # This ensures a fresh install in the action's environment
-          # The `--path vendor/bundle` ensures gems are installed locally to the docs folder
-          bundle install --path vendor/bundle --jobs 4 --retry 3
-          echo "Gem installation complete."
-
-          echo "Verifying jekyll executable path..."
-          # This command will show where bundle exec thinks jekyll is
-          bundle show jekyll
-
-          echo "Building Jekyll site..."
-          # Ensure the `bundle exec` command is used to correctly find Jekyll
-          # and output to ../_site (relative to docs/, so it's repo_root/_site)
+          bundle config set path 'vendor/bundle'
+          bundle install
           bundle exec jekyll build --baseurl "/Cardikit" --destination ../_site
-          echo "Jekyll build complete."
         env:
-          JEKYLL_ENV: production # Build in production mode
+          JEKYLL_ENV: production
 
-      - name: Upload artifact for GitHub Pages
+      - name: Upload built site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site # This path is relative to the *repository root*
+          path: _site
 
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
+
