@@ -106,8 +106,8 @@ Router::get('/csrf-token', [AuthController::class, 'csrfToken']);
 
 ## 📚 Related
 
-- Controllers
-- Middleware
+- [🧭 Controllers](./controllers.html)
+- [🧩 Middleware](./middleware.html)
 - Request Lifecycle
 
 ---

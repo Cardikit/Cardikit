@@ -100,7 +100,7 @@ Router::get('/secure', [SecureController::class, 'view'], [
 ## 📚 Related
 
 - [🧭 Router](./router.html)
-- Controllers
+- [🧭 Controllers](./controllers.html)
 - CSRF
 
 ---

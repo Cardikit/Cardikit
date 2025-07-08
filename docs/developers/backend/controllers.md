@@ -10,7 +10,7 @@ grandparent: Developers
 
 Controllers in **Cardikit** are responsible for handling incoming HTTP requests and returning appropriate responses. They serve as the bridge between routes and business logic.
 
-Each controller method corresponds to a specific action and is usually tied to a route in the router.
+Each controller method corresponds to a specific action and is usually tied to a route in the [router](./router.html).
 
 ---
 
@@ -36,7 +36,7 @@ Located at: App\Controllers\AuthController.php
 
 Registers a new user after validating input.
 
-- Uses the `Validator` to enforce rules on:
+- Uses the [Validator](./validator.html) to enforce rules on:
     - `name`: required, string, 2-10 characters
     - `email`: required, email format, must be unique
     - `password`: required, string, at least 8 characters, confirmed
@@ -52,7 +52,7 @@ Response:
 
 Authenticates an existing user.
 
-- Uses the `Validator` to enforce rules on:
+- Uses the [Validator](./validator.html) to enforce rules on:
     - `email`: required, email format
     - `password`: required, string
 - Verifies credentials with `password_verify()`.
@@ -118,4 +118,4 @@ class PingController
 
 - [🧭 Router](./router.html)
 - [🛡️ Middleware](./middleware.html)
-- Validation
+- [📜 Validator](./validator.html)
