@@ -104,7 +104,7 @@ X-CSRF-Token: your_csrf_token_here
 | Middleware         | Description                                                            |
 |--------------------|------------------------------------------------------------------------|
 | `Auth` | The user must be logged in with an active session.                     |
-| `CSRF`  | The request must include a **valid CSRF token** or it will be rejected. |
+| `CSRF`  | The request must include a **valid CSRF token** or it will be rejected. See [🛡️ CSRF Protection API](./csrf.html). |
 
 **✅ Successful Response:**
 
@@ -113,7 +113,7 @@ X-CSRF-Token: your_csrf_token_here
 **❌ Error Response:**
 
 - `401 Unauthorized` – Invalid credentials.
-- `419 Authentication Timeout` – CSRF token missing or invalid.
+- `419 Authentication Timeout` – CSRF token missing or invalid. See [🛡️ CSRF Protection API](./csrf.html).
 
 ---
 
