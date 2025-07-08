@@ -1,7 +1,8 @@
 ---
 layout: home
-title: Welcome
+title: Cardikit Docs
 nav_order: 1
+has_children: true
 ---
 
 # Welcome to Cardikit
