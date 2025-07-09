@@ -1,6 +1,14 @@
+<p align="center">
+    <img src="assets/smaller-logo-no-background.png" alt="Cardikit Logo" width="150" />
+</p>
+
+<div align="center">
+
 ![Backend Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
 ![Frontend Tests](https://github.com/Cardikit/Cardikit/actions/workflows/frontend-tests.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+</div>
 
 # CardiKit
 
