@@ -21,7 +21,7 @@ Router::post('/login', [AuthController::class, 'login'], [new RateLimitMiddlewar
 
 Router::post('/logout', [AuthController::class, 'logout'], [new AuthMiddleware(), new CsrfMiddleware()]);
 
-Router::get('/@me', [UserController::class, 'me'], [new AuthMiddleware()]);
+Router::get('/api/v1/@me', [UserController::class, 'me'], [new AuthMiddleware()]);
 
 Router::get('/csrf-token', [AuthController::class, 'csrfToken']);
 
