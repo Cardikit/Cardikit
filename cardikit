@@ -6,13 +6,41 @@ require_once __DIR__ . '/bootstrap.php';
 use Cardikit\CLI\Kernel;
 use App\Core\Config;
 
-if (Config::get('USE_DOCKER', 'false') === 'true' && !file_exists('/.dockerenv')) {
+$cmd = $argv[1] ?? null;
+$inDocker = file_exists('/.dockerenv');
+
+$frontendPassed = null;
+$backendPassed = null;
+
+// Run frontend tests on host (not in Docker)
+if ($cmd === 'test' && !$inDocker) {
+    echo "🧪 Running React (Vitest) tests on host...\n";
+    passthru('cd web-frontend && npm run test', $frontendExit);
+    $frontendPassed = $frontendExit === 0;
+}
+
+// Forward to Docker container if configured
+if (Config::get('USE_DOCKER', 'false') === 'true' && !$inDocker) {
     $args = array_map('escapeshellarg', array_slice($argv, 1));
-    $cmd = implode(' ', $args);
+    $cmdLine = implode(' ', $args);
     $container = Config::get('DOCKER_CONTAINER', 'cardikit_server');
-    passthru("docker exec -it $container ./cardikit $cmd");
-    exit;
+
+    passthru("docker exec -it $container ./cardikit $cmdLine", $backendExit);
+    $backendPassed = $backendExit === 0;
+
+    echo "\n📊 Test Summary:\n";
+    echo "Frontend: " . ($frontendPassed === true ? "✅ Passed" : "❌ Failed") . "\n";
+    echo "Backend:  " . ($backendPassed ? "✅ Passed" : "❌ Failed") . "\n";
+
+    // Return exit code that reflects failure if either failed
+    exit(($frontendPassed === false || !$backendPassed) ? 1 : 0);
+}
+
+// Run PHP tests inside container
+if ($cmd === 'test') {
+    echo "🧪 Running PHP tests...\n";
 }
 
 $kernel = new Kernel();
 $kernel->handle($argv);
+

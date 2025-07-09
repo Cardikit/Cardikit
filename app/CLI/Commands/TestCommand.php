@@ -6,6 +6,7 @@ class TestCommand
 {
     public function handle(array $args): void
     {
+        echo "🧪 Running PHP tests...\n";
         $cmd = ['./vendor/bin/pest', '--colors=always'];
 
         foreach($args as $arg) {
