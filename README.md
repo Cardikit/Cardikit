@@ -1,7 +1,5 @@
-<div align="center">
-    ![Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
-    [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-</div>
+![Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 # CardiKit
 
@@ -138,7 +136,7 @@ In order to ensure that the Cardikit community is welcoming to all, please revie
 
 ## 🛡 Security Vulnerabilities
 
-Please review our [Security Policy](https://github.com/Cardikit/Cardikit/blob/main/SECURITY.md) for information on how to report security vulnerabilities.
+Please review our [Security Policy](https://github.com/Cardikit/Cardikit/blob/main/.github/SECURITY.md) for information on how to report security vulnerabilities.
 
 ---
 
