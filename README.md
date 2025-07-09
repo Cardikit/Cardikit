@@ -1,4 +1,5 @@
-![Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
+![Backend Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
+![Frontend Tests](https://github.com/Cardikit/Cardikit/actions/workflows/frontend-tests.yml/badge.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 # CardiKit
