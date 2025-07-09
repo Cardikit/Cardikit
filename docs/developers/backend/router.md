@@ -108,6 +108,6 @@ Router::get('/csrf-token', [AuthController::class, 'csrfToken']);
 
 - [🧭 Controllers](./controllers.html)
 - [🧩 Middleware](./middleware.html)
-- Request Lifecycle
+- [🧩 Models](./models.html)
 
 ---

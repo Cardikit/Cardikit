@@ -54,6 +54,7 @@ MYSQL_PASSWORD=password
 ## 🧠 Notes
 
 - `USE_DOCKER=true` enables Docker passthrough for CLI tools like `./cardikit`.
+- See [CLI](./cli.html) for more information about the CLI.
 
 ---
 

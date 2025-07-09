@@ -73,6 +73,9 @@ Drops all tables by calling each migration's `down()` method.
 
 ⚠️ **Warning**: This will remove all data and tables. Use with caution in production environments.
 
+- See [Cli](./cli.html) for more information about CLI commands.
+- See [Config](./config.html) for more information about configuration files.
+
 ---
 
 ## 🛠️ Migration Base Class
@@ -101,4 +104,4 @@ Use `$this->execute(...)` to run raw SQL queries inside `up()` and `down()`.
 
 - [🧩 Models](./models.html)
 - [🚀 Controllers](./controllers.html)
-- CLI
+- [🛡️ Middleware](./middleware.html)

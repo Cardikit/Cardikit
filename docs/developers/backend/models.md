@@ -112,8 +112,8 @@ class User extends Model
 
 ## 📚 Related
 
-- Migrations
+- [📦 Migrations](./migrations.html)
 - [🚀 Controllers](./controllers.html)
-- Database Configuration
+- [🔧 Config](./config.html)
 
 ---
