@@ -1,0 +1,29 @@
+name: Frontend Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  react-tests:
+    name: 🧪 React (Vitest) Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧾 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 💡 Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📦 Install frontend dependencies
+        working-directory: ./web-frontend
+        run: npm ci
+
+      - name: 🧪 Run React (Vitest) tests
+        working-directory: ./web-frontend
+        run: npm run test
