@@ -2,6 +2,7 @@ import AuthLayout from '@/features/auth/components/AuthLayout';
 import Input from '@/features/auth/components/Input';
 import { IoIosMail, IoIosLock } from 'react-icons/io'
 import { Link } from 'react-router-dom';
+import Button from '@/components/Button';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,16 +11,35 @@ import { loginSchema } from '@/features/auth/validationSchema';
 import { useLoginUser } from '@/features/auth/hooks/useLoginUser';
 import { useAuth } from '@/contexts/AuthContext';
 
+interface LoginFormValues {
+    email: string;
+    password: string;
+}
+
+/**
+* Login Screen
+* ------------
+*  This screen allows existing users to authenticate into the Cardikit app.
+*  It includes:
+*  - Email and password inputs with validation
+*  - Error messaging on invalid credentials
+*  - Link to registration for new users
+*
+*  Integrates with the auth context to refresh the user session on success.
+*  UI is optimized for mobile with an accessible, modern form layout.
+*
+*  @since 0.0.1
+*/
 const Login: React.FC = () => {
-    const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: yupResolver(loginSchema) });
+    const { register, handleSubmit, formState: { errors }, } = useForm<LoginFormValues>({ resolver: yupResolver(loginSchema) });
     const { login, loading, error } = useLoginUser();
     const { refresh } = useAuth();
 
-    const onSubmit = async (data: any) => {
+    const onSubmit = async (payload: LoginFormValues) => {
         try {
             await login({
-                email: data.email,
-                password: data.password
+                email: payload.email,
+                password: payload.password
             });
             await refresh();
         } catch (err) {
@@ -49,13 +69,7 @@ const Login: React.FC = () => {
                     type="password"
                     error={errors?.password?.message}
                 />
-                <button
-                    className="cursor-pointer bg-[#FA3C25] border border-[#FA3C25] font-inter hover:bg-[#c92f1c] hover:-translate-y-1 transition-all ease-in-out shadow-md duration-200 text-[#FBFBFB] text-xl w-full py-3 rounded-lg flex items-center justify-center"
-                    type="submit"
-                    disabled={loading}
-                >
-                    {loading ? 'Loading...' : 'Log in'}
-                </button>
+                <Button loading={loading} type="submit">Sign in</Button>
 
                 <p className="text-center font-inter">Don't have an account? <Link className="text-[#FA3C25]" to="/register">Sign up</Link></p>
             </form>

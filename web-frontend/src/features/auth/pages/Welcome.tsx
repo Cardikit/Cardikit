@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 *  - "Sign in": navigates to the login page
 *
 *  UI is designed to be minimal, mobile-first, and visually engaging.
+*
+*  @since 0.0.1
 */
 const Welcome: React.FC = () => {
     return (

@@ -5,7 +5,7 @@ export const registerSchema = yup.object({
     email: yup.string().email('Invalid email').required('Email is required'),
     password: yup.string().min(6, 'Password must be at least 6 characters long').max(255, 'Password must be less than 255 characters long').required('Password is required'),
     confirmPassword: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required('Confirm Password is required'),
-    acceptTerms: yup.bool().oneOf([true], 'Terms must be accepted'),
+    acceptTerms: yup.bool().oneOf([true], 'Terms must be accepted').required('Terms must be accepted'),
 });
 
 export const loginSchema = yup.object({

@@ -3,6 +3,7 @@ import Input from '@/features/auth/components/Input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { IoIosMail, IoIosLock, IoMdContact } from 'react-icons/io'
 import { Link } from 'react-router-dom';
+import Button from '@/components/Button';
 
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,17 +12,68 @@ import { registerSchema } from '@/features/auth/validationSchema';
 import { useRegisterUser } from '@/features/auth/hooks/useRegisterUser';
 import { useAuth } from '@/contexts/AuthContext';
 
+interface RegisterFormValues {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    acceptTerms: boolean;
+}
+
+/**
+* Register Screen
+* ---------------
+*  This screen enables new users to create an account in the Cardikit app.
+*  It includes:
+*  - Inputs for name, email, password, confirm password
+*  - Terms & Conditions checkbox (validated)
+*  - Error handling for duplicate accounts or input issues
+*  - Link to login for existing users
+*
+*  On success, triggers auth context refresh to reflect the new session.
+*  UI follows a clean, mobile-first layout with friendly form UX.
+*
+*  @since 0.0.1
+*/
 const Register: React.FC = () => {
-    const { register, handleSubmit, control, formState: { errors }, } = useForm({ resolver: yupResolver(registerSchema) });
+    const { register, handleSubmit, control, formState: { errors }, } = useForm<RegisterFormValues>({
+        resolver: yupResolver(registerSchema),
+        defaultValues: {
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            acceptTerms: false
+        }
+    });
     const { register: registerUser, loading, error } = useRegisterUser();
     const { refresh } = useAuth();
 
-    const onSubmit = async (data: any) => {
+    /**
+    * Handles form submission for user registration.
+    *
+    * This function:
+    * - Sends user input (name, email, password) to the register API.
+    * - On success, refreshes the authentication context to reflect the new user session.
+    * - On failure, logs the error to the console.
+    *
+    * @param {RegisterFormValues} payload - The form data submitted by the user.
+    * @param {string} payload.name - The user's name.
+    * @param {string} payload.email - The user's email address.
+    * @param {string} payload.password - The user's password.
+    * @param {string} payload.confirmPassword - The user's password confirmation.
+    * @param {boolean} payload.terms - Whether the user has accepted the terms and conditions.
+    *
+    * @returns {Promise<void>}
+    *
+    * @since 0.0.1
+    */
+    const onSubmit = async (payload: RegisterFormValues) => {
         try {
             await registerUser({
-                name: data.name,
-                email: data.email,
-                password: data.password
+                name: payload.name,
+                email: payload.email,
+                password: payload.password
             });
             await refresh();
         } catch (err) {
@@ -82,13 +134,7 @@ const Register: React.FC = () => {
                     <p className="font-inter">I agree to the <span className="text-[#FA3C25]">Terms & Conditions</span> and <span className="text-[#FA3C25]">Privacy Policy</span></p>
                 </div>
                 {errors?.acceptTerms?.message && <p className="text-red-500 text-sm">{errors?.acceptTerms?.message}</p>}
-                <button
-                    className="cursor-pointer bg-[#FA3C25] border border-[#FA3C25] font-inter hover:bg-[#c92f1c] hover:-translate-y-1 transition-all ease-in-out shadow-md duration-200 text-[#FBFBFB] text-xl w-full py-3 rounded-lg flex items-center justify-center"
-                    type="submit"
-                    disabled={loading}
-                >
-                    {loading ? 'Loading...' : 'Sign Up'}
-                </button>
+                <Button loading={loading} type="submit">Sign up</Button>
 
                 <p className="text-center font-inter">Already have an account? <Link className="text-[#FA3C25]" to="/login">Sign in</Link></p>
             </form>
