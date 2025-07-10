@@ -1,5 +1,16 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
+/* @import "@fontsource/inter"; */
+
+@font-face {
+    font-family: "Inter";
+    src: url("./assets/Inter.ttf");
+    font-display: swap;
+}
+
+@theme {
+    --font-inter: Inter, sans-serif;
+}
 
 @custom-variant dark (&:is(.dark *));
 

@@ -1,15 +1,14 @@
-import HeroImage from '@/assets/hero-image.png';
-import Logo from '@/assets/logo.png';
+import HeroImage from '@/assets/hero-image.webp';
+import Logo from '@/assets/logo.webp';
 import { Link } from 'react-router-dom';
 
 const Welcome: React.FC = () => {
     return (
-        <div className="w-full h-screen overflow-hidden bg-[#FBFBFB] flex flex-col items-center justify-center">
-            <img src={HeroImage} alt="Welcome Image" className="w-full" />
-            <img src={Logo} alt="Cardikit Logo" className="w-36" />
-            <h1 className="font-bold text-3xl text-center text-[#1E1E1E]">Your professional identity.<br />One tap away.</h1>
-            <Link to="/register" className="bg-[#FC4B4B] text-[#FBFBFB] text-xl w-11/12 py-4 rounded-lg flex items-center justify-center mt-6">Get started</Link>
-            <Link to="/login" className="border border-[#1E1E1E] text-[#1E1E1E] text-xl w-11/12 py-4 rounded-lg flex items-center justify-center mt-6">Sign in</Link>
+        <div className="w-full h-dvh overflow-hidden bg-[#FBFBFB] flex flex-col items-center justify-center px-4">
+            <img src={HeroImage} alt="Welcome Image" className="w-3/4" />
+            <h1 className="font-bold font-inter leading-snug tracking-tight text-2xl text-center text-[#1E1E1E] mt-6">Your professional identity.<br />One tap away.</h1>
+            <Link to="/register" className="bg-[#FA3C25] border border-[#FA3C25] font-inter hover:bg-[#c92f1c] hover:-translate-y-1 transition-all ease-in-out shadow-md duration-200 text-[#FBFBFB] text-xl w-full py-4 rounded-lg flex items-center justify-center mt-6">Get started</Link>
+            <Link to="/login" className="border border-[#1E1E1E] bg-[#FBFBFB] hover:bg-[#e3e3e3] hover:-translate-y-1 transition-all ease-in-out font-inter text-[#1E1E1E] text-xl w-full py-4 shadow-md rounded-lg flex items-center justify-center mt-6">Sign in</Link>
         </div>
     );
 }
