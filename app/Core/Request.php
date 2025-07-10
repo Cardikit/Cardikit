@@ -109,7 +109,8 @@ class Request
         }
 
         $input = file_get_contents('php://input');
-        $contentType = $this->headers['Content-Type'] ?? '';
+        $this->headers = array_change_key_case($this->headers, CASE_LOWER);
+        $contentType = $this->headers['content-type'] ?? '';
 
         if (stripos($contentType, 'application/json') !== false) {
             return json_decode($input, true) ?? [];

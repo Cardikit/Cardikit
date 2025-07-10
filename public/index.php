@@ -15,14 +15,14 @@ session_start();
 Router::get('/api/ping/:id', [PingController::class, 'show']);
 Router::get('/db', [PingController::class, 'db']);
 
-Router::post('/register', [AuthController::class, 'register'], [new RateLimitMiddleware(5, 60)]);
+Router::post('/api/v1/register', [AuthController::class, 'register'], [new RateLimitMiddleware(5, 60)]);
 
-Router::post('/login', [AuthController::class, 'login'], [new RateLimitMiddleware(5, 60)]);
+Router::post('/api/v1/login', [AuthController::class, 'login'], [new RateLimitMiddleware(5, 60)]);
 
-Router::post('/logout', [AuthController::class, 'logout'], [new AuthMiddleware(), new CsrfMiddleware()]);
+Router::post('/api/v1/logout', [AuthController::class, 'logout'], [new AuthMiddleware(), new CsrfMiddleware()]);
 
 Router::get('/api/v1/@me', [UserController::class, 'me'], [new AuthMiddleware()]);
 
-Router::get('/csrf-token', [AuthController::class, 'csrfToken']);
+Router::get('/api/v1/csrf-token', [AuthController::class, 'csrfToken']);
 
 Router::dispatch();

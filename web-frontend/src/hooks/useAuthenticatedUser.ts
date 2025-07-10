@@ -30,6 +30,11 @@ export const useAuthenticatedUser = () => {
         fetchAuthenticatedUser();
     }, []);
 
+    const refresh = async () => {
+        setLoading(true);
+        await fetchAuthenticatedUser();
+    };
+
     /**
     * Contacts the `/@me` endpoint to get the authenticated user's data.
     *
@@ -51,5 +56,5 @@ export const useAuthenticatedUser = () => {
         }
     };
 
-    return { user, loading, error };
+    return { user, refresh, loading, error };
 };

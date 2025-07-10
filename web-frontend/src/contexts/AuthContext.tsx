@@ -5,6 +5,7 @@ import type { User } from '@/types/user';
 interface AuthContextType {
     user: User | null
     loading: boolean
+    refresh: () => Promise<void>
 }
 
 /**
@@ -14,7 +15,7 @@ interface AuthContextType {
 *
 * @since 0.0.1
 */
-const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
+const AuthContext = createContext<AuthContextType>({ user: null, loading: true, refresh: async () => {} });
 
 /**
 * Wraps the application and provides authentication context to its children.
@@ -29,10 +30,10 @@ const AuthContext = createContext<AuthContextType>({ user: null, loading: true }
 * @since 0.0.1
 */
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    const { user, loading } = useAuthenticatedUser();
+    const { user, loading, refresh } = useAuthenticatedUser();
 
     return (
-        <AuthContext.Provider value={{ user, loading }}>
+        <AuthContext.Provider value={{ user, loading, refresh }}>
             {children}
         </AuthContext.Provider>
     )

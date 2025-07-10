@@ -17,6 +17,12 @@ use App\Models\User;
 */
 class AuthController
 {
+    protected function signIn(array $user): void
+    {
+        // set session variable
+        $_SESSION['user_id'] = $user['id'];
+    }
+
     /**
     * Takes a request, validates user input.
     * If input is valid, creates a new user.
@@ -34,9 +40,9 @@ class AuthController
         // validate user input
         $validator = new Validator([User::class => new User()]);
         $valid = $validator->validate($data, [
-            'name' => 'required|min:2|max:10|type:string',
+            'name' => 'required|min:2|max:50|type:string',
             'email' => 'required|email|unique:App\Models\User:email',
-            'password' => 'required|min:8|type:string|confirmed'
+            'password' => 'required|min:8|type:string'
         ]);
 
         // return error if input is invalid
@@ -49,6 +55,10 @@ class AuthController
 
         // create user
         User::create($data);
+
+        // set session variable
+        $user = User::findByEmail($data['email']);
+        $this->signIn($user);
 
         // return success message
         Response::json([
@@ -91,13 +101,13 @@ class AuthController
         // return error if user does not exist
         if (!$user || !password_verify($data['password'], $user['password'])) {
             Response::json([
-                'message' => 'Invalid credentials'
+                'error' => 'Invalid credentials'
             ], 401);
             return;
         }
 
         // set session variable
-        $_SESSION['user_id'] = $user['id'];
+        $this->signIn($user);
 
         // return success message
         Response::json(['message' => 'Logged in successfully']);
