@@ -8,6 +8,22 @@ import Register from '@/features/auth/pages/Register';
 import Welcome from '@/features/auth/pages/Welcome';
 import NotFound from '@/pages/NotFound';
 
+/**
+* AppRoutes
+* ---------
+* Handles client-side routing and route protection logic.
+*
+* - Wraps all routes with `AuthProvider` to enable authentication state globally.
+* - `GuestRoute`: for unauthenticated-only pages like login/register.
+* - `PrivateRoute`: for protected pages that require authentication.
+*
+* Routes:
+* - `/` and `/register`, `/login`: public pages
+* - `/dashboard`: private/protected route
+* - `*`: 404 Not Found fallback
+*
+* @since 0.0.1
+*/
 const AppRoutes: React.FC = () => {
     return (
         <BrowserRouter>

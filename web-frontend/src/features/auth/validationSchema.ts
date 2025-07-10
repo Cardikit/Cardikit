@@ -1,5 +1,12 @@
 import * as yup from 'yup';
 
+/**
+* Validation schemas for auth forms
+*
+* Includes schemas for registration and login forms.
+*
+* @since 0.0.1
+*/
 export const registerSchema = yup.object({
     name: yup.string().min(2, 'Name must be at least 2 characters long').max(50, 'Name must be less than 50 characters long').required('Name is required'),
     email: yup.string().email('Invalid email').required('Email is required'),

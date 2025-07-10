@@ -1,3 +1,10 @@
+/**
+* Temporary 404 page
+*
+* @TODO: Create a 404 page
+*
+* @since 0.0.1
+*/
 const NotFound: React.FC = () => {
     return (
         <div>
@@ -7,4 +14,3 @@ const NotFound: React.FC = () => {
 }
 
 export default NotFound;
-

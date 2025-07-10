@@ -8,6 +8,24 @@ interface InputProps extends React.ComponentProps<typeof InputCN> {
   error?: string;
 }
 
+/**
+* Custom Input Component
+* ----------------------
+* A reusable input component built on top of the base UI `InputCN`.
+*
+* Features:
+* - Optional icon before the input (`startAdornment`)
+* - Error display below the input
+* - Password visibility toggle for password inputs
+* - Tailwind-based styling for consistent UI
+*
+* Props:
+* - `startAdornment`: optional React node shown on the left inside the input (e.g. icon)
+* - `error`: optional error string to display below the input
+* - All native Input props are supported via spread operator
+*
+* @since 0.0.1
+*/
 const Input = ({
   startAdornment,
   type,
@@ -38,6 +56,7 @@ const Input = ({
             {...props}
           />
           {isPassword && (
+            // @TODO: move away from button due to tabbing accessibility
             <button
               type="button"
               onClick={() => setShowPassword(prev => !prev)}
