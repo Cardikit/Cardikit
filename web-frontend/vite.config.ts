@@ -1,14 +1,25 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import path from 'path'
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+import { configDefaults } from 'vitest/config';
 
-// https://vite.dev/config/
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 export default defineConfig({
     plugins: [react(), tailwindcss()],
+    test: {
+        environment: 'jsdom',
+        globals: true,
+        exclude: [...configDefaults.exclude, 'e2e/**'],
+        setupFiles: './vitest.setup.ts',
+        css: false,
+    },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, './src'),
+            '@': resolve(__dirname, './src'),
         },
     },
     server: {
@@ -22,3 +33,4 @@ export default defineConfig({
         },
     },
 });
+

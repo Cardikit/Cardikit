@@ -46,7 +46,7 @@ const Input = ({
             </span>
           )}
           <InputCN
-            type={inputType}
+            type={inputType ?? 'text'}
             className={cn(
               "rounded-xl text-xl h-14 focus-visible:bg-white bg-[#FBFBFB] focus-visible:shadow-lg focus-visible:ring-0 text-gray-800 font-inter",
               startAdornment && "pl-12",
@@ -62,7 +62,7 @@ const Input = ({
               onClick={() => setShowPassword(prev => !prev)}
               className="absolute right-3 text-muted-foreground focus:outline-none text-2xl cursor-pointer"
             >
-              {showPassword ? <IoMdEyeOff className="text-[#FA3C25]" /> : <IoMdEye className="text-[#FA3C25]"/>}
+              {showPassword ? <IoMdEyeOff className="text-[#FA3C25]" data-testid="eye-off-icon" /> : <IoMdEye className="text-[#FA3C25]" data-testid="eye-on-icon"/>}
             </button>
           )}
         </div>

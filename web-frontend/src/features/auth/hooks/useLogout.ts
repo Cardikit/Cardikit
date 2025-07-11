@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import api from '@/lib/axios';
-import axios from 'axios';
 
 /**
 * useLogout Hook
@@ -37,12 +36,8 @@ export const useLogout = () => {
             const response = await api.post('/logout');
             return response.data;
         } catch (error: any) {
-            if (axios.isAxiosError(error)) {
-                // Check for specific backend error
-                console.log(error.response?.data);
-            } else {
-                setError('Unexpected error occurred');
-            }
+            setError('Unexpected error occurred');
+            console.error(error);
             throw error;
         } finally {
             setLoading(false);

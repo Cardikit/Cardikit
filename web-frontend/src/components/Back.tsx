@@ -29,12 +29,12 @@ const Back = () => {
     };
 
     return (
-        <div
+        <button
             className="absolute top-4 left-4 text-[#1E1E1E] bg-[#FBFBFB] p-2 rounded-full shadow-md cursor-pointer"
             onClick={handleBack}
         >
             <IoMdArrowBack className="text-2xl" />
-        </div>
+        </button>
     );
 }
 

@@ -54,6 +54,8 @@ export const useRegisterUser = () => {
                 }
                 if (error.response?.data?.error) {
                     setError(error.response?.data?.error);
+                } else {
+                    setError('An unknown API error occurred. Please try again.');
                 }
             } else {
                 setError('Unexpected error occurred');
