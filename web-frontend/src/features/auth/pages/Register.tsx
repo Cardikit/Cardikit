@@ -5,7 +5,7 @@ import { IoIosMail, IoIosLock, IoMdContact } from 'react-icons/io'
 import { Link } from 'react-router-dom';
 import Button from '@/components/Button';
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { registerSchema } from '@/features/auth/validationSchema';
 
@@ -68,7 +68,7 @@ const Register: React.FC = () => {
     *
     * @since 0.0.1
     */
-    const onSubmit = async (payload: RegisterFormValues) => {
+    const onSubmit: SubmitHandler<RegisterFormValues> = async (payload) => {
         try {
             await registerUser({
                 name: payload.name,
@@ -91,28 +91,28 @@ const Register: React.FC = () => {
             >
                 <Input
                     {...register('name')}
-                    startAdornment={<IoMdContact className="text-[#FA3C25]"/>}
+                    startAdornment={<IoMdContact className="text-primary-500"/>}
                     placeholder="Enter your name"
                     type="text"
                     error={errors?.name?.message}
                 />
                 <Input
                     {...register('email')}
-                    startAdornment={<IoIosMail className="text-[#FA3C25]"/>}
+                    startAdornment={<IoIosMail className="text-primary-500"/>}
                     placeholder="Enter your email"
                     type="email"
                     error={errors?.email?.message}
                 />
                 <Input
                     {...register('password')}
-                    startAdornment={<IoIosLock className="text-[#FA3C25]"/>}
+                    startAdornment={<IoIosLock className="text-primary-500"/>}
                     placeholder="Enter your password"
                     type="password"
                     error={errors?.password?.message}
                 />
                 <Input
                     {...register('confirmPassword')}
-                    startAdornment={<IoIosLock className="text-[#FA3C25]"/>}
+                    startAdornment={<IoIosLock className="text-primary-500"/>}
                     placeholder="Confirm your password"
                     type="password"
                     error={errors?.confirmPassword?.message}
@@ -124,19 +124,19 @@ const Register: React.FC = () => {
                         defaultValue={false}
                         render={({ field }) => (
                             <Checkbox
-                                className="cursor-pointer bg-gray-200 data-[state=checked]:bg-[#FA3C25] data-[state=checked]:border-[#FA3C25]"
+                                className="cursor-pointer bg-gray-200 data-[state=checked]:bg-primary-500 data-[state=checked]:border-primary-500"
                                 id="accept-terms"
                                 checked={field.value}
                                 onCheckedChange={field.onChange}
                             />
                         )}
                     />
-                    <p className="font-inter">I agree to the <span className="text-[#FA3C25]">Terms & Conditions</span> and <span className="text-[#FA3C25]">Privacy Policy</span></p>
+                    <p className="font-inter text-gray-800">I agree to the <span className="text-primary-500">Terms & Conditions</span> and <span className="text-primary-500">Privacy Policy</span></p>
                 </div>
                 {errors?.acceptTerms?.message && <p className="text-red-500 text-sm">{errors?.acceptTerms?.message}</p>}
                 <Button loading={loading} type="submit">Sign up</Button>
 
-                <p className="text-center font-inter">Already have an account? <Link className="text-[#FA3C25]" to="/login">Sign in</Link></p>
+                <p className="text-center font-inter text-gray-800">Already have an account? <Link className="text-primary-500" to="/login">Sign in</Link></p>
             </form>
         </AuthLayout>
     );

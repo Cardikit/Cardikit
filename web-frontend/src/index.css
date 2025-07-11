@@ -10,6 +10,10 @@
 
 @theme {
     --font-inter: Inter, sans-serif;
+    --color-primary-500: #FA3C25;
+    --color-primary-900: #c92f1c;
+    --color-background-100: #FBFBFB;
+    --color-background-200: #e3e3e3;
 }
 
 @custom-variant dark (&:is(.dark *));

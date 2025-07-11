@@ -57,21 +57,21 @@ const Login: React.FC = () => {
             >
                 <Input
                     {...register('email')}
-                    startAdornment={<IoIosMail className="text-[#FA3C25]"/>}
+                    startAdornment={<IoIosMail className="text-primary-500"/>}
                     placeholder="Enter your email"
                     type="email"
                     error={errors?.email?.message}
                 />
                 <Input
                     {...register('password')}
-                    startAdornment={<IoIosLock className="text-[#FA3C25]"/>}
+                    startAdornment={<IoIosLock className="text-primary-500"/>}
                     placeholder="Enter your password"
                     type="password"
                     error={errors?.password?.message}
                 />
                 <Button loading={loading} type="submit">Sign in</Button>
 
-                <p className="text-center font-inter">Don't have an account? <Link className="text-[#FA3C25]" to="/register">Sign up</Link></p>
+                <p className="text-center font-inter text-gray-800">Don't have an account? <Link className="text-primary-500" to="/register">Sign up</Link></p>
             </form>
         </AuthLayout>
     );
