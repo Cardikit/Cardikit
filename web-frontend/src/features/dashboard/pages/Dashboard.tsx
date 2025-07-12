@@ -29,8 +29,10 @@ const Dashboard: React.FC = () => {
         setOpen(prev => !prev);
     }
 
+    console.log('mounted');
+
     return (
-        <div className="min-h-dvh bg-gray-300 pt-16 overflow-x-hidden">
+        <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
             <TopNav openMenu={toggleMenu} card={currentCard} />
             <div className="w-full flex flex-col items-center justify-between h-dvh pb-20">
                 {/*TODO: implement QR code integration*/}
