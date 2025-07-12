@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [currentCard, setCurrentCard] = useState<Card>({
         id: 0,
-        name: ''
+        name: 'Add Card'
     });
 
     const toggleMenu = () => {
