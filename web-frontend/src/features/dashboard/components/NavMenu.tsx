@@ -1,7 +1,7 @@
 import Logo from '@/assets/logo.webp';
 import { ImEmbed2 } from 'react-icons/im';
 import { FaNfcSymbol } from 'react-icons/fa6';
-import { IoPersonSharp, IoLogOut } from "react-icons/io5";
+import { IoPersonSharp, IoLogOut, IoClose } from "react-icons/io5";
 import { useLogout } from '@/features/auth/hooks/useLogout';
 import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 import { useAuth } from '@/contexts/AuthContext';
@@ -36,7 +36,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
             )}
 
             {/* Sliding Menu */}
-            <div
+            <nav
                 className={`fixed top-0 left-0 h-dvh w-3/4 bg-gray-100 z-50 shadow-md transition-transform duration-300 ease-in-out ${
                     open ? 'translate-x-0' : '-translate-x-full'
                 }`}
@@ -44,7 +44,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
                 <div className="p-4 flex flex-col space-y-4">
                     <div className="flex justify-between items-center pb-6">
                         <img src={Logo} alt="Logo" className="w-12" />
-                        <button onClick={closeMenu} className="text-lg font-bold">X</button>
+                        <IoClose onClick={closeMenu} className="text-2xl text-gray-800 cursor-pointer" />
                     </div>
                     <p className="text-sm text-gray-600 font-inter">Connect Devices</p>
                     <div className="flex items-center space-x-2">
@@ -66,7 +66,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
                         <p className="font-inter text-gray-800">Logout</p>
                     </div>
                 </div>
-            </div>
+            </nav>
         </>
     );
 };
