@@ -32,29 +32,29 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData })
             }
         };
 
-        updateCurrentCard(); // set initial card
+        updateCurrentCard();
         api.on("select", updateCurrentCard);
 
         return () => {
-            api.off("select", updateCurrentCard); // cleanup listener
+            api.off("select", updateCurrentCard);
         };
     }, [api, cardData, setCurrentCard]);
 
     return (
-        <Carousel setApi={setApi} className="w-1/2">
+        <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
                 {cardData.map((card) => (
                     <CarouselItem key={card.id}>
-                        <div className="p-1">
-                            <div className="flex aspect-square items-center justify-center p-6 bg-white rounded-xl shadow">
+                        <div className="p-10">
+                            <div className="flex items-center justify-center bg-white rounded-xl shadow h-[600px] w-full">
                                 <span className="text-xl font-semibold">{card.name}</span>
                             </div>
                         </div>
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
+            <CarouselNext className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
         </Carousel>
     );
 };

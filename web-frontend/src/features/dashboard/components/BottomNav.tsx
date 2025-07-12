@@ -6,7 +6,7 @@ const BottomNav: React.FC = () => {
     const isActive = (path: string) => location.pathname === path;
 
     return (
-        <div className="fixed bottom-0 w-full bg-background-100 shadow-md z-10 flex justify-around items-center py-4">
+        <div className="fixed bottom-0 w-full bg-background-100 shadow-md z-10 flex justify-around items-center py-4 border-t border-gray-200">
             <Link
                 to="/dashboard"
                 className={`flex flex-col items-center ${isActive('/dashboard') ? 'text-primary-500 cursor-default' : 'text-gray-800'}`}
