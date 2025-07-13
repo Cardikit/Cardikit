@@ -4,6 +4,7 @@ import TitleEditor from '@/features/editor/components/TitleEditor';
 import type { Card } from '@/types/card';
 
 const defaultCard: Card = {
+    id: 0,
     name: 'New Card',
 }
 

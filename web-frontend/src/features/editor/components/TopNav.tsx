@@ -1,6 +1,9 @@
 import { MdModeEdit } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import type { Card } from '@/types/card';
+import { useCreateCard } from '@/features/editor/hooks/useCreateCard';
+import { useNavigate } from 'react-router-dom';
+import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 
 interface TopNavProps {
     card: Card;
@@ -8,6 +11,18 @@ interface TopNavProps {
 }
 
 const TopNav: React.FC<TopNavProps> = ({ card, setOpen }) => {
+    const { createCard } = useCreateCard();
+    const navigate = useNavigate();
+
+    const onSubmit = async () => {
+        try {
+            await fetchCsrfToken();
+            await createCard({ name: card.name });
+            navigate('/dashboard');
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <div className="fixed top-0 w-full z-10 p-4 flex items-center justify-between text-gray-800">
@@ -16,7 +31,7 @@ const TopNav: React.FC<TopNavProps> = ({ card, setOpen }) => {
                 <h1 className="text-xl font-semibold font-inter">{card.name}</h1>
                 <MdModeEdit className="text-2xl" />
             </div>
-            <p className="font-inter cursor-pointer">Save</p>
+            <p onClick={onSubmit} className="font-inter cursor-pointer">Save</p>
         </div>
     );
 }
