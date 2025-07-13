@@ -1,7 +1,8 @@
 import { MdModeEdit } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import type { Card } from '@/types/card';
 import { useCreateCard } from '@/features/editor/hooks/useCreateCard';
+import { useUpdateCard } from '@/features/editor/hooks/useUpdateCard';
 import { useNavigate } from 'react-router-dom';
 import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 
@@ -12,12 +13,18 @@ interface TopNavProps {
 
 const TopNav: React.FC<TopNavProps> = ({ card, setOpen }) => {
     const { createCard } = useCreateCard();
+    const { updateCard } = useUpdateCard();
     const navigate = useNavigate();
+    const { id } = useParams();
 
     const onSubmit = async () => {
         try {
             await fetchCsrfToken();
-            await createCard({ name: card.name });
+            if (id) {
+                await updateCard({ name: card.name }, Number(id));
+            } else {
+                await createCard({ name: card.name });
+            }
             navigate('/dashboard');
         } catch (error) {
             console.error(error);

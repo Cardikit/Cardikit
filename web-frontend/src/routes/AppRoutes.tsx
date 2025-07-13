@@ -39,6 +39,7 @@ const AppRoutes: React.FC = () => {
                     <Route element={<PrivateRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/editor" element={<Editor />} />
+                        <Route path="/editor/:id" element={<Editor />} />
                     </Route>
 
                     <Route path="*" element={<NotFound />} />

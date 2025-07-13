@@ -26,6 +26,8 @@ Router::get('/api/v1/@me', [UserController::class, 'me'], [new AuthMiddleware()]
 
 Router::get('/api/v1/@me/cards', [CardController::class, 'index'], [new AuthMiddleware()]);
 
+Router::get('/api/v1/@me/cards/:id', [CardController::class, 'show'], [new AuthMiddleware()]);
+
 Router::post('/api/v1/@me/cards', [CardController::class, 'create'], [new AuthMiddleware(), new CsrfMiddleware()]);
 
 Router::put('/api/v1/@me/cards/:id', [CardController::class, 'update'], [new AuthMiddleware(), new CsrfMiddleware()]);

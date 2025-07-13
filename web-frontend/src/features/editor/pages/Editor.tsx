@@ -1,20 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TopNav from '@/features/editor/components/TopNav';
 import TitleEditor from '@/features/editor/components/TitleEditor';
-import type { Card } from '@/types/card';
-
-const defaultCard: Card = {
-    id: 0,
-    name: 'New Card',
-}
+import { useParams } from 'react-router-dom';
+import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 
 const Editor: React.FC = () => {
     const [titleEditorOpen, setTitleEditorOpen] = useState(false);
-    const [card, setCard] = useState<Card>(defaultCard);
-
-    useEffect(() => {
-        setCard(defaultCard);
-    }, []);
+    const { id } = useParams();
+    const { card, setCard, loading } = useFetchCard(id ? Number(id) : undefined);
 
     return (
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">

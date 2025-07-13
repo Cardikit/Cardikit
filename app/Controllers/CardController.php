@@ -18,6 +18,20 @@ class CardController
         Response::json($cards ?? []);
     }
 
+    public function show(Request $request, int $id): void
+    {
+        $card = Card::find($id);
+
+        if (!$card) {
+            Response::json([
+                'message' => 'Card not found'
+            ], 404);
+            return;
+        }
+
+        Response::json($card);
+    }
+
     public function create(Request $request): void
     {
         $data = $request->body();
