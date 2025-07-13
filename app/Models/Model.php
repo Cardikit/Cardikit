@@ -62,4 +62,25 @@ abstract class Model
 
         return $result ?: null;
     }
+
+    /**
+    * Finds all records
+    * that match the specicified column
+    * and value.
+    *
+    * @param string $column
+    * @param mixed $value
+    *
+    * @return array|null
+    *
+    * @since 0.0.1
+    */
+    public function findAllBy(string $column, mixed $value): ?array
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$column} = :value");
+        $stmt->execute(['value' => $value]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result ?: null;
+    }
 }

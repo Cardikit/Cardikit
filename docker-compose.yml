@@ -54,7 +54,7 @@ services:
     container_name: cardikit_phpmyadmin
     image: phpmyadmin/phpmyadmin
     ports:
-      - 3000:80
+      - 3001:80
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
