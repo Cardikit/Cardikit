@@ -3,6 +3,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import PrivateRoute from '@/routes/PrivateRoute';
 import GuestRoute from '@/routes/GuestRoute';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
+import Editor from '@/features/editor/pages/Editor';
 import Login from '@/features/auth/pages/Login';
 import Register from '@/features/auth/pages/Register';
 import Welcome from '@/features/auth/pages/Welcome';
@@ -37,6 +38,7 @@ const AppRoutes: React.FC = () => {
 
                     <Route element={<PrivateRoute />}>
                         <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/editor" element={<Editor />} />
                     </Route>
 
                     <Route path="*" element={<NotFound />} />

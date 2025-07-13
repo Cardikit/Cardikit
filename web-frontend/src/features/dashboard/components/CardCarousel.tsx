@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
     Carousel,
     CarouselContent,
@@ -58,14 +59,14 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData })
                         </div>
                     </CarouselItem>
                 ))}
-                <CarouselItem id="create" className="cursor-pointer">
+                <CarouselItem id="create">
                         <div className="p-10">
-                            <div className="flex flex-col space-y-4 items-center justify-center bg-white rounded-xl shadow h-[600px] w-full">
+                            <Link to="/editor" className="flex flex-col space-y-4 items-center justify-center bg-white rounded-xl shadow h-[600px] w-full cursor-pointer">
                                 <div className="p-4 rounded-full bg-red-100">
                                     <FaPlus className="text-3xl text-primary-500" />
                                 </div>
                                 <span className="text-xl font-semibold text-gray-800 font-inter">Add card</span>
-                            </div>
+                            </Link>
                         </div>
                 </CarouselItem>
             </CarouselContent>
