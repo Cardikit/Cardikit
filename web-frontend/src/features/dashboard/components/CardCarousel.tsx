@@ -9,18 +9,15 @@ import {
     type CarouselApi
 } from '@/components/ui/carousel';
 import { FaPlus } from 'react-icons/fa';
-
-interface Card {
-    id: number;
-    name: string;
-}
+import type { Card } from '@/types/card';
 
 interface CardCarouselProps {
     cardData: Card[];
     setCurrentCard: (card: Card) => void;
+    loading: boolean;
 }
 
-const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData }) => {
+const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, loading }) => {
     const [api, setApi] = useState<CarouselApi | undefined>();
 
     useEffect(() => {
@@ -45,12 +42,12 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData })
         return () => {
             api.off("select", updateCurrentCard);
         };
-    }, [api, cardData, setCurrentCard]);
+    }, [api, cardData, setCurrentCard, loading]);
 
     return (
         <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
-                {cardData.map((card) => (
+                {loading ? <div>Loading...</div> : cardData.map((card) => (
                     <CarouselItem key={card.id}>
                         <div className="p-10">
                             <div className="flex items-center justify-center bg-white rounded-xl shadow h-[600px] w-full">

@@ -4,15 +4,8 @@ import TopNav from '@/features/dashboard/components/TopNav';
 import NavMenu from '@/features/dashboard/components/NavMenu';
 import CardCarousel from '@/features/dashboard/components/CardCarousel';
 import { FaPaperPlane } from 'react-icons/fa';
-
-const cardData = [
-    { id: 1, name: 'Personal Card' },
-];
-
-interface Card {
-    id: number;
-    name: string;
-}
+import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
+import type { Card } from '@/types/card';
 
 const Dashboard: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -25,6 +18,8 @@ const Dashboard: React.FC = () => {
         setOpen(prev => !prev);
     }
 
+    const { cards, loading, error } = useFetchCards();
+
     return (
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
             <TopNav openMenu={toggleMenu} card={currentCard} />
@@ -35,7 +30,8 @@ const Dashboard: React.FC = () => {
                 </div>
                 <CardCarousel
                     setCurrentCard={setCurrentCard}
-                    cardData={cardData}
+                    cardData={cards}
+                    loading={loading}
                 />
             </div>
             <button
