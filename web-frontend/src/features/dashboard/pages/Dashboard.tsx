@@ -7,10 +7,6 @@ import { FaPaperPlane } from 'react-icons/fa';
 
 const cardData = [
     { id: 1, name: 'Personal Card' },
-    { id: 2, name: 'Work Card' },
-    { id: 3, name: 'Freelance Card' },
-    { id: 4, name: 'Conference Card' },
-    { id: 5, name: 'Event Card' },
 ];
 
 interface Card {
@@ -28,8 +24,6 @@ const Dashboard: React.FC = () => {
     const toggleMenu = () => {
         setOpen(prev => !prev);
     }
-
-    console.log('mounted');
 
     return (
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
