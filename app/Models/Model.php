@@ -158,6 +158,22 @@ abstract class Model
     }
 
     /**
+    * Deletes a record by id.
+    *
+    * @param int $id
+    *
+    * @return bool
+    *
+    * @since 0.0.1
+    */
+    public function deleteById(int $id): bool
+    {
+        $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE id = :id");
+
+        return $stmt->execute(['id' => $id]);
+    }
+
+    /**
     * Hook that runs before create statements.
     *
     * @param array $data

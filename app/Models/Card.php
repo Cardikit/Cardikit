@@ -15,18 +15,14 @@ class Card extends Model
 {
     protected string $table = 'cards';
 
+    /**
+    * The columns that are fillable
+    *
+    * @var array $fillable
+    *
+    * @since 0.0.1
+    */
     protected array $fillable = ['name', 'user_id'];
-
-    public static function delete(int $id): bool
-    {
-        $pdo = Database::connect();
-
-        $stmt = $pdo->prepare("DELETE FROM cards WHERE id = :id");
-
-        return $stmt->execute([
-            'id' => $id,
-        ]);
-    }
 
     /**
     * Returns a user's cards

@@ -124,8 +124,8 @@ class CardController
             return;
         }
 
-        // update card
-        Card::delete($id);
+        // delete card
+        (new Card())->deleteById($id);
 
         // return success message
         Response::json([
