@@ -37,8 +37,10 @@ class AuthController
     {
         $data = $request->body();
 
+        $userModel = new User();
+
         // validate user input
-        $validator = new Validator([User::class => new User()]);
+        $validator = new Validator([User::class => $userModel]);
         $valid = $validator->validate($data, [
             'name' => 'required|min:2|max:50|type:string',
             'email' => 'required|email|unique:App\Models\User:email',
@@ -54,10 +56,10 @@ class AuthController
         }
 
         // create user
-        User::create($data);
+        $userModel->create($data);
 
         // set session variable
-        $user = User::findByEmail($data['email']);
+        $user = $userModel->findByEmail($data['email']);
         $this->signIn($user);
 
         // return success message
