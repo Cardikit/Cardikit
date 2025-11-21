@@ -1,13 +1,13 @@
 import { MdModeEdit } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
-import type { Card } from '@/types/card';
+import type { CardType } from '@/types/card';
 import { useCreateCard } from '@/features/editor/hooks/useCreateCard';
 import { useUpdateCard } from '@/features/editor/hooks/useUpdateCard';
 import { useNavigate } from 'react-router-dom';
 import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 
 interface TopNavProps {
-    card: Card;
+    card: CardType;
     setOpen: (open: boolean) => void;
 }
 
