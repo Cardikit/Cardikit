@@ -20,7 +20,7 @@ class CardController
 
     public function show(Request $request, int $id): void
     {
-        $card = Card::find($id);
+        $card = (new Card())->findBy('id', $id);
 
         if (!$card) {
             Response::json([
@@ -52,7 +52,7 @@ class CardController
         $data['user_id'] = $_SESSION['user_id'];
 
         // create card
-        Card::create($data);
+        (new Card())->create($data);
 
         // return success message
         Response::json([
@@ -78,7 +78,7 @@ class CardController
         }
 
         // Ensure card exists
-        $card = Card::find($id);
+        $card = (new Card())->findBy('id', $id);
 
         if (!$card) {
             Response::json([
@@ -95,10 +95,8 @@ class CardController
             return;
         }
 
-        $data['id'] = $id;
-
         // update card
-        Card::update($data);
+        (new Card())->updateById($id, $data);
 
         // return success message
         Response::json([
@@ -109,7 +107,7 @@ class CardController
     public function delete(Request $request, int $id): void
     {
         // Ensure card exists
-        $card = Card::find($id);
+        $card = (new Card())->findBy('id', $id);
 
         if (!$card) {
             Response::json([

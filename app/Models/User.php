@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\Database;
-use PDO;
-
 /**
 * User model contains methods to interact with the users table.
 *
@@ -17,26 +14,13 @@ class User extends Model
     protected string $table = 'users';
 
     /**
-    * Stores user data in the database.
+    * The columns that are fillable.
     *
-    * @param array $data
-    *
-    * @return bool
+    * @var array
     *
     * @since 0.0.1
     */
-    public static function create(array $data): bool
-    {
-        $pdo = Database::connect();
-
-        $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
-
-        return $stmt->execute([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => password_hash($data['password'], PASSWORD_DEFAULT),
-        ]);
-    }
+    protected array $fillable = ['name', 'email', 'password'];
 
     /**
     * Finds a user by email.
@@ -84,5 +68,51 @@ class User extends Model
     public static function findById(int $id): ?array
     {
         return (new static())->findBy('id', $id);
+    }
+
+    /**
+    * Hash sensitive data before creating a record.
+    *
+    * @param array $data
+    *
+    * @return array
+    *
+    * @since 0.0.1
+    */
+    protected function beforeCreate(array $data): array
+    {
+        return $this->hashPasswordIfPresent($data);
+    }
+
+    /**
+    * Hash sensitive data before updating a record.
+    *
+    * @param array $data
+    *
+    * @return array
+    *
+    * @since 0.0.1
+    */
+    protected function beforeUpdate(array $data): array
+    {
+        return $this->hashPasswordIfPresent($data);
+    }
+
+    /**
+    * Hashes the password if present.
+    *
+    * @param array $data
+    *
+    * @return array
+    *
+    * @since 0.0.1
+    */
+    protected function hashPasswordIfPresent(array $data): array
+    {
+        if (array_key_exists('password', $data)) {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+
+        return $data;
     }
 }

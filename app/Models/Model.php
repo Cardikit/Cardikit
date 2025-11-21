@@ -33,13 +33,22 @@ abstract class Model
     protected string $table;
 
     /**
+    * The allowed columns for mass assignment.
+    *
+    * @var array<int, string>
+    *
+    * @since 0.0.1
+    */
+    protected array $fillable = [];
+
+    /**
     * Connects to the database.
     *
     * @since 0.0.1
     */
-    public function __construct()
+    public function __construct(?PDO $db = null)
     {
-        $this->db = Database::connect();
+        $this->db = $db ?? Database::connect();
     }
 
     /**
@@ -82,5 +91,119 @@ abstract class Model
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $result ?: null;
+    }
+
+    /**
+    * Creates a new record using fillable columns.
+    *
+    * @param array $data
+    *
+    * @return bool
+    *
+    * @since 0.0.1
+    */
+    public function create(array $data): bool
+    {
+        $payload = $this->beforeCreate($this->filterFillable($data));
+
+        if (empty($payload)) {
+            return false;
+        }
+
+        $columns = array_keys($payload);
+        $placeholders = array_map(fn ($column) => ":{$column}", $columns);
+        $sql = sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)',
+            $this->table,
+            implode(', ', $columns),
+            implode(', ', $placeholders)
+        );
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute($payload);
+    }
+
+    /**
+    * Updates a record by id.
+    *
+    * @param int $id
+    * @param array $data
+    *
+    * @return bool
+    *
+    * @since 0.0.1
+    */
+    public function updateById(int $id, array $data): bool
+    {
+        $payload = $this->beforeUpdate($this->filterFillable($data));
+
+        if (empty($payload)) {
+            return false;
+        }
+
+        $columns = array_keys($payload);
+        $assignments = array_map(fn ($column) => "{$column} = :{$column}", $columns);
+        $sql = sprintf(
+            'UPDATE %s SET %s WHERE id = :id',
+            $this->table,
+            implode(', ', $assignments)
+        );
+
+        $payload['id'] = $id;
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute($payload);
+    }
+
+    /**
+    * Hook that runs before create statements.
+    *
+    * @param array $data
+    *
+    * @return array
+    *
+    * @since 0.0.1
+    */
+    protected function beforeCreate(array $data): array
+    {
+        return $data;
+    }
+
+    /**
+    * Hook that runs before update statements.
+    *
+    * @param array $data
+    *
+    * @return array
+    *
+    * @since 0.0.1
+    */
+    protected function beforeUpdate(array $data): array
+    {
+        return $data;
+    }
+
+    /**
+    * Filters data by the fillable whitelist preserving order.
+    *
+    * @param array $data
+    *
+    * @return array
+    *
+    * @since 0.0.1
+    */
+    protected function filterFillable(array $data): array
+    {
+        $filtered = [];
+
+        foreach ($this->fillable as $column) {
+            if (array_key_exists($column, $data)) {
+                $filtered[$column] = $data[$column];
+            }
+        }
+
+        return $filtered;
     }
 }
