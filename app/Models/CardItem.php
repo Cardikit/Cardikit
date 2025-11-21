@@ -9,7 +9,7 @@ namespace App\Models;
 *
 * @since 0.0.1
 */
-class Card extends Model
+class CardItem extends Model
 {
     protected string $table = 'card_items';
 

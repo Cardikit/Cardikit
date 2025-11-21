@@ -6,6 +6,7 @@ use App\Models\Card;
 use App\Core\Response;
 use App\Core\Request;
 use App\Core\Validator;
+use App\Services\CardItemService;
 
 class CardController
 {
@@ -49,16 +50,43 @@ class CardController
             return;
         }
 
+        $cardItemsPayload = $data['card_items'] ?? [];
+        unset($data['card_items']);
+
         $data['user_id'] = $_SESSION['user_id'];
 
         // create card
         $card = (new Card())->create($data);
 
+        if (!$card) {
+            Response::json([
+                'message' => 'Card creation failed'
+            ], 500);
+            return;
+        }
+
         // create card items
+        [$createdItems, $itemErrors] = (new CardItemService($card['id']))->createCardItems($cardItemsPayload);
+
+        if (!empty($itemErrors)) {
+            Response::json([
+                'message' => 'Card Creation Failed',
+                'card' => $card,
+                'items' => $createdItems,
+                'errors' => $itemErrors,
+            ], 422);
+
+            // delete card if card items failed
+            (new Card())->deleteById($card['id']);
+
+            return;
+        }
 
         // return success message
         Response::json([
-            'message' => 'Card created successfully'
+            'message' => 'Card created successfully',
+            'card' => $card,
+            'items' => $createdItems
         ], 201);
     }
 
