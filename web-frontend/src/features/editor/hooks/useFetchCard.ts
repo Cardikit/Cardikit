@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/axios';
-import type { Card } from '@/types/card';
+import type { CardType } from '@/types/card';
 
-const defaultCard: Card = {
+const defaultCard: CardType = {
     id: 0,
     name: 'New Card',
 }
@@ -22,7 +22,7 @@ const defaultCard: Card = {
 * @since 0.0.1
 */
 export const useFetchCard = (id?: number) => {
-    const [card, setCard] = useState<Card>(defaultCard)
+    const [card, setCard] = useState<CardType>(defaultCard)
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -52,7 +52,7 @@ export const useFetchCard = (id?: number) => {
     */
     const fetchCard = async () => {
         try {
-            const response = await api.get<Card>(`@me/cards/${id}`);
+            const response = await api.get<CardType>(`@me/cards/${id}`);
             setCard(response.data);
         } catch (err: any) {
             setError(err?.response?.data?.message || 'Failed to fetch cards');

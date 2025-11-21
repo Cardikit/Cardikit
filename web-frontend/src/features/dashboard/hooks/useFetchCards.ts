@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/axios';
-import type { Card } from '@/types/card';
+import type { CardType } from '@/types/card';
 
 /**
 * This react hook fetches the currently authenticated user from the API.
@@ -17,7 +17,7 @@ import type { Card } from '@/types/card';
 * @since 0.0.1
 */
 export const useFetchCards = () => {
-    const [cards, setCards] = useState<Card[]>([]);
+    const [cards, setCards] = useState<CardType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -46,7 +46,7 @@ export const useFetchCards = () => {
     */
     const fetchCards = async () => {
         try {
-            const response = await api.get<Card[]>('/@me/cards');
+            const response = await api.get<CardType[]>('/@me/cards');
             setCards(response.data);
         } catch (err: any) {
             setError(err?.response?.data?.message || 'Failed to fetch cards');
