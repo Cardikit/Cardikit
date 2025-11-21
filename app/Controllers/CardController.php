@@ -52,7 +52,9 @@ class CardController
         $data['user_id'] = $_SESSION['user_id'];
 
         // create card
-        (new Card())->create($data);
+        $card = (new Card())->create($data);
+
+        // create card items
 
         // return success message
         Response::json([

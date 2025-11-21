@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\Database;
-
 /**
 * Card model contains methods to interact with the cards table.
 *
