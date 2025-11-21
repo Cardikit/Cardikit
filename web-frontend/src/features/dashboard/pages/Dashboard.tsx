@@ -5,11 +5,11 @@ import NavMenu from '@/features/dashboard/components/NavMenu';
 import CardCarousel from '@/features/dashboard/components/CardCarousel';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
-import type { Card } from '@/types/card';
+import type { CardType } from '@/types/card';
 
 const Dashboard: React.FC = () => {
     const [open, setOpen] = useState(false);
-    const [currentCard, setCurrentCard] = useState<Card>({
+    const [currentCard, setCurrentCard] = useState<CardType>({
         id: 0,
         name: 'Add Card'
     });
@@ -22,7 +22,7 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
-            <TopNav openMenu={toggleMenu} card={currentCard} />
+            <TopNav openMenu={toggleMenu} card={currentCard} loading={loading} />
             <div className="w-full flex flex-col items-center justify-between h-dvh pb-20">
                 {/*TODO: implement QR code integration*/}
                 <div className="flex-grow flex items-center justify-center">

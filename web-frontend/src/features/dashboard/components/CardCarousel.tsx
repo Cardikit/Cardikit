@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
     Carousel,
     CarouselContent,
@@ -8,12 +7,14 @@ import {
     CarouselPrevious,
     type CarouselApi
 } from '@/components/ui/carousel';
-import { FaPlus } from 'react-icons/fa';
-import type { Card } from '@/types/card';
+import type { CardType } from '@/types/card';
+import CardComponent from '@/features/dashboard/components/Card';
+import CardSkeleton from '@/features/dashboard/components/CardSkeleton';
+import AddCard from '@/features/dashboard/components/AddCard';
 
 interface CardCarouselProps {
-    cardData: Card[];
-    setCurrentCard: (card: Card) => void;
+    cardData: CardType[];
+    setCurrentCard: (card: CardType) => void;
     loading: boolean;
 }
 
@@ -47,24 +48,17 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, l
     return (
         <Carousel setApi={setApi} className="w-full">
             <CarouselContent>
-                {loading ? <div>Loading...</div> : cardData.map((card) => (
-                    <CarouselItem key={card.id}>
-                        <div className="p-10">
-                            <div className="flex items-center justify-center bg-white rounded-xl shadow h-[600px] w-full">
-                                <span className="text-xl font-semibold">{card.name}</span>
-                            </div>
-                        </div>
+                {loading ? Array.from({ length: 3 }).map((_, index) => (
+                    <CarouselItem key={`card-skeleton-${index}`}>
+                        <CardSkeleton />
                     </CarouselItem>
-                ))}
+                    )) : cardData.map((card) => (
+                        <CarouselItem key={card.id}>
+                            <CardComponent card={card} />
+                        </CarouselItem>
+                    ))}
                 <CarouselItem id="create">
-                        <div className="p-10">
-                            <Link to="/editor" className="flex flex-col space-y-4 items-center justify-center bg-white rounded-xl shadow h-[600px] w-full cursor-pointer">
-                                <div className="p-4 rounded-full bg-red-100">
-                                    <FaPlus className="text-3xl text-primary-500" />
-                                </div>
-                                <span className="text-xl font-semibold text-gray-800 font-inter">Add card</span>
-                            </Link>
-                        </div>
+                    <AddCard />
                 </CarouselItem>
             </CarouselContent>
             <CarouselPrevious className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
