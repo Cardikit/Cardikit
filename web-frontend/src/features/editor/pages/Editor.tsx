@@ -29,7 +29,7 @@ const Editor: React.FC = () => {
     return (
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
             <TopNav card={card} setOpen={setTitleEditorOpen} />
-            <Card card={card} setOpen={setOptionsOpen} />
+            <Card card={card} setOpen={setOptionsOpen} setCard={setCard} />
             <TitleEditor setCard={setCard} card={card} open={titleEditorOpen} setOpen={setTitleEditorOpen} />
             <Options card={card} setCard={setCard} open={optionsOpen} setOpen={setOptionsOpen} />
             {id && <button onClick={onDelete} className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg cursor-pointer">Delete</button>}

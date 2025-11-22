@@ -1,10 +1,10 @@
 export interface CardType {
     id: number;
     name: string;
-    items: CardItem[];
+    items: ItemType[];
 }
 
-export interface CardItem {
+export interface ItemType {
     type: string;
     value: string;
     label?: string;
