@@ -21,9 +21,15 @@ const TopNav: React.FC<TopNavProps> = ({ card, setOpen }) => {
         try {
             await fetchCsrfToken();
             if (id) {
-                await updateCard({ name: card.name }, Number(id));
+                await updateCard({
+                    name: card.name,
+                    card_items: card.items
+                }, Number(id));
             } else {
-                await createCard({ name: card.name });
+                await createCard({
+                    name: card.name,
+                    card_items: card.items
+                });
             }
             navigate('/dashboard');
         } catch (error) {

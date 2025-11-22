@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import api from '@/lib/axios';
 import axios from 'axios';
+import type { ItemType } from '@/types/card';
 
 interface Payload {
     name: string;
+    card_items: ItemType[]
 }
 
 /**
@@ -40,6 +42,7 @@ export const useUpdateCard = () => {
         try {
             const response = await api.put(`/@me/cards/${id}`, {
                 name: data.name,
+                card_items: data.card_items
             });
             return response.data;
         } catch (error: any) {
