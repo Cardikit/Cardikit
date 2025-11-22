@@ -7,10 +7,12 @@ export interface CardType {
 export interface CardItem {
     type: string;
     value: string;
+    label?: string;
     position: number;
-    id: number;
-    card_id: number;
-    meta: string;
-    created_at: string;
-    updated_at: string;
+    id?: number;
+    card_id?: number;
+    meta?: string;
+    created_at?: string;
+    updated_at?: string;
+    client_id?: string;
 }

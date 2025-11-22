@@ -5,6 +5,7 @@ import type { CardType } from '@/types/card';
 const defaultCard: CardType = {
     id: 0,
     name: 'New Card',
+    items: []
 }
 
 /**

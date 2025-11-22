@@ -1,12 +1,12 @@
 import type { CardType } from '@/types/card';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaPlus } from 'react-icons/fa';
 
 interface CardProps {
-    card: CardType
+    card: CardType;
+    setOpen: (open: boolean) => void
 }
 
-const Card: React.FC<CardProps> = ({ card }) => {
-
+const Card: React.FC<CardProps> = ({ card, setOpen }) => {
     return (
         <div className="p-10">
             <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col">
@@ -22,6 +22,11 @@ const Card: React.FC<CardProps> = ({ card }) => {
                         )
                     ))
                 )}
+                <div onClick={() => setOpen(true)} className="w-full flex hover:bg-gray-100 rounded-lg justify-center cursor-pointer p-2">
+                    <div className="p-1 rounded-full bg-red-100">
+                        <FaPlus className="text-primary-500" />
+                    </div>
+                </div>
             </div>
         </div>
     );
