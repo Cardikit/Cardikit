@@ -14,7 +14,7 @@ class CardController
     {
         $user_id = $_SESSION['user_id'];
 
-        $cards = Card::userCards($user_id);
+        $cards = Card::userCardsWithItems($user_id);
 
         Response::json($cards ?? []);
     }

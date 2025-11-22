@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\CardItem;
 use App\Core\Validator;
-use App\Core\Response;
 
 class CardItemService
 {
@@ -32,7 +31,7 @@ class CardItemService
                     break;
 
                 default:
-                    $errors[$index] = ['type' => ['Unsupported card item type']];
+                    $errors[$index] = ['type' => 'Unsupported card item type'];
                     break;
             }
         }
@@ -49,7 +48,7 @@ class CardItemService
 
         // return error if input is invalid
         if (!$valid) {
-            return [null, $validator->errors()];
+            return [null, ['type' => 'name', 'errors' => $validator->errors()]];
         }
 
         $data['card_id'] = $this->card_id;
