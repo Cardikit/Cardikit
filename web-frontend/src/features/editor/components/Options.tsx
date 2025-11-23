@@ -3,8 +3,8 @@ import {
     DrawerClose,
     DrawerContent,
 } from '@/components/ui/drawer';
+import { getItemConfig, ITEM_ORDER } from '@/features/editor/config/itemConfig';
 import type { CardType } from '@/types/card';
-import { FaUser } from 'react-icons/fa';
 
 interface OptionsProps {
     open: boolean;
@@ -15,19 +15,25 @@ interface OptionsProps {
 
 const Options: React.FC<OptionsProps> = ({ open, setOpen, card, setCard }) => {
 
-    const addName = () => {
+    const addItem = (type: string) => {
         const items = card.items ?? [];
         let topPosition = items.length + 1;
+        const config = getItemConfig(type);
+        const includesLabel = config.fields.some(f => f.key === 'label');
+
+        const newItem = {
+            type,
+            value: '',
+            position: topPosition,
+            client_id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            ...(includesLabel ? { label: '' } : {}),
+        };
+
         setCard({
             ...card,
             items: [
                 ...items,
-                {
-                    type: 'name',
-                    value: '',
-                    position: topPosition,
-                    client_id: crypto.randomUUID(),
-                }
+                newItem,
             ]
         });
         setOpen(false);
@@ -45,13 +51,25 @@ const Options: React.FC<OptionsProps> = ({ open, setOpen, card, setCard }) => {
                     </div>
                     <div className="w-full flex justify-center flex-col">
                         <span className="text-gray-800 font-semibold font-inter text-center">Select a field below to add it</span>
-                        <div className="w-full grid grid-cols-3 gap-6 mt-6">
-                            <div onClick={addName} className="flex justify-center flex-col items-center hover:bg-gray-200 cursor-pointer p-2 rounded-lg">
-                                <div className="bg-primary-500 rounded-full p-2">
-                                    <FaUser className="text-white" />
-                                </div>
-                                <span className="text-sm font-inter">Name</span>
-                            </div>
+                        <div className="w-full grid grid-cols-3 gap-6 mt-6 overflow-y-auto h-72">
+                            {ITEM_ORDER.map(type => {
+                                const config = getItemConfig(type);
+                                const Icon = config.icon;
+                                const fieldLabels = config.fields.map(f => f.label).join(' + ');
+                                return (
+                                    <button
+                                        key={type}
+                                        onClick={() => addItem(type)}
+                                        className="flex justify-center flex-col items-center hover:bg-gray-200 cursor-pointer p-2 rounded-lg"
+                                    >
+                                        <div className={`${config.accentClass} rounded-full p-2`}>
+                                            <Icon className={config.iconClass ?? 'text-white'} />
+                                        </div>
+                                        <span className="text-sm font-inter text-center">{config.displayName}</span>
+                                        <span className="text-[11px] text-gray-500 font-inter text-center">{fieldLabels}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>

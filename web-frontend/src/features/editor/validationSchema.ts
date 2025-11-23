@@ -1,6 +1,44 @@
 import * as yup from 'yup';
 
-const itemLabel = (type?: string) => type === 'name' ? 'Name item' : 'Card item';
+const itemLabel = (type?: string) => {
+    const labels: Record<string, string> = {
+        name: 'Name item',
+        job_title: 'Job title item',
+        department: 'Department item',
+        company: 'Company item',
+        headline: 'Headline item',
+        phone: 'Phone item',
+        email: 'Email item',
+        link: 'Link item',
+        address: 'Address item',
+        website: 'Website item',
+        linkedin: 'LinkedIn item',
+        instagram: 'Instagram item',
+        calendly: 'Calendly item',
+        x: 'X item',
+        facebook: 'Facebook item',
+        threads: 'Threads item',
+        snapchat: 'Snapchat item',
+        tiktok: 'TikTok item',
+        youtube: 'YouTube item',
+        github: 'GitHub item',
+        yelp: 'Yelp item',
+        venmo: 'Venmo item',
+        paypal: 'PayPal item',
+        cashapp: 'Cash App item',
+        discord: 'Discord item',
+        signal: 'Signal item',
+        skype: 'Skype item',
+        telegram: 'Telegram item',
+        twitch: 'Twitch item',
+        whatsapp: 'WhatsApp item',
+        pronouns: 'Pronouns item',
+        bio: 'Bio item',
+        portfolio: 'Portfolio item',
+    };
+
+    return labels[type ?? ''] ?? 'Card item';
+};
 
 export const cardItemSchema = yup.object({
     id: yup.number().optional(),
@@ -27,8 +65,8 @@ export const cardItemSchema = yup.object({
         .test('item-max', function (value) {
             if (!value) return true;
             const label = itemLabel((this.parent as any)?.type);
-            if ((value ?? '').length > 50) {
-                return this.createError({ message: `${label} must be less than 50 characters` });
+            if ((value ?? '').length > 255) {
+                return this.createError({ message: `${label} must be less than 255 characters` });
             }
             return true;
         }),
