@@ -165,7 +165,7 @@ export const ITEM_CONFIGS: Record<string, ItemTypeConfig> = {
         icon: FaFacebook,
         accentClass: 'bg-blue-600',
         fields: [
-            { key: 'value', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'label', label: 'Title (optional)', placeholder: 'Follow me' },
             { key: 'value', label: 'Profile URL', placeholder: 'https://facebook.com/you' }
         ],
     },

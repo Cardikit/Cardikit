@@ -176,7 +176,7 @@ class CardItemService
     {
         $validator = new Validator([CardItem::class => new CardItem()]);
         $valid = $validator->validate($data, [
-            'value' => 'required|min:2|max:50|type:string',
+            'value' => 'required|min:2|max:255|type:string',
         ]);
 
         // return error if input is invalid

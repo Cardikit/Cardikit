@@ -65,8 +65,8 @@ export const cardItemSchema = yup.object({
         .test('item-max', function (value) {
             if (!value) return true;
             const label = itemLabel((this.parent as any)?.type);
-            if ((value ?? '').length > 50) {
-                return this.createError({ message: `${label} must be less than 50 characters` });
+            if ((value ?? '').length > 255) {
+                return this.createError({ message: `${label} must be less than 255 characters` });
             }
             return true;
         }),

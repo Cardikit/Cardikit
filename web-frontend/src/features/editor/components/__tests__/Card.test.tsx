@@ -48,7 +48,7 @@ describe('Editor Card component', () => {
 
         expect(screen.getByText('Name item empty')).toBeInTheDocument();
 
-        const ringContainer = screen.getByText('John Doe').parentElement?.parentElement;
+        const ringContainer = screen.getByText('John Doe').closest('[class*="ring-red-500"]');
         expect(ringContainer?.className).toContain('ring-red-500');
     });
 });
