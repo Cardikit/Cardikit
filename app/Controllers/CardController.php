@@ -6,6 +6,7 @@ use App\Models\Card;
 use App\Core\Response;
 use App\Core\Request;
 use App\Core\Validator;
+use App\Core\Database;
 use App\Services\CardItemService;
 
 class CardController
@@ -21,7 +22,7 @@ class CardController
 
     public function show(Request $request, int $id): void
     {
-        $card = (new Card())->findBy('id', $id);
+        $card = (new Card())->findWithItems($id);
 
         if (!$card) {
             Response::json([
@@ -94,21 +95,9 @@ class CardController
     {
         $data = $request->body();
 
-        $validator = new Validator([Card::class => new Card()]);
-        $valid = $validator->validate($data, [
-            'name' => 'required|min:2|max:50|type:string|unique:App\Models\Card:name',
-        ]);
-
-        // return error if input is invalid
-        if (!$valid) {
-            Response::json([
-                'errors' => $validator->errors()
-            ], 422);
-            return;
-        }
-
         // Ensure card exists
-        $card = (new Card())->findBy('id', $id);
+        $cardModel = new Card();
+        $card = $cardModel->findBy('id', $id);
 
         if (!$card) {
             Response::json([
@@ -125,12 +114,65 @@ class CardController
             return;
         }
 
-        // update card
-        (new Card())->updateById($id, $data);
+        $cardItemsPayload = $data['card_items'] ?? [];
+        unset($data['card_items']);
+
+        // keep existing name if not provided
+        $data['name'] = $data['name'] ?? $card['name'];
+
+        $validator = new Validator([Card::class => new Card()]);
+        $nameRule = 'required|min:2|max:50|type:string';
+        if ($data['name'] !== $card['name']) {
+            $nameRule .= '|unique:App\Models\Card:name';
+        }
+        $valid = $validator->validate($data, [
+            'name' => $nameRule,
+        ]);
+
+        // return error if input is invalid
+        if (!$valid) {
+            Response::json([
+                'errors' => $validator->errors()
+            ], 422);
+            return;
+        }
+
+        $db = Database::connect();
+
+        try {
+            $db->beginTransaction();
+
+            // update card
+            $cardModel->updateById($id, $data);
+
+            // sync card items
+            [, $itemErrors] = (new CardItemService($id))->syncCardItems($cardItemsPayload);
+
+            if (!empty($itemErrors)) {
+                $db->rollBack();
+                Response::json([
+                    'message' => 'Card update failed',
+                    'errors' => $itemErrors
+                ], 422);
+                return;
+            }
+
+            $db->commit();
+        } catch (\Throwable $e) {
+            if ($db->inTransaction()) {
+                $db->rollBack();
+            }
+
+            Response::json([
+                'message' => 'Card update failed'
+            ], 500);
+            return;
+        }
 
         // return success message
         Response::json([
-            'message' => 'Card updated successfully'
+            'message' => 'Card updated successfully',
+            'card' => Card::findWithItems($id)
         ], 200);
     }
 
