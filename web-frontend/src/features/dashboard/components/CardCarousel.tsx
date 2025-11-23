@@ -32,7 +32,8 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, l
             } else {
                 setCurrentCard({
                     id: 0,
-                    name: 'Add Card'
+                    name: 'Add Card',
+                    items: []
                 });
             }
         };

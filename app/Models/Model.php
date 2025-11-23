@@ -98,11 +98,11 @@ abstract class Model
     *
     * @param array $data
     *
-    * @return bool
+    * @return array|false|null The created record (with assigned id) or null/false on failure
     *
     * @since 0.0.1
     */
-    public function create(array $data): bool
+    public function create(array $data): array|false|null
     {
         $payload = $this->beforeCreate($this->filterFillable($data));
 
@@ -121,7 +121,15 @@ abstract class Model
 
         $stmt = $this->db->prepare($sql);
 
-        return $stmt->execute($payload);
+        $executed = $stmt->execute($payload);
+
+        if (!$executed) {
+            return null;
+        }
+
+        $id = (int) ($this->db->lastInsertId() ?: 0);
+
+        return ['id' => $id, ...$payload];
     }
 
     /**

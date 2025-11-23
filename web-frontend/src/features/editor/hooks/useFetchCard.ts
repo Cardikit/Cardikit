@@ -5,6 +5,7 @@ import type { CardType } from '@/types/card';
 const defaultCard: CardType = {
     id: 0,
     name: 'New Card',
+    items: []
 }
 
 /**
@@ -52,7 +53,7 @@ export const useFetchCard = (id?: number) => {
     */
     const fetchCard = async () => {
         try {
-            const response = await api.get<CardType>(`@me/cards/${id}`);
+            const response = await api.get<CardType>(`/@me/cards/${id}`);
             setCard(response.data);
         } catch (err: any) {
             setError(err?.response?.data?.message || 'Failed to fetch cards');

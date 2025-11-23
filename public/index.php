@@ -1,7 +1,6 @@
 <?php
 
 use App\Core\Router;
-use App\Controllers\PingController;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\CardController;
@@ -12,9 +11,6 @@ use App\Middleware\RateLimitMiddleware;
 require __DIR__ . '/../bootstrap.php';
 
 session_start();
-
-Router::get('/api/ping/:id', [PingController::class, 'show']);
-Router::get('/db', [PingController::class, 'db']);
 
 Router::post('/api/v1/register', [AuthController::class, 'register'], [new RateLimitMiddleware(5, 60)]);
 

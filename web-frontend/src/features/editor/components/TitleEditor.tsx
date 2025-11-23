@@ -5,13 +5,13 @@ import {
 } from '@/components/ui/drawer';
 import Input from '@/features/auth/components/Input';
 import { FaIdCard } from 'react-icons/fa';
-import type { Card } from '@/types/card';
+import type { CardType } from '@/types/card';
 
 interface TitleEditorProps {
     open: boolean;
     setOpen: (open: boolean) => void;
-    card: Card;
-    setCard: (card: Card) => void;
+    card: CardType;
+    setCard: (card: CardType) => void;
 }
 
 const TitleEditor: React.FC<TitleEditorProps> = ({ open, setOpen, card, setCard }) => {
