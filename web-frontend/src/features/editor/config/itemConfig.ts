@@ -52,7 +52,7 @@ export const ITEM_CONFIGS: Record<string, ItemTypeConfig> = {
         displayName: 'Name',
         icon: FaUser,
         accentClass: baseAccent,
-        fields: [{ key: 'value', label: 'Full name', placeholder: 'Jane Doe' }],
+        fields: [{ key: 'value', label: 'Full name', placeholder: 'John Doe' }],
     },
     job_title: {
         displayName: 'Job Title',
@@ -82,13 +82,19 @@ export const ITEM_CONFIGS: Record<string, ItemTypeConfig> = {
         displayName: 'Phone',
         icon: FaPhone,
         accentClass: 'bg-green-500',
-        fields: [{ key: 'value', label: 'Phone number', placeholder: '+1 (555) 123-4567' }],
+        fields: [
+            { key: 'label', label: 'Label (optional)', placeholder: 'Mobile' },
+            { key: 'value', label: 'Phone number', placeholder: '+1 (555) 123-4567' }
+        ],
     },
     email: {
         displayName: 'Email',
         icon: FaEnvelope,
         accentClass: 'bg-blue-500',
-        fields: [{ key: 'value', label: 'Email address', placeholder: 'you@company.com' }],
+        fields: [
+            { key: 'label', label: 'Label (optional)', placeholder: 'Work' },
+            { key: 'value', label: 'Email address', placeholder: 'you@company.com' }
+        ],
     },
     link: {
         displayName: 'Link',
@@ -103,7 +109,10 @@ export const ITEM_CONFIGS: Record<string, ItemTypeConfig> = {
         displayName: 'Address',
         icon: FaMapMarkerAlt,
         accentClass: 'bg-orange-500',
-        fields: [{ key: 'value', label: 'Address', placeholder: '123 Main St, City' }],
+        fields: [
+            { key: 'label', label: 'Label (optional)', placeholder: 'Office' },
+            { key: 'value', label: 'Address', placeholder: '123 Main St, City' }
+        ],
     },
     website: {
         displayName: 'Website',
@@ -118,124 +127,184 @@ export const ITEM_CONFIGS: Record<string, ItemTypeConfig> = {
         displayName: 'LinkedIn',
         icon: FaLinkedin,
         accentClass: 'bg-blue-700',
-        fields: [{ key: 'value', label: 'Profile URL', placeholder: 'https://linkedin.com/in/you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Connect with me' },
+            { key: 'value', label: 'Profile URL', placeholder: 'https://linkedin.com/in/you' }
+        ],
     },
     instagram: {
         displayName: 'Instagram',
         icon: FaInstagram,
         accentClass: 'bg-pink-500',
-        fields: [{ key: 'value', label: 'Handle or URL', placeholder: '@handle' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'value', label: 'Handle or URL', placeholder: '@handle' }
+        ],
     },
     calendly: {
         displayName: 'Calendly',
         icon: FaCalendarAlt,
         accentClass: 'bg-slate-600',
-        fields: [{ key: 'value', label: 'Calendly link', placeholder: 'https://calendly.com/you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Schedule a call' },
+            { key: 'value', label: 'Calendly link', placeholder: 'https://calendly.com/you' }
+        ],
     },
     x: {
         displayName: 'X (Twitter)',
         icon: FaTwitter,
         accentClass: 'bg-gray-900',
         iconClass: 'text-white',
-        fields: [{ key: 'value', label: 'Handle or URL', placeholder: '@handle' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'value', label: 'Handle or URL', placeholder: '@handle' }
+        ],
     },
     facebook: {
         displayName: 'Facebook',
         icon: FaFacebook,
         accentClass: 'bg-blue-600',
-        fields: [{ key: 'value', label: 'Profile URL', placeholder: 'https://facebook.com/you' }],
+        fields: [
+            { key: 'value', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'value', label: 'Profile URL', placeholder: 'https://facebook.com/you' }
+        ],
     },
     threads: {
         displayName: 'Threads',
         icon: FaHashtag,
         accentClass: 'bg-zinc-700',
-        fields: [{ key: 'value', label: 'Handle', placeholder: '@handle' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'value', label: 'Handle', placeholder: '@handle' }
+        ],
     },
     snapchat: {
         displayName: 'Snapchat',
         icon: FaSnapchatGhost,
         accentClass: 'bg-yellow-300',
         iconClass: 'text-black',
-        fields: [{ key: 'value', label: 'Username', placeholder: 'snapname' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'value', label: 'Username', placeholder: 'snapname' }
+        ],
     },
     tiktok: {
         displayName: 'TikTok',
         icon: FaMusic,
         accentClass: 'bg-fuchsia-600',
-        fields: [{ key: 'value', label: 'Handle', placeholder: '@handle' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'value', label: 'Handle', placeholder: '@handle' }
+        ],
     },
     youtube: {
         displayName: 'YouTube',
         icon: FaYoutube,
         accentClass: 'bg-red-600',
-        fields: [{ key: 'value', label: 'Channel URL', placeholder: 'https://youtube.com/@you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Subscribe' },
+            { key: 'value', label: 'Channel URL', placeholder: 'https://youtube.com/@you' }
+        ],
     },
     github: {
         displayName: 'GitHub',
         icon: FaGithub,
         accentClass: 'bg-gray-800',
         iconClass: 'text-white',
-        fields: [{ key: 'value', label: 'Profile URL', placeholder: 'https://github.com/you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Portfolio' },
+            { key: 'value', label: 'Profile URL', placeholder: 'https://github.com/you' }
+        ],
     },
     yelp: {
         displayName: 'Yelp',
         icon: FaYelp,
         accentClass: 'bg-red-500',
-        fields: [{ key: 'value', label: 'Business URL', placeholder: 'https://yelp.com/biz/...' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Leave a review' },
+            { key: 'value', label: 'Business URL', placeholder: 'https://yelp.com/biz/...' }
+        ],
     },
     venmo: {
         displayName: 'Venmo',
         icon: FaMoneyBillWave,
         accentClass: 'bg-sky-700',
-        fields: [{ key: 'value', label: 'Username', placeholder: '@you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Pay via Venmo' },
+            { key: 'value', label: 'Username', placeholder: '@you' }
+        ],
     },
     paypal: {
         displayName: 'PayPal',
         icon: FaPaypal,
         accentClass: 'bg-blue-700',
-        fields: [{ key: 'value', label: 'PayPal.me link', placeholder: 'https://paypal.me/you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Pay via PayPal' },
+            { key: 'value', label: 'PayPal.me link', placeholder: 'https://paypal.me/you' }
+        ],
     },
     cashapp: {
         displayName: 'Cash App',
         icon: FaMoneyBillWave,
         accentClass: 'bg-emerald-700',
-        fields: [{ key: 'value', label: '$Cashtag', placeholder: '$you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Pay via Cash App' },
+            { key: 'value', label: '$Cashtag', placeholder: '$you' }
+        ],
     },
     discord: {
         displayName: 'Discord',
         icon: FaDiscord,
         accentClass: 'bg-indigo-700',
-        fields: [{ key: 'value', label: 'Username or URL', placeholder: 'username' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Join Discord' },
+            { key: 'value', label: 'Username or URL', placeholder: 'username' }
+        ],
     },
     signal: {
         displayName: 'Signal',
         icon: FaHashtag,
         accentClass: 'bg-cyan-600',
-        fields: [{ key: 'value', label: 'Number or handle', placeholder: '+1 (555) 123-4567' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Connect with me' },
+            { key: 'value', label: 'Number or handle', placeholder: '+1 (555) 123-4567' }
+        ],
     },
     skype: {
         displayName: 'Skype',
         icon: FaSkype,
         accentClass: 'bg-sky-600',
-        fields: [{ key: 'value', label: 'Username', placeholder: 'live:username' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Connect with me' },
+            { key: 'value', label: 'Username', placeholder: 'live:username' }
+        ],
     },
     telegram: {
         displayName: 'Telegram',
         icon: FaTelegramPlane,
         accentClass: 'bg-cyan-700',
-        fields: [{ key: 'value', label: 'Handle', placeholder: '@handle' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Connect with me' },
+            { key: 'value', label: 'Handle', placeholder: '@handle' }
+        ],
     },
     twitch: {
         displayName: 'Twitch',
         icon: FaTwitch,
         accentClass: 'bg-purple-700',
-        fields: [{ key: 'value', label: 'Channel URL', placeholder: 'https://twitch.tv/you' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Follow me' },
+            { key: 'value', label: 'Channel URL', placeholder: 'https://twitch.tv/you' }
+        ],
     },
     whatsapp: {
         displayName: 'WhatsApp',
         icon: FaWhatsapp,
         accentClass: 'bg-green-600',
-        fields: [{ key: 'value', label: 'Number', placeholder: '+1 (555) 123-4567' }],
+        fields: [
+            { key: 'label', label: 'Title (optional)', placeholder: 'Connect with me' },
+            { key: 'value', label: 'Number', placeholder: '+1 (555) 123-4567' }
+        ],
     },
     pronouns: {
         displayName: 'Pronouns',
