@@ -1,38 +1,12 @@
 import { useState } from 'react';
 import type { CardType, ItemType } from '@/types/card';
+import { getItemConfig } from '@/features/editor/config/itemConfig';
 import {
-    FaUser,
     FaPlus,
     FaEdit,
     FaTrash,
     FaCheck,
     FaTimes,
-    FaBriefcase,
-    FaBuilding,
-    FaHeading,
-    FaPhone,
-    FaEnvelope,
-    FaLink,
-    FaMapMarkerAlt,
-    FaGlobe,
-    FaLinkedin,
-    FaInstagram,
-    FaCalendarAlt,
-    FaTwitter,
-    FaFacebook,
-    FaHashtag,
-    FaSnapchatGhost,
-    FaMusic,
-    FaYoutube,
-    FaGithub,
-    FaYelp,
-    FaPaypal,
-    FaMoneyBillWave,
-    FaDiscord,
-    FaSkype,
-    FaTelegramPlane,
-    FaTwitch,
-    FaWhatsapp,
 } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
@@ -47,49 +21,10 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors = {}, setItemErrors }) => {
     const [editingId, setEditingId] = useState<string | number | null>(null);
-    const [editingValue, setEditingValue] = useState("");
-    const [editingLabel, setEditingLabel] = useState<string>("");
+    const [editingFields, setEditingFields] = useState<Record<string, string>>({});
     const { id } = useParams();
 
     const getKey = (item: ItemType) => item.id ?? item.client_id;
-
-    const typeIconMap: Record<string, React.ComponentType<any>> = {
-        name: FaUser,
-        job_title: FaBriefcase,
-        department: FaBuilding,
-        company: FaBuilding,
-        headline: FaHeading,
-        phone: FaPhone,
-        email: FaEnvelope,
-        link: FaLink,
-        address: FaMapMarkerAlt,
-        website: FaGlobe,
-        linkedin: FaLinkedin,
-        instagram: FaInstagram,
-        calendly: FaCalendarAlt,
-        x: FaTwitter,
-        facebook: FaFacebook,
-        threads: FaHashtag,
-        snapchat: FaSnapchatGhost,
-        tiktok: FaMusic,
-        youtube: FaYoutube,
-        github: FaGithub,
-        yelp: FaYelp,
-        venmo: FaMoneyBillWave,
-        paypal: FaPaypal,
-        cashapp: FaMoneyBillWave,
-        discord: FaDiscord,
-        signal: FaHashtag,
-        skype: FaSkype,
-        telegram: FaTelegramPlane,
-        twitch: FaTwitch,
-        whatsapp: FaWhatsapp,
-        pronouns: FaHashtag,
-        bio: FaHeading,
-        portfolio: FaLink,
-    };
-
-    const getIconForType = (type: string) => typeIconMap[type] ?? FaLink;
 
     // DELETE ITEM
     const onDelete = (itemToDelete: ItemType) => {
@@ -116,8 +51,10 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
     // START EDITING
     const onEdit = (item: ItemType) => {
         setEditingId(getKey(item));
-        setEditingValue(item.value);
-        setEditingLabel(item.label ?? '');
+        setEditingFields({
+            value: item.value ?? '',
+            label: item.label ?? '',
+        });
 
         // REMOVE ERROR
         const itemKey = getKey(item);
@@ -129,24 +66,30 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
     // SAVE EDIT
     const onSave = (item: ItemType) => {
         const itemKey = getKey(item);
+        const config = getItemConfig(item.type);
+        const includesLabel = config.fields.some(f => f.key === 'label');
 
         setCard(prev => ({
             ...prev,
             items: prev.items.map(i =>
-                getKey(i) === itemKey ? { ...i, value: editingValue, label: editingLabel } : i
+                getKey(i) === itemKey
+                    ? {
+                        ...i,
+                        value: editingFields.value ?? '',
+                        ...(includesLabel ? { label: editingFields.label ?? '' } : { label: undefined }),
+                    }
+                    : i
             )
         }));
 
         setEditingId(null);
-        setEditingValue("");
-        setEditingLabel("");
+        setEditingFields({});
     };
 
     // CANCEL EDIT
     const onCancel = () => {
         setEditingId(null);
-        setEditingValue("");
-        setEditingLabel("");
+        setEditingFields({});
     };
 
     return (
@@ -157,12 +100,17 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
                     {card.items.map(item => {
                         const key = getKey(item);
                         const hasError = Boolean(itemErrors[key]);
-                        const Icon = getIconForType(item.type);
+                        const config = getItemConfig(item.type);
+                        const Icon = config.icon;
+                        const hasLabelField = config.fields.some(f => f.key === 'label');
 
                         const itemContainerClasses = [
                             'w-full flex space-x-2 hover:bg-gray-100 rounded-lg p-2 flex-col',
                             hasError ? 'ring-2 ring-red-500 ring-offset-2 ring-offset-white' : '',
                         ].join(' ').trim();
+
+                        const primaryText = hasLabelField ? (item.label || item.value) : item.value;
+                        const secondaryText = hasLabelField ? item.value : undefined;
 
                         return (
                             <div key={key} className="w-full">
@@ -173,41 +121,39 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-2">
                                             {/* Left Icon */}
-                                            <div className="bg-primary-500 rounded-full p-2">
-                                                <Icon className="text-white" />
+                                            <div className={`${config.accentClass} rounded-full p-2`}>
+                                                <Icon className={config.iconClass ?? 'text-white'} />
                                             </div>
 
                                             {/* VALUE OR INPUT */}
                                             <div className="flex items-center">
                                                 {editingId === key ? (
                                                     <div className="flex flex-col flex-1 space-y-2">
-                                                        <label htmlFor="label" className="text-xs text-gray-500 font-inter">
-                                                            Label
-                                                        </label>
-                                                        <input
-                                                            value={editingLabel}
-                                                            onChange={e => setEditingLabel(e.target.value)}
-                                                            className="flex-1 p-1 border rounded font-inter w-full"
-                                                            placeholder="Label (e.g. Company website)"
-                                                        />
-                                                        <label htmlFor="value" className="text-xs text-gray-500 font-inter mt-2">
-                                                            Value
-                                                        </label>
-                                                        <input
-                                                            value={editingValue}
-                                                            onChange={e => setEditingValue(e.target.value)}
-                                                            className="flex-1 p-1 border rounded font-inter w-full"
-                                                            placeholder="Value"
-                                                            autoFocus
-                                                        />
+                                                        {config.fields.map((field, fieldIndex) => (
+                                                            <div key={field.key} className="flex flex-col space-y-1">
+                                                                <label className="text-xs text-gray-500 font-inter">
+                                                                    {field.label}
+                                                                </label>
+                                                                <input
+                                                                    value={editingFields[field.key] ?? ''}
+                                                                    onChange={e => setEditingFields(prev => ({
+                                                                        ...prev,
+                                                                        [field.key]: e.target.value,
+                                                                    }))}
+                                                                    className="flex-1 p-1 border rounded font-inter w-full"
+                                                                    placeholder={field.placeholder ?? 'Value'}
+                                                                    autoFocus={fieldIndex === 0}
+                                                                />
+                                                            </div>
+                                                        ))}
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col flex-1">
                                                         <span className="font-semibold font-inter flex-1">
-                                                            {item.value}
+                                                            {primaryText}
                                                         </span>
-                                                        {item.label && (
-                                                            <span className="text-xs text-gray-500 font-inter">{item.label}</span>
+                                                        {secondaryText && (
+                                                            <span className="text-xs text-gray-500 font-inter break-all">{secondaryText}</span>
                                                         )}
                                                     </div>
                                                 )}
