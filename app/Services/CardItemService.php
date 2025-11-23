@@ -8,6 +8,41 @@ use App\Core\Validator;
 class CardItemService
 {
     protected int $card_id;
+    protected array $textTypes = [
+        'name',
+        'job_title',
+        'department',
+        'company',
+        'headline',
+        'phone',
+        'email',
+        'link',
+        'address',
+        'website',
+        'linkedin',
+        'instagram',
+        'calendly',
+        'x',
+        'facebook',
+        'threads',
+        'snapchat',
+        'tiktok',
+        'youtube',
+        'github',
+        'yelp',
+        'venmo',
+        'paypal',
+        'cashapp',
+        'discord',
+        'signal',
+        'skype',
+        'telegram',
+        'twitch',
+        'whatsapp',
+        'pronouns',
+        'bio',
+        'portfolio',
+    ];
 
     public function __construct(int $card_id)
     {
@@ -20,19 +55,18 @@ class CardItemService
         $errors = [];
 
         foreach ($items as $index => $item) {
-            switch ($item['type'] ?? null) {
-                case 'name':
-                    [$itemResult, $itemError] = $this->createName($item);
-                    if ($itemError !== null) {
-                        $errors[$index] = $itemError;
-                    } else {
-                        $created[] = $itemResult;
-                    }
-                    break;
+            $type = $item['type'] ?? null;
 
-                default:
-                    $errors[$index] = ['type' => 'Unsupported card item type'];
-                    break;
+            if (!$this->isSupportedType($type)) {
+                $errors[$index] = ['type' => 'Unsupported card item type'];
+                continue;
+            }
+
+            [$itemResult, $itemError] = $this->createTextItem($item, $type);
+            if ($itemError !== null) {
+                $errors[$index] = $itemError;
+            } else {
+                $created[] = $itemResult;
             }
         }
 
@@ -63,12 +97,12 @@ class CardItemService
         foreach ($items as $index => $item) {
             $type = $item['type'] ?? null;
 
-            if ($type !== 'name') {
+            if (!$this->isSupportedType($type)) {
                 $errors[$index] = ['type' => 'Unsupported card item type'];
                 continue;
             }
 
-            $validationError = $this->validateName($item);
+            $validationError = $this->validateText($item, $type);
             if ($validationError !== null) {
                 $errors[$index] = $validationError;
                 continue;
@@ -77,7 +111,7 @@ class CardItemService
             $itemId = isset($item['id']) ? (int) $item['id'] : null;
             if ($itemId !== null && !isset($existingById[$itemId])) {
                 $errors[$index] = [
-                    'type' => 'name',
+                    'type' => $type,
                     'errors' => ['id' => ['Card item not found for this card']]
                 ];
                 continue;
@@ -85,7 +119,7 @@ class CardItemService
 
             $prepared[] = [
                 'id' => $itemId,
-                'payload' => $this->mapPayload($item, 'name'),
+                'payload' => $this->mapPayload($item, $type),
             ];
         }
 
@@ -123,22 +157,22 @@ class CardItemService
         return [$persisted, []];
     }
 
-    protected function createName(array $data): ?array
+    protected function createTextItem(array $data, string $type): ?array
     {
-        $validationError = $this->validateName($data);
+        $validationError = $this->validateText($data, $type);
 
         if ($validationError !== null) {
             return [null, $validationError];
         }
 
-        $data = $this->mapPayload($data, 'name');
+        $data = $this->mapPayload($data, $type);
 
         $item = (new CardItem())->create($data);
 
         return [$item, null];
     }
 
-    protected function validateName(array $data): ?array
+    protected function validateText(array $data, string $type): ?array
     {
         $validator = new Validator([CardItem::class => new CardItem()]);
         $valid = $validator->validate($data, [
@@ -147,10 +181,15 @@ class CardItemService
 
         // return error if input is invalid
         if (!$valid) {
-            return ['type' => 'name', 'errors' => $validator->errors()];
+            return ['type' => $type, 'errors' => $validator->errors()];
         }
 
         return null;
+    }
+
+    protected function isSupportedType(?string $type): bool
+    {
+        return $type !== null && in_array($type, $this->textTypes, true);
     }
 
     /**
