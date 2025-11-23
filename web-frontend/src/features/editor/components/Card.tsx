@@ -8,9 +8,11 @@ interface CardProps {
     setOpen: (open: boolean) => void;
     setCard: React.Dispatch<React.SetStateAction<CardType>>;
     loading: boolean;
+    itemErrors?: Record<string, string>;
+    setItemErrors?: (errors: Record<string, string>) => void;
 }
 
-const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading }) => {
+const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors = {}, setItemErrors }) => {
     const [editingId, setEditingId] = useState<string | number | null>(null);
     const [editingValue, setEditingValue] = useState("");
     const { id } = useParams();
@@ -43,6 +45,12 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading }) => {
     const onEdit = (item: ItemType) => {
         setEditingId(getKey(item));
         setEditingValue(item.value);
+
+        // REMOVE ERROR
+        const itemKey = getKey(item);
+        if (itemErrors[itemKey]) {
+            setItemErrors(prev => ({ ...prev, [itemKey]: "" }));
+        }
     };
 
     // SAVE EDIT
@@ -66,22 +74,26 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading }) => {
         setEditingValue("");
     };
 
-    console.log(card);
-
     return (
         <div className="p-10">
             {loading && id ? <div>Loading...</div> : (
-                <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col">
+                <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-2">
 
                     {card.items.map(item => {
                         if (item.type !== 'name') return null;
                         const key = getKey(item);
+                        const hasError = Boolean(itemErrors[key]);
+
+                        const itemContainerClasses = [
+                            'w-full flex space-x-2 items-center hover:bg-gray-100 rounded-lg p-2',
+                            hasError ? 'ring-2 ring-red-500 ring-offset-2 ring-offset-white' : '',
+                        ].join(' ').trim();
 
                         return (
-                            <div
-                                key={key}
-                                className="w-full flex space-x-2 items-center hover:bg-gray-100 rounded-lg p-2"
-                            >
+                            <div key={key} className="w-full">
+                                <div
+                                    className={itemContainerClasses}
+                                >
                                 {/* Left Icon */}
                                 <div className="bg-primary-500 rounded-full p-2">
                                     <FaUser className="text-white" />
@@ -143,6 +155,10 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading }) => {
                                         </>
                                     )}
                                 </div>
+                                </div>
+                                {hasError && (
+                                    <p className="text-red-600 text-sm mt-1 ml-12 font-inter">{itemErrors[key]}</p>
+                                )}
                             </div>
                         );
                     })}

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import api from '@/lib/axios';
 import axios from 'axios';
 import type { ItemType } from '@/types/card';
+import * as yup from 'yup';
+import { cardSchema } from '@/features/editor/validationSchema';
 
 interface Payload {
     name: string;
@@ -40,18 +42,23 @@ export const useUpdateCard = () => {
         setError(null);
 
         try {
+            await cardSchema.validate(data, { abortEarly: false });
+
             const response = await api.put(`/@me/cards/${id}`, {
                 name: data.name,
                 card_items: data.card_items
             });
             return response.data;
         } catch (error: any) {
-            if (axios.isAxiosError(error)) {
+            if (error instanceof yup.ValidationError) {
+                setError(error.errors[0]);
+            } else if (axios.isAxiosError(error)) {
                 // Check for specific backend error (e.g. 422 conflict)
                 if (error.response?.data?.errors?.name) {
                     setError(error.response?.data?.errors?.name[0]);
-                }
-                if (error.response?.data?.error) {
+                } else if (error.response?.data?.message) {
+                    setError(error.response?.data?.message);
+                } else if (error.response?.data?.error) {
                     setError(error.response?.data?.error);
                 } else {
                     setError('An unknown API error occurred. Please try again.');
