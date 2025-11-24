@@ -78,10 +78,21 @@ class QrCodeService
         if (!$path) return;
 
         $publicRoot = dirname(__DIR__, 2) . '/public';
-        $localPath = realpath($publicRoot . $path) ?: $publicRoot . $path;
+        $storageDir = Config::get('QR_STORAGE_PATH', $publicRoot . '/qrcodes');
 
-        if (is_file($localPath)) {
-            @unlink($localPath);
+        $fileName = basename($path);
+        if (!$fileName) return;
+
+        $targetPath = rtrim($storageDir, '/\\') . DIRECTORY_SEPARATOR . $fileName;
+
+        // Only delete files that live inside the configured QR storage directory.
+        $realStorage = realpath($storageDir) ?: $storageDir;
+        $realTarget = realpath($targetPath) ?: $targetPath;
+
+        if (is_string($realStorage) && is_string($realTarget) && str_starts_with($realTarget, rtrim($realStorage, '/\\') . DIRECTORY_SEPARATOR)) {
+            if (is_file($realTarget)) {
+                @unlink($realTarget);
+            }
         }
     }
 
@@ -140,6 +151,11 @@ class QrCodeService
     protected function createLogoImage(string $logoData): GdImage
     {
         $binary = $this->decodeBase64Payload($logoData);
+
+        if (strlen($binary) > 10 * 1024 * 1024) { //10 MB
+            throw new \InvalidArgumentException('Logo image too large');
+        }
+
         $image = imagecreatefromstring($binary);
 
         if (!$image instanceof GdImage) {
