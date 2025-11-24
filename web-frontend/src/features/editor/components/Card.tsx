@@ -40,7 +40,11 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
             }
 
             const [moved] = items.splice(fromIndex, 1);
-            items.splice(toIndex, 0, moved);
+
+            // If moving down, the removal shifts the target left by 1
+            const adjustedToIndex = fromIndex < toIndex ? toIndex - 1 : toIndex;
+
+            items.splice(adjustedToIndex, 0, moved);
 
             const reindexed = items.map((item, index) => ({
                 ...item,
