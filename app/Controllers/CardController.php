@@ -84,10 +84,21 @@ class CardController
             return;
         }
 
+        // generate and persist QR after successful create
+        try {
+            $qr = (new QrCodeService())->generateForCard($card['id']);
+            (new Card())->updateById($card['id'], [
+                'qr_url' => $qr['card_url'],
+                'qr_image' => $qr['image_url'],
+            ]);
+        } catch (\Throwable $e) {
+            // Fail softly: card is created, but QR failed
+        }
+
         // return success message
         Response::json([
             'message' => 'Card created successfully',
-            'card' => $card,
+            'card' => Card::findWithItems($card['id']),
             'items' => $createdItems
         ], 201);
     }
