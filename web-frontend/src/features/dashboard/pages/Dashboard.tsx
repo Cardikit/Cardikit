@@ -2,6 +2,7 @@ import { useState } from 'react';
 import BottomNav from '@/features/dashboard/components/BottomNav';
 import TopNav from '@/features/dashboard/components/TopNav';
 import NavMenu from '@/features/dashboard/components/NavMenu';
+import QrCode from '@/features/dashboard/components/QrCode';
 import CardCarousel from '@/features/dashboard/components/CardCarousel';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
@@ -25,31 +26,7 @@ const Dashboard: React.FC = () => {
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
             <TopNav openMenu={toggleMenu} card={currentCard} loading={loading} />
             <div className="w-full flex flex-col items-center justify-between h-dvh pb-20">
-                <div className="flex-grow flex items-center justify-center">
-                    {loading ? (
-                        <div className="animate-pulse h-56 w-56 bg-gray-200 rounded-xl" />
-                    ) : currentCard?.qr_image ? (
-                        <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center space-y-2">
-                            <img
-                                src={currentCard.qr_image}
-                                alt={`QR for ${currentCard.name}`}
-                                className="h-52 w-52 object-contain"
-                            />
-                            <p className="text-sm text-gray-600 font-inter text-center">
-                                Scan to view card
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="bg-white rounded-xl shadow p-4 flex flex-col justify-center items-center space-y-2">
-                            <div className="size-52 flex items-center justify-center">
-                                <p className="text-gray-600 font-inter text-center">No QR code available</p>
-                            </div>
-                            <p className="text-sm text-gray-600 font-inter text-center">
-                                Scan to view card
-                            </p>
-                        </div>
-                    )}
-                </div>
+                <QrCode currentCard={currentCard} loading={loading} />
                 <CardCarousel
                     setCurrentCard={setCurrentCard}
                     cardData={cards}
