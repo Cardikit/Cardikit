@@ -4,12 +4,14 @@ import TopNav from '@/features/dashboard/components/TopNav';
 import NavMenu from '@/features/dashboard/components/NavMenu';
 import QrCode from '@/features/dashboard/components/QrCode';
 import CardCarousel from '@/features/dashboard/components/CardCarousel';
+import EditQrDrawer from '@/features/dashboard/components/EditQrDrawer';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
 import type { CardType } from '@/types/card';
 
 const Dashboard: React.FC = () => {
     const [open, setOpen] = useState(false);
+    const [editQrOpen, setEditQrOpen] = useState(false);
     const [currentCard, setCurrentCard] = useState<CardType>({
         id: 0,
         name: 'Add Card',
@@ -26,7 +28,7 @@ const Dashboard: React.FC = () => {
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
             <TopNav openMenu={toggleMenu} card={currentCard} loading={loading} />
             <div className="w-full flex flex-col items-center justify-between h-dvh pb-20">
-                <QrCode currentCard={currentCard} loading={loading} />
+                <QrCode currentCard={currentCard} loading={loading} setOpen={setEditQrOpen} />
                 <CardCarousel
                     setCurrentCard={setCurrentCard}
                     cardData={cards}
@@ -41,6 +43,7 @@ const Dashboard: React.FC = () => {
             </button>
             <BottomNav />
             <NavMenu open={open} closeMenu={toggleMenu} />
+            <EditQrDrawer open={editQrOpen} setOpen={setEditQrOpen} currentCard={currentCard} />
         </div>
     );
 }

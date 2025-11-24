@@ -3,11 +3,19 @@ import type { CardType } from '@/types/card';
 interface QrCodeProps {
     currentCard: CardType;
     loading: boolean;
+    setOpen: (open: boolean) => void
 }
 
-const QrCode: React.FC<QrCodeProps> = ({ currentCard, loading }) => {
+const QrCode: React.FC<QrCodeProps> = ({ currentCard, loading, setOpen }) => {
+
+    const openQrDrawer = () => {
+        if (currentCard?.qr_image) {
+            setOpen(true);
+        }
+    }
+
     return (
-        <div className="flex-grow flex items-center justify-center">
+        <div onClick={openQrDrawer} className="flex-grow flex items-center justify-center cursor-pointer">
             {loading ? (
                 <div className="animate-pulse h-56 w-56 bg-gray-200 rounded-xl" />
             ) : currentCard?.qr_image ? (
