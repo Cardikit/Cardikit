@@ -47,7 +47,7 @@ const Editor: React.FC = () => {
                 setItemErrors={setItemErrors}
             />
             {loading && id ? (
-                <div className="p-10 space-y-4">
+                <div className="p-10 space-y-4" data-testid="editor-skeleton">
                     <div className="h-6 w-40 bg-gray-200 rounded animate-pulse" />
                     <div className="h-4 w-24 bg-gray-200 rounded animate-pulse" />
                     <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-4 animate-pulse">
