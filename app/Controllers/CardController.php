@@ -9,6 +9,7 @@ use App\Core\Validator;
 use App\Core\Database;
 use App\Services\CardItemService;
 use App\Services\QrCodeService;
+use App\Services\ImageStorageService;
 
 class CardController
 {
@@ -41,6 +42,11 @@ class CardController
 
         // normalize defaults
         $data['color'] = $this->normalizeColor($data['color'] ?? null, '#1D4ED8');
+        $hasBanner = array_key_exists('banner_image', $data);
+        $hasAvatar = array_key_exists('avatar_image', $data);
+        $bannerPayload = $hasBanner ? ($data['banner_image'] ?? '') : null;
+        $avatarPayload = $hasAvatar ? ($data['avatar_image'] ?? '') : null;
+        unset($data['banner_image'], $data['avatar_image']);
 
         $validator = new Validator([Card::class => new Card()]);
         $valid = $validator->validate($data, [
@@ -90,11 +96,18 @@ class CardController
 
         // generate and persist QR after successful create
         try {
+            $imageService = new ImageStorageService();
+            $banner = $imageService->storeOrKeep($bannerPayload, $card['id'], 'banner', null, null);
+            $avatar = $imageService->storeOrKeep($avatarPayload, $card['id'], 'avatar', null, null);
+
             $qr = (new QrCodeService())->generateForCard($card['id']);
             (new Card())->updateById($card['id'], [
                 'qr_url' => $qr['card_url'],
                 'qr_image' => $qr['image_url'],
             ]);
+
+            $this->upsertCardImage($card['id'], 'banner', $banner['url'], $banner['path']);
+            $this->upsertCardImage($card['id'], 'avatar', $avatar['url'], $avatar['path']);
         } catch (\Throwable $e) {
             Response::json([
                 'message' => 'QR code generation failed',
@@ -136,12 +149,19 @@ class CardController
         }
 
         $data['color'] = $this->normalizeColor($data['color'] ?? null, $card['color'] ?? '#1D4ED8');
+        $hasBanner = array_key_exists('banner_image', $data);
+        $hasAvatar = array_key_exists('avatar_image', $data);
+        $bannerPayload = $hasBanner ? ($data['banner_image'] ?? '') : null;
+        $avatarPayload = $hasAvatar ? ($data['avatar_image'] ?? '') : null;
+        unset($data['banner_image'], $data['avatar_image']);
 
         $cardItemsPayload = $data['card_items'] ?? [];
         unset($data['card_items']);
 
         // keep existing name if not provided
         $data['name'] = $data['name'] ?? $card['name'];
+
+        $existingImages = $this->getCardImages($id);
 
         $validator = new Validator([Card::class => new Card()]);
         $nameRule = 'required|min:2|max:50|type:string';
@@ -168,6 +188,13 @@ class CardController
 
             // update card
             $cardModel->updateById($id, $data);
+
+            $imageService = new ImageStorageService();
+            $banner = $imageService->storeOrKeep($bannerPayload, $id, 'banner', $existingImages['banner']['url'] ?? null, $existingImages['banner']['path'] ?? null);
+            $avatar = $imageService->storeOrKeep($avatarPayload, $id, 'avatar', $existingImages['avatar']['url'] ?? null, $existingImages['avatar']['path'] ?? null);
+
+            $this->upsertCardImage($id, 'banner', $banner['url'], $banner['path']);
+            $this->upsertCardImage($id, 'avatar', $avatar['url'], $avatar['path']);
 
             // sync card items
             [, $itemErrors] = (new CardItemService($id))->syncCardItems($cardItemsPayload);
@@ -224,6 +251,9 @@ class CardController
         // delete associated QR image file
         try {
             (new QrCodeService())->deleteImage($card['qr_image'] ?? null);
+            $existingImages = $this->getCardImages($id);
+            $this->deleteCardImageFile($existingImages['banner']['path'] ?? null);
+            $this->deleteCardImageFile($existingImages['avatar']['path'] ?? null);
         } catch (\Throwable $e) {
             // swallow cleanup errors
         }
@@ -286,6 +316,61 @@ class CardController
             'qr_image_url' => $qr['image_url'],
             'qr_image_path' => $qr['image_path'],
         ], 200);
+    }
+
+    protected function upsertCardImage(int $cardId, string $type, ?string $url, ?string $path): void
+    {
+        $db = Database::connect();
+
+        if ($url === null || $path === null) {
+            $stmt = $db->prepare('DELETE FROM card_images WHERE card_id = :card_id AND type = :type');
+            $stmt->execute(['card_id' => $cardId, 'type' => $type]);
+            return;
+        }
+
+        $stmt = $db->prepare("
+            INSERT INTO card_images (card_id, type, image_url, image_path)
+            VALUES (:card_id, :type, :url, :path)
+            ON DUPLICATE KEY UPDATE image_url = VALUES(image_url), image_path = VALUES(image_path)
+        ");
+        $stmt->execute([
+            'card_id' => $cardId,
+            'type' => $type,
+            'url' => $url,
+            'path' => $path,
+        ]);
+    }
+
+    protected function deleteCardImageFile(?string $path): void
+    {
+        if ($path && is_file($path)) {
+            @unlink($path);
+        }
+    }
+
+    protected function getCardImages(int $cardId): array
+    {
+        $db = Database::connect();
+        $stmt = $db->prepare("SELECT type, image_url, image_path FROM card_images WHERE card_id = :card_id");
+        $stmt->execute(['card_id' => $cardId]);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        $result = [
+            'banner' => ['url' => null, 'path' => null],
+            'avatar' => ['url' => null, 'path' => null],
+        ];
+
+        foreach ($rows as $row) {
+            $type = $row['type'];
+            if ($type === 'banner' || $type === 'avatar') {
+                $result[$type] = [
+                    'url' => $row['image_url'] ?? null,
+                    'path' => $row['image_path'] ?? null,
+                ];
+            }
+        }
+
+        return $result;
     }
 
     /**

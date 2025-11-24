@@ -50,6 +50,8 @@ export const useFetchCards = () => {
             const normalized = response.data.map(card => ({
                 ...card,
                 color: card.color ?? '#1D4ED8',
+                banner_image: card.banner_image ?? null,
+                avatar_image: card.avatar_image ?? null,
             }));
             setCards(normalized);
         } catch (err: any) {

@@ -4,6 +4,8 @@ export interface CardType {
     color?: string;
     qr_url?: string;
     qr_image?: string;
+    banner_image?: string | null;
+    avatar_image?: string | null;
     items: ItemType[];
 }
 

@@ -26,7 +26,7 @@ const Dashboard: React.FC = () => {
     }
 
 
-    const { cards, loading, error, refresh } = useFetchCards();
+    const { cards, loading, refresh } = useFetchCards();
 
     return (
         <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">

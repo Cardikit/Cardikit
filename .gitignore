@@ -8,6 +8,7 @@
 /docs/vendor/
 
 /public/qrcodes/
+/public/images/
 
 /web-frontend/node_modules/
 /web-frontend/logs

@@ -6,6 +6,8 @@ const defaultCard: CardType = {
     id: 0,
     name: 'New Card',
     color: '#1D4ED8',
+    banner_image: null,
+    avatar_image: null,
     items: []
 }
 
@@ -56,7 +58,12 @@ export const useFetchCard = (id?: number) => {
         try {
             const response = await api.get<CardType>(`/@me/cards/${id}`);
             const color = response.data.color ?? defaultCard.color;
-            setCard({ ...response.data, color });
+            setCard({
+                ...response.data,
+                color,
+                banner_image: response.data.banner_image ?? null,
+                avatar_image: response.data.avatar_image ?? null,
+            });
         } catch (err: any) {
             setError(err?.response?.data?.message || 'Failed to fetch cards');
             setCard(defaultCard);

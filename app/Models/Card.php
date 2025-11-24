@@ -52,6 +52,10 @@ class Card extends Model
         $sql = "
             SELECT
                 c.*,
+                (SELECT image_url FROM card_images WHERE card_id = c.id AND type = 'banner' LIMIT 1) AS banner_image,
+                (SELECT image_path FROM card_images WHERE card_id = c.id AND type = 'banner' LIMIT 1) AS banner_image_path,
+                (SELECT image_url FROM card_images WHERE card_id = c.id AND type = 'avatar' LIMIT 1) AS avatar_image,
+                (SELECT image_path FROM card_images WHERE card_id = c.id AND type = 'avatar' LIMIT 1) AS avatar_image_path,
                 ci.id AS item_id,
                 ci.card_id AS item_card_id,
                 ci.type AS item_type,
@@ -136,6 +140,10 @@ class Card extends Model
         $sql = "
             SELECT
                 c.*,
+                (SELECT image_url FROM card_images WHERE card_id = c.id AND type = 'banner' LIMIT 1) AS banner_image,
+                (SELECT image_path FROM card_images WHERE card_id = c.id AND type = 'banner' LIMIT 1) AS banner_image_path,
+                (SELECT image_url FROM card_images WHERE card_id = c.id AND type = 'avatar' LIMIT 1) AS avatar_image,
+                (SELECT image_path FROM card_images WHERE card_id = c.id AND type = 'avatar' LIMIT 1) AS avatar_image_path,
                 ci.id AS item_id,
                 ci.card_id AS item_card_id,
                 ci.type AS item_type,
