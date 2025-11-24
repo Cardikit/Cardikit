@@ -1,0 +1,1 @@
+{"root":["./src/vite-env.d.ts","./src/types/card.d.ts","./src/types/user.d.ts","./src/types/vitest.d.ts","./vitest.setup.ts"],"errors":true,"version":"5.8.3"}
