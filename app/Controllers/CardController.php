@@ -39,9 +39,13 @@ class CardController
     {
         $data = $request->body();
 
+        // normalize defaults
+        $data['color'] = $this->normalizeColor($data['color'] ?? null, '#1D4ED8');
+
         $validator = new Validator([Card::class => new Card()]);
         $valid = $validator->validate($data, [
             'name' => 'required|min:2|max:50|type:string|unique:App\Models\Card:name',
+            'color' => 'required|type:string|hexcolor|max:20',
         ]);
 
         // return error if input is invalid
@@ -92,7 +96,12 @@ class CardController
                 'qr_image' => $qr['image_url'],
             ]);
         } catch (\Throwable $e) {
-            // Fail softly: card is created, but QR failed
+            Response::json([
+                'message' => 'QR code generation failed',
+                'error' => $e->getMessage(),
+                'card_id' => $card['id'],
+            ], 500);
+            return;
         }
 
         // return success message
@@ -126,6 +135,8 @@ class CardController
             return;
         }
 
+        $data['color'] = $this->normalizeColor($data['color'] ?? null, $card['color'] ?? '#1D4ED8');
+
         $cardItemsPayload = $data['card_items'] ?? [];
         unset($data['card_items']);
 
@@ -139,6 +150,7 @@ class CardController
         }
         $valid = $validator->validate($data, [
             'name' => $nameRule,
+            'color' => 'type:string|hexcolor|max:20',
         ]);
 
         // return error if input is invalid
@@ -274,5 +286,22 @@ class CardController
             'qr_image_url' => $qr['image_url'],
             'qr_image_path' => $qr['image_path'],
         ], 200);
+    }
+
+    /**
+     * Normalize color input to a #HEX format or fallback when invalid/empty.
+     */
+    protected function normalizeColor(?string $raw, string $fallback): string
+    {
+        $trimmed = trim((string) $raw);
+        if ($trimmed === '') {
+            return $fallback;
+        }
+
+        if (preg_match('/^#?([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $trimmed, $m)) {
+            return '#' . strtoupper($m[1]);
+        }
+
+        return $fallback;
     }
 }

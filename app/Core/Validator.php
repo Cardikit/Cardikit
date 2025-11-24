@@ -94,6 +94,15 @@ class Validator
                 if (str_starts_with($rule, 'unique:')) {
                     $this->unique($field, $value, $rule);
                 }
+
+                if (strtolower($rule) === 'hexcolor') {
+                    $this->hexColor($field, $value);
+                }
+
+                if (str_starts_with($rule, 'regex:')) {
+                    $pattern = substr($rule, strlen('regex:'));
+                    $this->regex($field, $value, $pattern);
+                }
             }
         }
 
@@ -170,6 +179,51 @@ class Validator
     {
         if (strlen((string) $value) > $length) {
             $this->addError($field, 'is too long');
+        }
+    }
+
+    /**
+    * Adds error message if value does not match regex.
+    *
+    * @param string $field
+    * @param mixed $value
+    * @param string $pattern
+    *
+    * @return void
+    */
+    protected function regex(string $field, mixed $value, string $pattern): void
+    {
+        if ($value === null || $value === '') {
+            return;
+        }
+
+        // Ensure delimiters exist (expect callers to provide them, fallback to '/' wrapping).
+        $delimited = $pattern;
+        if (@preg_match($pattern, '') === false) {
+            $delimited = '/' . trim($pattern, '/') . '/';
+        }
+
+        if (@preg_match($delimited, (string) $value) !== 1) {
+            $this->addError($field, 'format is invalid');
+        }
+    }
+
+    /**
+    * Adds error message if value is not a valid hex color (#RGB or #RRGGBB).
+    *
+    * @param string $field
+    * @param mixed $value
+    *
+    * @return void
+    */
+    protected function hexColor(string $field, mixed $value): void
+    {
+        if ($value === null || $value === '') {
+            return;
+        }
+
+        if (!preg_match('/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', (string) $value)) {
+            $this->addError($field, 'must be a valid hex color');
         }
     }
 

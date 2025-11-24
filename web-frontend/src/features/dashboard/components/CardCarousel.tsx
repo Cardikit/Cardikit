@@ -33,6 +33,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, l
                 setCurrentCard({
                     id: 0,
                     name: 'Add Card',
+                    color: '#1D4ED8',
                     items: []
                 });
             }
@@ -69,4 +70,3 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, l
 };
 
 export default CardCarousel;
-

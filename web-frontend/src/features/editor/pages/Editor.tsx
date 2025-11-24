@@ -3,6 +3,7 @@ import TopNav from '@/features/editor/components/TopNav';
 import TitleEditor from '@/features/editor/components/TitleEditor';
 import Card from '@/features/editor/components/Card';
 import Options from '@/features/editor/components/Options';
+import ColorPicker from '@/features/editor/components/ColorPicker';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 import { useDeleteCard } from '@/features/editor/hooks/useDeleteCard';
@@ -34,7 +35,7 @@ const Editor: React.FC = () => {
     }
 
     return (
-        <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
+        <div className="min-h-dvh bg-gray-300 pt-16 overflow-hidden">
             <TopNav
                 card={card}
                 setOpen={setTitleEditorOpen}
@@ -42,6 +43,7 @@ const Editor: React.FC = () => {
                 setFormError={setFormError}
                 setItemErrors={setItemErrors}
             />
+            <ColorPicker card={card} setCard={setCard} />
             <Card
                 card={card}
                 setOpen={setOptionsOpen}

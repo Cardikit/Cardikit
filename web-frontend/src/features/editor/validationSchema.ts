@@ -80,5 +80,9 @@ export const cardSchema = yup.object({
         .required('Card name is required')
         .min(2, 'Card name must be at least 2 characters')
         .max(50, 'Card name must be less than 50 characters'),
+    color: yup.string()
+        .transform((v) => (v ?? '').trim())
+        .matches(/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/, 'Color must be a valid hex code')
+        .default('#1D4ED8'),
     card_items: yup.array().of(cardItemSchema).default([]),
 });
