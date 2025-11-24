@@ -9,6 +9,7 @@ import LogoModal from '@/features/dashboard/components/LogoModal';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
 import type { CardType } from '@/types/card';
+import { Link } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
     const [open, setOpen] = useState(false);
@@ -29,18 +30,77 @@ const Dashboard: React.FC = () => {
     const { cards, loading, refresh } = useFetchCards();
 
     return (
-        <div className="h-dvh bg-gray-300 pt-16 overflow-hidden">
+        <div className="h-dvh bg-gray-300 pt-16 md:pt-24 overflow-hidden">
             <TopNav openMenu={toggleMenu} card={currentCard} loading={loading} />
-            <div className="w-full flex flex-col items-center justify-between h-dvh pb-20">
-                <QrCode currentCard={currentCard} loading={loading} setOpen={setEditQrOpen} />
-                <CardCarousel
-                    setCurrentCard={setCurrentCard}
-                    cardData={cards}
-                    loading={loading}
-                />
+            <div className="w-full h-full pb-20 px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+                <div className="hidden lg:block lg:col-span-2 xl:col-span-2">
+                    <div className="bg-white rounded-xl shadow p-4 space-y-4 sticky top-24">
+                        <p className="text-sm font-semibold text-gray-700 font-inter">Navigation</p>
+                        <button
+                            onClick={toggleMenu}
+                            className="w-full bg-gray-100 hover:bg-gray-200 rounded-lg py-3 font-semibold text-gray-800 cursor-pointer transition-colors"
+                        >
+                            Open menu
+                        </button>
+                        <div className="space-y-2">
+                            <p className="text-sm font-semibold text-gray-700 font-inter">Shortcuts</p>
+                            <ul className="text-sm text-gray-600 space-y-1 font-inter">
+                                <li>• Dashboard</li>
+                                <li>• Cards</li>
+                                <li>• Settings</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col items-center space-y-6 lg:col-span-6 xl:col-span-7">
+                    <div className="w-full flex justify-center">
+                        <QrCode currentCard={currentCard} loading={loading} setOpen={setEditQrOpen} />
+                    </div>
+                    <div className="w-full max-w-4xl mx-auto">
+                        <CardCarousel
+                            setCurrentCard={setCurrentCard}
+                            cardData={cards}
+                            loading={loading}
+                        />
+                    </div>
+                </div>
+
+                <div className="hidden lg:flex flex-col space-y-4 lg:col-span-4 xl:col-span-3">
+                    <div className="bg-white rounded-xl shadow p-4 space-y-3">
+                        <h3 className="text-lg font-bold text-gray-900 font-inter">Actions</h3>
+                        <button
+                            onClick={() => setEditQrOpen(true)}
+                            className="w-full bg-primary-500 text-white py-2 rounded-lg font-semibold shadow cursor-pointer hover:bg-primary-900 transition-colors flex items-center justify-center gap-2"
+                        >
+                            <FaPaperPlane />
+                            Share card
+                        </button>
+                        <Link
+                            to={`/editor/${currentCard.id || ''}`}
+                            className="w-full bg-gray-100 text-gray-800 py-2 rounded-lg font-semibold cursor-pointer hover:bg-gray-200 transition-colors text-center block"
+                        >
+                            Edit card
+                        </Link>
+                        <button
+                            onClick={() => setCurrentCard({ id: 0, name: 'Add Card', color: '#1D4ED8', items: [] })}
+                            className="w-full bg-gray-100 text-gray-800 py-2 rounded-lg font-semibold cursor-pointer hover:bg-gray-200 transition-colors"
+                        >
+                            Create new card
+                        </button>
+                    </div>
+                    <div className="bg-white rounded-xl shadow p-4 space-y-2">
+                        <h3 className="text-lg font-bold text-gray-900 font-inter">Current card</h3>
+                        <p className="text-base font-semibold text-gray-800">{currentCard.name}</p>
+                        <p className="text-sm text-gray-600">
+                            {currentCard.items?.length || 0} items • Color {currentCard.color}
+                        </p>
+                    </div>
+                </div>
             </div>
+
             <button
-                className="absolute z-20 bottom-24 right-1/2 translate-x-1/2 py-2 px-4 rounded-full flex items-center gap-2 bg-primary-500 shadow-lg cursor-pointer transition-all hover:-translate-y-1 hover:bg-primary-900 duration-200 ease-in-out"
+                className="fixed lg:hidden z-20 bottom-24 right-1/2 translate-x-1/2 py-2 px-4 rounded-full flex items-center gap-2 bg-primary-500 shadow-lg cursor-pointer transition-all hover:-translate-y-1 hover:bg-primary-900 duration-200 ease-in-out"
                 onClick={() => setEditQrOpen(true)}
             >
                 <FaPaperPlane className="text-gray-100" />

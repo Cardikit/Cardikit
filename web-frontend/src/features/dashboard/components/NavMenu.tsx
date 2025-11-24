@@ -37,7 +37,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
 
             {/* Sliding Menu */}
             <nav
-                className={`fixed top-0 left-0 h-dvh w-3/4 bg-gray-100 z-50 shadow-md transition-transform duration-300 ease-in-out ${
+                className={`fixed top-0 left-0 h-dvh w-3/4 md:w-1/3 bg-gray-100 z-50 shadow-md transition-transform duration-300 ease-in-out ${
                     open ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >

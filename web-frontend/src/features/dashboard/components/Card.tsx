@@ -11,8 +11,8 @@ const Card: React.FC<CardProps> = ({ card }) => {
     const avatar = card.avatar_image ?? null;
 
     return (
-        <div className="p-10">
-            <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-3">
+        <div className="p-10 flex flex-col items-center">
+            <div className="flex bg-white rounded-xl shadow h-[600px] w-full md:w-3/4 p-4 flex-col space-y-3">
                 <div className="w-full mb-2">
                     <div
                         className="w-full h-32 rounded-lg bg-gray-100 overflow-hidden"
