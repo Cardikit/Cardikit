@@ -139,6 +139,8 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
         setEditingFields({});
     };
 
+    const accentColor = card.color ?? '#1D4ED8';
+
     const onDragStart = (e: React.DragEvent, key: string) => {
         setDraggingId(key);
         e.dataTransfer.effectAllowed = 'move';
@@ -239,7 +241,10 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
                                             </span>
 
                                             {/* Left Icon */}
-                                            <div className={`${config.accentClass} rounded-full p-2`}>
+                                            <div
+                                                className="rounded-full p-2"
+                                                style={{ backgroundColor: accentColor }}
+                                            >
                                                 <Icon className={config.iconClass ?? 'text-white'} />
                                             </div>
 

@@ -1,6 +1,7 @@
 export interface CardType {
     id: number;
     name: string;
+    color?: string;
     qr_url?: string;
     qr_image?: string;
     items: ItemType[];

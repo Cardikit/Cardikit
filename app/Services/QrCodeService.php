@@ -116,6 +116,10 @@ class QrCodeService
             }
         }
 
+        if (!is_writable($storageDir)) {
+            throw new \RuntimeException(sprintf('QR storage directory is not writable: %s', $storageDir));
+        }
+
         if ($existingImageUrl) {
             $existingName = basename(parse_url($existingImageUrl, PHP_URL_PATH));
             if ($existingName) {

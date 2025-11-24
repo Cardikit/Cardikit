@@ -47,7 +47,11 @@ export const useFetchCards = () => {
     const fetchCards = async () => {
         try {
             const response = await api.get<CardType[]>('/@me/cards');
-            setCards(response.data);
+            const normalized = response.data.map(card => ({
+                ...card,
+                color: card.color ?? '#1D4ED8',
+            }));
+            setCards(normalized);
         } catch (err: any) {
             setError(err?.response?.data?.message || 'Failed to fetch cards');
             setCards([]);

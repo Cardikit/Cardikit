@@ -25,10 +25,12 @@ const TopNav: React.FC<TopNavProps> = ({ card, setOpen, formError, setFormError,
     const navigate = useNavigate();
     const { id } = useParams();
     const isSaving = creating || updating;
+    const defaultColor = '#1D4ED8';
 
     const onSubmit = async () => {
         const payload = {
             name: (card.name ?? '').trim(),
+            color: (card.color ?? defaultColor).trim(),
             card_items: (card.items ?? []).map(item => ({
                 ...item,
                 value: (item.value ?? '').trim(),
