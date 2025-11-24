@@ -26,7 +26,7 @@ const defaultCard: CardType = {
 * @since 0.0.1
 */
 export const useFetchCard = (id?: number) => {
-    const [card, setCard] = useState<CardType>(defaultCard)
+    const [card, setCard] = useState<CardType>(defaultCard);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

@@ -52,7 +52,7 @@ describe('Editor page', () => {
 
         renderEditor();
 
-        expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
+        expect(screen.getByTestId('editor-skeleton')).toBeInTheDocument();
     });
 
     it('deletes card and navigates back to dashboard', async () => {
