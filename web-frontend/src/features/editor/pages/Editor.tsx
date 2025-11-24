@@ -17,6 +17,7 @@ const Editor: React.FC = () => {
     const [itemErrors, setItemErrors] = useState<Record<string, string>>({});
     const [bannerModalOpen, setBannerModalOpen] = useState(false);
     const [avatarModalOpen, setAvatarModalOpen] = useState(false);
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
     const { id } = useParams();
     const { card, setCard, loading } = useFetchCard(id ? Number(id) : undefined);
     const { deleteCard } = useDeleteCard();
@@ -75,20 +76,57 @@ const Editor: React.FC = () => {
                     />
                     <TitleEditor setCard={setCard} card={card} open={titleEditorOpen} setOpen={setTitleEditorOpen} />
                     <Options card={card} setCard={setCard} open={optionsOpen} setOpen={setOptionsOpen} />
-                    <ImageUploadModal
-                        open={bannerModalOpen}
-                        onClose={() => setBannerModalOpen(false)}
-                        onSave={(data) => setCard(prev => ({ ...prev, banner_image: data }))}
-                        title="Upload banner image"
-                    />
-                    <ImageUploadModal
-                        open={avatarModalOpen}
-                        onClose={() => setAvatarModalOpen(false)}
-                        onSave={(data) => setCard(prev => ({ ...prev, avatar_image: data }))}
-                        title="Upload avatar image"
-                    />
-                    {id && <button onClick={onDelete} className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg cursor-pointer">Delete</button>}
+                    {id && (
+                        <div className="px-10 pb-6">
+                            <button
+                                onClick={() => setConfirmDeleteOpen(true)}
+                                className="w-full bg-red-500 text-white px-4 py-3 rounded-xl shadow-lg cursor-pointer hover:bg-red-600 transition-colors font-semibold"
+                            >
+                                Delete card
+                            </button>
+                        </div>
+                    )}
                 </>
+            )}
+            <ImageUploadModal
+                open={bannerModalOpen}
+                onClose={() => setBannerModalOpen(false)}
+                onSave={(data) => setCard(prev => ({ ...prev, banner_image: data }))}
+                title="Upload banner image"
+            />
+            <ImageUploadModal
+                open={avatarModalOpen}
+                onClose={() => setAvatarModalOpen(false)}
+                onSave={(data) => setCard(prev => ({ ...prev, avatar_image: data }))}
+                title="Upload avatar image"
+            />
+            {id && (
+                <div className={`${confirmDeleteOpen ? 'block' : 'hidden'}`}>
+                    <div className="fixed inset-0 bg-black/40 z-40" onClick={() => setConfirmDeleteOpen(false)} />
+                    <div className="fixed inset-x-4 bottom-10 bg-white rounded-2xl shadow-2xl z-50 p-6 space-y-4">
+                        <h3 className="text-lg font-bold text-gray-900">Delete this card?</h3>
+                        <p className="text-gray-600 text-sm">
+                            This action cannot be undone. All items and media for this card will be removed.
+                        </p>
+                        <div className="flex space-x-3">
+                            <button
+                                onClick={() => setConfirmDeleteOpen(false)}
+                                className="flex-1 py-2 rounded-lg border border-gray-300 text-gray-800 font-semibold hover:bg-gray-100 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={async () => {
+                                    await onDelete();
+                                    setConfirmDeleteOpen(false);
+                                }}
+                                className="flex-1 py-2 rounded-lg bg-red-500 text-white font-semibold shadow hover:bg-red-600 transition-colors"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
