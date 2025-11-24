@@ -50,7 +50,7 @@ const Login: React.FC = () => {
     return (
         <AuthLayout>
             {error && <p className="text-red-500 font-inter">{error}</p>}
-            <h1 className="font-bold font-inter leading-snug tracking-tight text-2xl text-center text-gray-800">Welcome back!</h1>
+            <h1 className="font-bold font-inter leading-snug tracking-tight text-2xl sm:text-3xl text-center text-gray-800">Welcome back!</h1>
             <form
                 className="w-full flex flex-col gap-4 mt-6"
                 onSubmit={handleSubmit(onSubmit)}
@@ -71,7 +71,7 @@ const Login: React.FC = () => {
                 />
                 <Button loading={loading} type="submit">Sign in</Button>
 
-                <p className="text-center font-inter text-gray-800">Don't have an account? <Link className="text-primary-500" to="/register">Sign up</Link></p>
+                <p className="text-center font-inter text-gray-800 text-sm sm:text-base">Don't have an account? <Link className="text-primary-500" to="/register">Sign up</Link></p>
             </form>
         </AuthLayout>
     );

@@ -84,7 +84,7 @@ const Register: React.FC = () => {
     return (
         <AuthLayout>
             {error && <p className="text-red-500 font-inter">{error}</p>}
-            <h1 className="font-bold font-inter leading-snug tracking-tight text-2xl text-center text-gray-800">Create an account</h1>
+            <h1 className="font-bold font-inter leading-snug tracking-tight text-2xl sm:text-3xl text-center text-gray-800">Create an account</h1>
             <form
                 className="w-full flex flex-col gap-4 mt-6"
                 onSubmit={handleSubmit(onSubmit)}
@@ -131,12 +131,12 @@ const Register: React.FC = () => {
                             />
                         )}
                     />
-                    <p className="font-inter text-gray-800">I agree to the <span className="text-primary-500">Terms & Conditions</span> and <span className="text-primary-500">Privacy Policy</span></p>
+                    <p className="font-inter text-gray-800 text-sm sm:text-base">I agree to the <span className="text-primary-500">Terms & Conditions</span> and <span className="text-primary-500">Privacy Policy</span></p>
                 </div>
                 {errors?.acceptTerms?.message && <p className="text-red-500 text-sm">{errors?.acceptTerms?.message}</p>}
                 <Button loading={loading} type="submit">Sign up</Button>
 
-                <p className="text-center font-inter text-gray-800">Already have an account? <Link className="text-primary-500" to="/login">Sign in</Link></p>
+                <p className="text-center font-inter text-gray-800 text-sm sm:text-base">Already have an account? <Link className="text-primary-500" to="/login">Sign in</Link></p>
             </form>
         </AuthLayout>
     );
