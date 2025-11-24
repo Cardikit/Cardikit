@@ -189,13 +189,6 @@ class CardController
             // update card
             $cardModel->updateById($id, $data);
 
-            $imageService = new ImageStorageService();
-            $banner = $imageService->storeOrKeep($bannerPayload, $id, 'banner', $existingImages['banner']['url'] ?? null, $existingImages['banner']['path'] ?? null);
-            $avatar = $imageService->storeOrKeep($avatarPayload, $id, 'avatar', $existingImages['avatar']['url'] ?? null, $existingImages['avatar']['path'] ?? null);
-
-            $this->upsertCardImage($id, 'banner', $banner['url'], $banner['path']);
-            $this->upsertCardImage($id, 'avatar', $avatar['url'], $avatar['path']);
-
             // sync card items
             [, $itemErrors] = (new CardItemService($id))->syncCardItems($cardItemsPayload);
 
@@ -209,6 +202,14 @@ class CardController
             }
 
             $db->commit();
+
+            // Apply image changes after successful DB transaction to avoid orphaned files on rollback
+            $imageService = new ImageStorageService();
+            $banner = $imageService->storeOrKeep($bannerPayload, $id, 'banner', $existingImages['banner']['url'] ?? null, $existingImages['banner']['path'] ?? null);
+            $avatar = $imageService->storeOrKeep($avatarPayload, $id, 'avatar', $existingImages['avatar']['url'] ?? null, $existingImages['avatar']['path'] ?? null);
+
+            $this->upsertCardImage($id, 'banner', $banner['url'], $banner['path']);
+            $this->upsertCardImage($id, 'avatar', $avatar['url'], $avatar['path']);
         } catch (\Throwable $e) {
             if ($db->inTransaction()) {
                 $db->rollBack();
