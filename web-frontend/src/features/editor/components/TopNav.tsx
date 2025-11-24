@@ -122,7 +122,7 @@ const TopNav: React.FC<TopNavProps> = ({ card, setOpen, formError, setFormError,
     }
 
     return (
-        <div className="fixed top-0 w-full z-10 p-4 text-gray-800">
+        <div className="fixed top-0 w-full z-10 p-4 text-gray-800 bg-gray-300">
             <div className="flex items-center justify-between">
                 <Link to="/dashboard" className="font-inter cursor-pointer">Cancel</Link>
                 <div onClick={() => setOpen(true)} className="flex items-center space-x-2 cursor-pointer">
