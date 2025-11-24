@@ -7,6 +7,8 @@
 /docs/.jekyll-cache/
 /docs/vendor/
 
+/public/qrcodes/
+
 /web-frontend/node_modules/
 /web-frontend/logs
 /web-frontend/*.log
