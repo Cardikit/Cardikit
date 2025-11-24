@@ -40,6 +40,7 @@ const Dashboard: React.FC = () => {
             </div>
             <button
                 className="absolute z-20 bottom-24 right-1/2 translate-x-1/2 py-2 px-4 rounded-full flex items-center gap-2 bg-primary-500 shadow-lg cursor-pointer transition-all hover:-translate-y-1 hover:bg-primary-900 duration-200 ease-in-out"
+                onClick={() => setEditQrOpen(true)}
             >
                 <FaPaperPlane className="text-gray-100" />
                 <span className="font-inter font-bold text-gray-100">Share</span>
