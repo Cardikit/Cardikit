@@ -68,7 +68,10 @@ describe('Editor page', () => {
 
         renderEditor();
 
-        fireEvent.click(screen.getByRole('button', { name: /delete/i }));
+        // Open confirmation modal
+        fireEvent.click(screen.getByRole('button', { name: /delete card/i }));
+        // Confirm deletion
+        fireEvent.click(screen.getByRole('button', { name: /^delete$/i }));
 
         await waitFor(() => {
             expect(mockedFetchCsrf).toHaveBeenCalled();
