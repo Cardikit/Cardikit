@@ -29,8 +29,16 @@ RUN mkdir -p /var/www/html/public/qrcodes \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 775 /var/www/html/public/qrcodes
 
+# Ensure runtime permissions if the host bind mount overrides ownership
+RUN usermod -a -G www-data root
+
+# Runtime entrypoint to fix permissions each start (handles bind mounts)
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["apache2-foreground"]
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
   && composer install --no-interaction --no-dev --optimize-autoloader --working-dir=/var/www/html
-

@@ -6,6 +6,7 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ card }) => {
+    const accentColor = card.color ?? '#1D4ED8';
 
     return (
         <div className="p-10">
@@ -21,7 +22,10 @@ const Card: React.FC<CardProps> = ({ card }) => {
                     const iconColorClass = config.iconClass ?? 'text-white';
                     const content = (
                         <div className="flex items-start space-x-3">
-                            <div className="bg-primary-500 rounded-full p-2 flex items-center justify-center">
+                            <div
+                                className="rounded-full p-2 flex items-center justify-center"
+                                style={{ backgroundColor: accentColor }}
+                            >
                                 <Icon className={iconColorClass} />
                             </div>
                             <div className="flex flex-col">

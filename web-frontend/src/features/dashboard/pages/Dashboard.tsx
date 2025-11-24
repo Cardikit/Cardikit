@@ -17,6 +17,7 @@ const Dashboard: React.FC = () => {
     const [currentCard, setCurrentCard] = useState<CardType>({
         id: 0,
         name: 'Add Card',
+        color: '#1D4ED8',
         items: [],
     });
 
