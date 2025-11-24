@@ -4,6 +4,7 @@ use App\Core\Router;
 use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\CardController;
+use App\Controllers\PublicCardController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
 use App\Middleware\RateLimitMiddleware;
@@ -30,6 +31,10 @@ Router::put('/api/v1/@me/cards/:id', [CardController::class, 'update'], [new Aut
 
 Router::delete('/api/v1/@me/cards/:id', [CardController::class, 'delete'], [new AuthMiddleware(), new CsrfMiddleware()]);
 
+Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], [new AuthMiddleware(), new CsrfMiddleware()]);
+
 Router::get('/api/v1/csrf-token', [AuthController::class, 'csrfToken']);
+
+Router::get('/c/:id', [PublicCardController::class, 'show']);
 
 Router::dispatch();

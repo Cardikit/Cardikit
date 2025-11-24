@@ -21,6 +21,7 @@ class MigrateCommand
     public function handle(array $argv): void
     {
         $migrations = glob(__DIR__ . '/../../../database/migrations/*.php');
+        $migrations = array_reverse($migrations);
 
         foreach ($migrations as $file) {
             echo "Running: " . basename($file) . "\n";

@@ -62,8 +62,8 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, l
                     <AddCard />
                 </CarouselItem>
             </CarouselContent>
-            <CarouselPrevious className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
-            <CarouselNext className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
+            <CarouselPrevious className="absolute left-4 top-1/3 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
+            <CarouselNext className="absolute right-4 top-1/3 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
         </Carousel>
     );
 };

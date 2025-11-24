@@ -8,6 +8,7 @@ use App\Core\Request;
 use App\Core\Validator;
 use App\Core\Database;
 use App\Services\CardItemService;
+use App\Services\QrCodeService;
 
 class CardController
 {
@@ -83,10 +84,21 @@ class CardController
             return;
         }
 
+        // generate and persist QR after successful create
+        try {
+            $qr = (new QrCodeService())->generateForCard($card['id']);
+            (new Card())->updateById($card['id'], [
+                'qr_url' => $qr['card_url'],
+                'qr_image' => $qr['image_url'],
+            ]);
+        } catch (\Throwable $e) {
+            // Fail softly: card is created, but QR failed
+        }
+
         // return success message
         Response::json([
             'message' => 'Card created successfully',
-            'card' => $card,
+            'card' => Card::findWithItems($card['id']),
             'items' => $createdItems
         ], 201);
     }
@@ -179,7 +191,8 @@ class CardController
     public function delete(Request $request, int $id): void
     {
         // Ensure card exists
-        $card = (new Card())->findBy('id', $id);
+        $cardModel = new Card();
+        $card = $cardModel->findBy('id', $id);
 
         if (!$card) {
             Response::json([
@@ -196,12 +209,70 @@ class CardController
             return;
         }
 
+        // delete associated QR image file
+        try {
+            (new QrCodeService())->deleteImage($card['qr_image'] ?? null);
+        } catch (\Throwable $e) {
+            // swallow cleanup errors
+        }
+
         // delete card
-        (new Card())->deleteById($id);
+        $cardModel->deleteById($id);
 
         // return success message
         Response::json([
             'message' => 'Card deleted successfully'
+        ], 200);
+    }
+
+    public function generateQr(Request $request, int $id): void
+    {
+        $cardModel = new Card();
+        $card = $cardModel->findBy('id', $id);
+
+        if (!$card) {
+            Response::json([
+                'message' => 'Card not found'
+            ], 404);
+            return;
+        }
+
+        if ($card['user_id'] !== $_SESSION['user_id']) {
+            Response::json([
+                'message' => 'Unauthorized'
+            ], 401);
+            return;
+        }
+
+        $body = $request->body();
+        $logoData = $body['logo'] ?? null;
+
+        try {
+            $qr = (new QrCodeService())->generateForCard($id, $logoData, $card['qr_image'] ?? null);
+        } catch (\InvalidArgumentException $e) {
+            Response::json([
+                'message' => $e->getMessage()
+            ], 422);
+            return;
+        } catch (\Throwable $e) {
+            Response::json([
+                'message' => 'QR code generation failed',
+                'error' => $e->getMessage()
+            ], 500);
+            return;
+        }
+
+        // persist QR data to the card (store URL/path, not binary)
+        $cardModel->updateById($id, [
+            'qr_url' => $qr['card_url'],
+            'qr_image' => $qr['image_url'],
+        ]);
+
+        Response::json([
+            'message' => 'QR code generated',
+            'card_url' => $qr['card_url'],
+            'qr_image_url' => $qr['image_url'],
+            'qr_image_path' => $qr['image_path'],
         ], 200);
     }
 }
