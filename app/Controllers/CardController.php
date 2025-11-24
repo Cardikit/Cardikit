@@ -191,7 +191,8 @@ class CardController
     public function delete(Request $request, int $id): void
     {
         // Ensure card exists
-        $card = (new Card())->findBy('id', $id);
+        $cardModel = new Card();
+        $card = $cardModel->findBy('id', $id);
 
         if (!$card) {
             Response::json([
@@ -208,8 +209,15 @@ class CardController
             return;
         }
 
+        // delete associated QR image file
+        try {
+            (new QrCodeService())->deleteImage($card['qr_image'] ?? null);
+        } catch (\Throwable $e) {
+            // swallow cleanup errors
+        }
+
         // delete card
-        (new Card())->deleteById($id);
+        $cardModel->deleteById($id);
 
         // return success message
         Response::json([
@@ -238,10 +246,9 @@ class CardController
 
         $body = $request->body();
         $logoData = $body['logo'] ?? null;
-        var_dump($logoData);
 
         try {
-            $qr = (new QrCodeService())->generateForCard($id, $logoData);
+            $qr = (new QrCodeService())->generateForCard($id, $logoData, $card['qr_image'] ?? null);
         } catch (\InvalidArgumentException $e) {
             Response::json([
                 'message' => $e->getMessage()

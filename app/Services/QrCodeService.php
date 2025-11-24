@@ -20,10 +20,11 @@ class QrCodeService
      *
      * @param int $cardId
      * @param string|null $logoData Base64 (optionally data URI) image to overlay in the center of the QR.
+     * @param string|null $existingImageUrl Existing QR image URL to delete/replace (for cache busting).
      *
      * @return array{card_url: string, image_url: string, image_path: string}
      */
-    public function generateForCard(int $cardId, ?string $logoData = null): array
+    public function generateForCard(int $cardId, ?string $logoData = null, ?string $existingImageUrl = null): array
     {
         $logoImage = $logoData ? $this->createLogoImage($logoData) : null;
 
@@ -57,13 +58,31 @@ class QrCodeService
             $this->overlayLogo($qrImage, $logoImage);
         }
 
-        [$imagePath, $imageUrl] = $this->saveImage($qrImage, $cardId);
+        [$imagePath, $imageUrl] = $this->saveImage($qrImage, $cardId, $existingImageUrl);
 
         return [
             'card_url' => $cardUrl,
             'image_url' => $imageUrl,
             'image_path' => $imagePath,
         ];
+    }
+
+    /**
+     * Delete an existing QR image given its public URL.
+     */
+    public function deleteImage(?string $existingImageUrl): void
+    {
+        if (!$existingImageUrl) return;
+
+        $path = parse_url($existingImageUrl, PHP_URL_PATH);
+        if (!$path) return;
+
+        $publicRoot = dirname(__DIR__, 2) . '/public';
+        $localPath = realpath($publicRoot . $path) ?: $publicRoot . $path;
+
+        if (is_file($localPath)) {
+            @unlink($localPath);
+        }
     }
 
     protected function cardUrl(int $cardId): string
@@ -75,7 +94,7 @@ class QrCodeService
     /**
      * Persist the generated QR to disk and return path + public URL.
      */
-    protected function saveImage(GdImage $image, int $cardId): array
+    protected function saveImage(GdImage $image, int $cardId, ?string $existingImageUrl = null): array
     {
         $publicRoot = dirname(__DIR__, 2) . '/public';
         $storageDir = Config::get('QR_STORAGE_PATH', $publicRoot . '/qrcodes');
@@ -86,7 +105,17 @@ class QrCodeService
             }
         }
 
-        $fileName = "card-{$cardId}.png";
+        if ($existingImageUrl) {
+            $existingName = basename(parse_url($existingImageUrl, PHP_URL_PATH));
+            if ($existingName) {
+                $existingPath = rtrim($storageDir, '/\\') . DIRECTORY_SEPARATOR . $existingName;
+                if (is_file($existingPath)) {
+                    @unlink($existingPath);
+                }
+            }
+        }
+
+        $fileName = sprintf('card-%d-%s.png', $cardId, uniqid());
         $filePath = rtrim($storageDir, '/\\') . DIRECTORY_SEPARATOR . $fileName;
 
         $written = imagepng($image, $filePath);

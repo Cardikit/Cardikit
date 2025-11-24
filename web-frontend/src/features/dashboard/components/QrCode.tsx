@@ -21,7 +21,7 @@ const QrCode: React.FC<QrCodeProps> = ({ currentCard, loading, setOpen }) => {
             ) : currentCard?.qr_image ? (
                 <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center space-y-2">
                     <img
-                        src={currentCard.qr_image}
+                        src={`${currentCard.qr_image}?t=${Date.now()}`}
                         alt={`QR for ${currentCard.name}`}
                         className="h-52 w-52 object-contain"
                     />

@@ -19,9 +19,12 @@ interface EditQrDrawerProps {
     open: boolean;
     setOpen: (open: boolean) => void;
     currentCard: CardType;
+    setLogoModalOpen: (open: boolean) => void
 }
 
-const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard }) => {
+const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard, setLogoModalOpen }) => {
+
+
     return (
         <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent className="bg-gray-100 px-6 py-4">
@@ -48,7 +51,10 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard 
                             Scan to view card
                         </p>
 
-                        <button className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button
+                            onClick={() => {setLogoModalOpen(true), setOpen(false)}}
+                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                        >
                             <FaImage />
                             <span>Add logo to QR Code</span>
                         </button>

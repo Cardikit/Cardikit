@@ -22,9 +22,12 @@ class PublicCardController
         $qrImageUrl = $card['qr_image'] ?? null;
         if (!$qrImageUrl) {
             $publicRoot = dirname(__DIR__, 2) . '/public';
-            $defaultPath = $publicRoot . "/qrcodes/card-{$id}.png";
-            if (is_file($defaultPath)) {
-                $qrImageUrl = rtrim(Config::get('QR_BASE_URL', Config::get('APP_URL', 'http://localhost')), '/') . "/qrcodes/card-{$id}.png";
+            $matches = glob($publicRoot . "/qrcodes/card-{$id}-*.png");
+            if (!empty($matches)) {
+                // pick the latest file
+                usort($matches, fn($a, $b) => filemtime($b) <=> filemtime($a));
+                $fileName = basename($matches[0]);
+                $qrImageUrl = rtrim(Config::get('QR_BASE_URL', Config::get('APP_URL', 'http://localhost')), '/') . "/qrcodes/{$fileName}";
             }
         }
 
