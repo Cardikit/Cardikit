@@ -7,6 +7,7 @@ import {
     FaTrash,
     FaCheck,
     FaTimes,
+    FaGripVertical,
 } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
@@ -22,9 +23,50 @@ interface CardProps {
 const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors = {}, setItemErrors }) => {
     const [editingId, setEditingId] = useState<string | number | null>(null);
     const [editingFields, setEditingFields] = useState<Record<string, string>>({});
+    const [draggingId, setDraggingId] = useState<string | null>(null);
     const { id } = useParams();
 
-    const getKey = (item: ItemType) => item.id ?? item.client_id;
+    const getKey = (item: ItemType): string => String(item.id ?? item.client_id ?? item.position);
+
+    const reorderItems = (sourceKey: string, targetKey: string) => {
+        setCard(prev => {
+            const items = [...prev.items];
+            const fromIndex = items.findIndex(item => getKey(item) === sourceKey);
+            const toIndex = items.findIndex(item => getKey(item) === targetKey);
+
+            if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) {
+                return prev;
+            }
+
+            const [moved] = items.splice(fromIndex, 1);
+            items.splice(toIndex, 0, moved);
+
+            const reindexed = items.map((item, index) => ({
+                ...item,
+                position: index + 1,
+            }));
+
+            return { ...prev, items: reindexed };
+        });
+    };
+
+    const moveItemToEnd = (sourceKey: string) => {
+        setCard(prev => {
+            const items = [...prev.items];
+            const fromIndex = items.findIndex(item => getKey(item) === sourceKey);
+            if (fromIndex === -1) return prev;
+
+            const [moved] = items.splice(fromIndex, 1);
+            items.push(moved);
+
+            const reindexed = items.map((item, index) => ({
+                ...item,
+                position: index + 1,
+            }));
+
+            return { ...prev, items: reindexed };
+        });
+    };
 
     // DELETE ITEM
     const onDelete = (itemToDelete: ItemType) => {
@@ -92,6 +134,38 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
         setEditingFields({});
     };
 
+    const onDragStart = (e: React.DragEvent, key: string) => {
+        setDraggingId(key);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', String(key));
+    };
+
+    const onDragEnd = () => {
+        setDraggingId(null);
+    };
+
+    const onDropOnItem = (e: React.DragEvent, targetKey: string) => {
+        e.preventDefault();
+        const sourceKey = draggingId ?? e.dataTransfer.getData('text/plain');
+        if (!sourceKey || sourceKey === targetKey) {
+            setDraggingId(null);
+            return;
+        }
+        reorderItems(sourceKey, targetKey);
+        setDraggingId(null);
+    };
+
+    const onDropToEnd = (e: React.DragEvent) => {
+        e.preventDefault();
+        const sourceKey = draggingId ?? e.dataTransfer.getData('text/plain');
+        if (!sourceKey) {
+            setDraggingId(null);
+            return;
+        }
+        moveItemToEnd(sourceKey);
+        setDraggingId(null);
+    };
+
     return (
         <div className="p-10">
             {loading && id ? <div>Loading...</div> : (
@@ -113,13 +187,29 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
                         const secondaryText = hasLabelField ? item.value : undefined;
 
                         return (
-                            <div key={key} className="w-full">
+                            <div
+                                key={key}
+                                className="w-full"
+                                onDragOver={e => draggingId && e.preventDefault()}
+                                onDrop={e => onDropOnItem(e, key)}
+                            >
                                 <div
                                     className={itemContainerClasses}
                                     onClick={() => editingId !== key && onEdit(item)}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-2">
+                                            <button
+                                                className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
+                                                draggable
+                                                onDragStart={e => onDragStart(e, key)}
+                                                onDragEnd={onDragEnd}
+                                                aria-label="Reorder item"
+                                                onClick={e => e.stopPropagation()}
+                                            >
+                                                <FaGripVertical size={20} />
+                                            </button>
+
                                             {/* Left Icon */}
                                             <div className={`${config.accentClass} rounded-full p-2`}>
                                                 <Icon className={config.iconClass ?? 'text-white'} />
@@ -205,6 +295,8 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
                     {/* ADD ITEM */}
                     <div
                         onClick={() => setOpen(true)}
+                        onDragOver={e => draggingId && e.preventDefault()}
+                        onDrop={onDropToEnd}
                         className="w-full flex hover:bg-gray-100 rounded-lg justify-center cursor-pointer p-2"
                     >
                         <div className="p-2 rounded-full bg-red-100">
