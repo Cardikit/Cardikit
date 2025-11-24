@@ -13,6 +13,9 @@
         "verbatimModuleSyntax": true,
         "moduleDetection": "force",
         "composite": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "outDir": "./node_modules/.tmp/tsbuild/app",
         "jsx": "react-jsx",
 
         /* Linting */

@@ -19,6 +19,6 @@
 /web-frontend/pnpm-debug.log*
 /web-frontend/lerna-debug.log*
 
-/web-frontend/dist
+/web-frontend/dist/
 /web-frontend/dist-ssr
 /web-frontend/*.local
