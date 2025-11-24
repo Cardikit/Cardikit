@@ -76,16 +76,20 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
 
     const shareQr = async () => {
         if (!qrImageUrl) return;
-        if ((navigator as any).canShare && (navigator as any).canShare({ files: [] })) {
-            try {
-                const res = await fetch(qrImageUrl);
-                const blob = await res.blob();
-                const file = new File([blob], `card-${currentCard.id}-qr.png`, { type: blob.type || 'image/png' });
+        try {
+            const res = await fetch(qrImageUrl);
+            const blob = await res.blob();
+            const file = new File([blob], `card-${currentCard.id}-qr.png`, { type: blob.type || 'image/png' });
+            const canShareFiles = typeof (navigator as any).canShare === 'function'
+                ? (navigator as any).canShare({ files: [file] })
+                : false;
+
+            if (canShareFiles && typeof (navigator as any).share === 'function') {
                 await (navigator as any).share({ files: [file], title: currentCard.name });
                 return;
-            } catch (e) {
-                // fall through to download
             }
+        } catch (e) {
+            // fall through to download
         }
         await downloadQr();
     };
