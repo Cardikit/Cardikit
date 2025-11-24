@@ -12,7 +12,10 @@
         "allowImportingTsExtensions": true,
         "verbatimModuleSyntax": true,
         "moduleDetection": "force",
-        "noEmit": true,
+        "composite": true,
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "outDir": "./node_modules/.tmp/tsbuild/app",
         "jsx": "react-jsx",
 
         /* Linting */

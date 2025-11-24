@@ -8,6 +8,7 @@
 /docs/vendor/
 
 /public/qrcodes/
+/public/images/
 
 /web-frontend/node_modules/
 /web-frontend/logs
@@ -18,6 +19,6 @@
 /web-frontend/pnpm-debug.log*
 /web-frontend/lerna-debug.log*
 
-/web-frontend/dist
+/web-frontend/dist/
 /web-frontend/dist-ssr
 /web-frontend/*.local

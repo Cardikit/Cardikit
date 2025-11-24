@@ -16,11 +16,13 @@ interface CardProps {
     setOpen: (open: boolean) => void;
     setCard: React.Dispatch<React.SetStateAction<CardType>>;
     loading: boolean;
+    onOpenBanner: () => void;
+    onOpenAvatar: () => void;
     itemErrors?: Record<string, string>;
     setItemErrors?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
-const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors = {}, setItemErrors }) => {
+const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, onOpenBanner, onOpenAvatar, itemErrors = {}, setItemErrors }) => {
     const [editingId, setEditingId] = useState<string | number | null>(null);
     const [editingFields, setEditingFields] = useState<Record<string, string>>({});
     const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -140,6 +142,8 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
     };
 
     const accentColor = card.color ?? '#1D4ED8';
+    const banner = card.banner_image ?? null;
+    const avatar = card.avatar_image ?? null;
 
     const onDragStart = (e: React.DragEvent, key: string) => {
         setDraggingId(key);
@@ -182,6 +186,36 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
         <div className="p-10">
             {loading && id ? <div>Loading...</div> : (
                 <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-2">
+                    <div className="w-full mb-2">
+                        {/* Banner placeholder */}
+                        <button
+                            type="button"
+                            className="w-full h-32 rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary-500"
+                            style={{ backgroundColor: banner ? undefined : accentColor + '22' }}
+                            onClick={onOpenBanner}
+                        >
+                            {banner ? (
+                                <img src={banner} alt="Card banner" className="w-full h-full object-cover" />
+                            ) : (
+                                <span className="text-gray-600 font-inter">Add banner</span>
+                            )}
+                        </button>
+                        {/* Avatar placeholder */}
+                        <div className="w-full flex justify-center -mt-10">
+                            <button
+                                type="button"
+                                className="w-20 h-20 rounded-full bg-gray-200 border-4 border-white overflow-hidden shadow cursor-pointer flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                style={{ backgroundColor: avatar ? undefined : accentColor + '44' }}
+                                onClick={onOpenAvatar}
+                            >
+                                {avatar ? (
+                                    <img src={avatar} alt="Card avatar" className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-gray-500 text-sm font-inter">Avatar</span>
+                                )}
+                            </button>
+                        </div>
+                    </div>
 
                     {card.items.map(item => {
                         const key = getKey(item);

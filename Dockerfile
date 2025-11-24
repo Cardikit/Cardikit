@@ -26,8 +26,10 @@ COPY . /var/www/html/
 
 # Give Apache permission to write to storage directories
 RUN mkdir -p /var/www/html/public/qrcodes \
+    && mkdir -p /var/www/html/images \
     && chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/public/qrcodes
+    && chmod -R 775 /var/www/html/public/qrcodes \
+    && chmod -R 775 /var/www/html/images
 
 # Ensure runtime permissions if the host bind mount overrides ownership
 RUN usermod -a -G www-data root

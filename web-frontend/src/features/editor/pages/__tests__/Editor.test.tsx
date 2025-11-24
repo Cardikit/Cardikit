@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useParams } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import Editor from '@/features/editor/pages/Editor';
 import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 import { useDeleteCard } from '@/features/editor/hooks/useDeleteCard';
@@ -44,6 +44,7 @@ describe('Editor page', () => {
         mockedUseFetchCard.mockReturnValue({
             card: { id: 1, name: 'Test Card', items: [] },
             setCard: vi.fn(),
+            refresh: vi.fn(),
             loading: true,
             error: null,
         });
@@ -59,6 +60,7 @@ describe('Editor page', () => {
         mockedUseFetchCard.mockReturnValue({
             card: { id: 1, name: 'Test Card', items: [] },
             setCard: vi.fn(),
+            refresh: vi.fn(),
             loading: false,
             error: null,
         });

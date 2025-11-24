@@ -7,10 +7,32 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ card }) => {
     const accentColor = card.color ?? '#1D4ED8';
+    const banner = card.banner_image ?? null;
+    const avatar = card.avatar_image ?? null;
 
     return (
         <div className="p-10">
             <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-3">
+                <div className="w-full mb-2">
+                    <div
+                        className="w-full h-32 rounded-lg bg-gray-100 overflow-hidden"
+                        style={{ backgroundColor: banner ? undefined : accentColor + '22' }}
+                    >
+                        {banner && <img src={banner} alt="Card banner" className="w-full h-full object-cover" />}
+                    </div>
+                    <div className="w-full flex justify-center -mt-10">
+                        <div
+                            className="w-20 h-20 rounded-full bg-gray-200 border-4 border-white overflow-hidden shadow flex items-center justify-center"
+                            style={{ backgroundColor: avatar ? undefined : accentColor + '44' }}
+                        >
+                            {avatar ? (
+                                <img src={avatar} alt="Card avatar" className="w-full h-full object-cover" />
+                            ) : (
+                                <span className="text-gray-500 text-sm font-inter">Avatar</span>
+                            )}
+                        </div>
+                    </div>
+                </div>
                 {card.items?.map((item, index) => {
                     const config = getItemConfig(item.type);
                     const Icon = config.icon;

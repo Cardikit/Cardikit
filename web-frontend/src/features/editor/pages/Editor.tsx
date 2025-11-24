@@ -4,6 +4,7 @@ import TitleEditor from '@/features/editor/components/TitleEditor';
 import Card from '@/features/editor/components/Card';
 import Options from '@/features/editor/components/Options';
 import ColorPicker from '@/features/editor/components/ColorPicker';
+import ImageUploadModal from '@/features/editor/components/ImageUploadModal';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 import { useDeleteCard } from '@/features/editor/hooks/useDeleteCard';
@@ -14,6 +15,8 @@ const Editor: React.FC = () => {
     const [optionsOpen, setOptionsOpen] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
     const [itemErrors, setItemErrors] = useState<Record<string, string>>({});
+    const [bannerModalOpen, setBannerModalOpen] = useState(false);
+    const [avatarModalOpen, setAvatarModalOpen] = useState(false);
     const { id } = useParams();
     const { card, setCard, loading } = useFetchCard(id ? Number(id) : undefined);
     const { deleteCard } = useDeleteCard();
@@ -49,11 +52,25 @@ const Editor: React.FC = () => {
                 setOpen={setOptionsOpen}
                 setCard={setCard}
                 loading={loading}
+                onOpenBanner={() => setBannerModalOpen(true)}
+                onOpenAvatar={() => setAvatarModalOpen(true)}
                 itemErrors={itemErrors}
                 setItemErrors={setItemErrors}
             />
             <TitleEditor setCard={setCard} card={card} open={titleEditorOpen} setOpen={setTitleEditorOpen} />
             <Options card={card} setCard={setCard} open={optionsOpen} setOpen={setOptionsOpen} />
+            <ImageUploadModal
+                open={bannerModalOpen}
+                onClose={() => setBannerModalOpen(false)}
+                onSave={(data) => setCard(prev => ({ ...prev, banner_image: data }))}
+                title="Upload banner image"
+            />
+            <ImageUploadModal
+                open={avatarModalOpen}
+                onClose={() => setAvatarModalOpen(false)}
+                onSave={(data) => setCard(prev => ({ ...prev, avatar_image: data }))}
+                title="Upload avatar image"
+            />
             {id && <button onClick={onDelete} className="bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg cursor-pointer">Delete</button>}
         </div>
     );

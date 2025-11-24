@@ -7,6 +7,9 @@ import type { CardType } from '@/types/card';
 const baseCard: CardType = {
     id: 1,
     name: 'Sample Card',
+    color: '#1D4ED8',
+    banner_image: null,
+    avatar_image: null,
     items: [
         {
             id: 11,
@@ -21,18 +24,20 @@ const renderCard = (card: CardType, itemErrors?: Record<string, string>) =>
     render(
         <MemoryRouter initialEntries={['/editor/1']}>
             <Routes>
-                <Route
-                    path="/editor/:id"
-                    element={
-                        <Card
-                            card={card}
-                            setOpen={() => {}}
-                            setCard={() => {}}
-                            loading={false}
-                            itemErrors={itemErrors}
+                        <Route
+                            path="/editor/:id"
+                            element={
+                                <Card
+                                    card={card}
+                                    setOpen={() => {}}
+                                    setCard={() => {}}
+                                    loading={false}
+                                    onOpenBanner={() => {}}
+                                    onOpenAvatar={() => {}}
+                                    itemErrors={itemErrors}
+                                />
+                            }
                         />
-                    }
-                />
             </Routes>
         </MemoryRouter>
     );

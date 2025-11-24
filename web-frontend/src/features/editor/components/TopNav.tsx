@@ -31,6 +31,8 @@ const TopNav: React.FC<TopNavProps> = ({ card, setOpen, formError, setFormError,
         const payload = {
             name: (card.name ?? '').trim(),
             color: (card.color ?? defaultColor).trim(),
+            banner_image: card.banner_image ?? null,
+            avatar_image: card.avatar_image ?? null,
             card_items: (card.items ?? []).map(item => ({
                 ...item,
                 value: (item.value ?? '').trim(),
