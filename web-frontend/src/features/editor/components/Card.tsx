@@ -184,7 +184,17 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, onOpenBann
 
     return (
         <div className="p-10">
-            {loading && id ? <div>Loading...</div> : (
+            {loading && id ? (
+                <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-4 animate-pulse">
+                    <div className="h-32 w-full rounded-lg bg-gray-200" />
+                    <div className="flex justify-center -mt-10">
+                        <div className="w-20 h-20 rounded-full bg-gray-200 border-4 border-white" />
+                    </div>
+                    {Array.from({ length: 4 }).map((_, idx) => (
+                        <div key={idx} className="w-full rounded-lg bg-gray-100 h-16" />
+                    ))}
+                </div>
+            ) : (
                 <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-2">
                     <div className="w-full mb-2">
                         {/* Banner placeholder */}
