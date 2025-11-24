@@ -4,6 +4,7 @@ import {
     DrawerContent,
 } from '@/components/ui/drawer';
 import type { CardType } from '@/types/card';
+import { useState } from 'react';
 
 import {
     FaImage,
@@ -23,6 +24,75 @@ interface EditQrDrawerProps {
 }
 
 const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard, setLogoModalOpen }) => {
+    const [copied, setCopied] = useState(false);
+
+    const cardUrl = currentCard.qr_url ?? currentCard.qr_image ?? '';
+    const qrImageUrl = currentCard.qr_image ?? '';
+
+    const copyLink = async () => {
+        if (!cardUrl) return;
+        try {
+            await navigator.clipboard.writeText(cardUrl);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (e) {
+            console.error('Failed to copy link', e);
+        }
+    };
+
+    const shareLink = async () => {
+        if (!cardUrl) return;
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: currentCard.name, url: cardUrl });
+            } catch (e) {
+                // ignored if user cancels
+            }
+        } else {
+            await copyLink();
+        }
+    };
+
+    const shareSms = async () => {
+        if (!cardUrl) return;
+        const smsUrl = `sms:?&body=${encodeURIComponent(cardUrl)}`;
+        window.open(smsUrl, '_blank');
+    };
+
+    const shareEmail = async () => {
+        if (!cardUrl) return;
+        const mailto = `mailto:?subject=${encodeURIComponent(currentCard.name || 'My card')}&body=${encodeURIComponent(cardUrl)}`;
+        window.open(mailto, '_blank');
+    };
+
+    const downloadQr = async () => {
+        if (!qrImageUrl) return;
+        const link = document.createElement('a');
+        link.href = qrImageUrl;
+        link.target = '_blank';
+        link.download = `card-${currentCard.id}-qr.png`;
+        link.click();
+    };
+
+    const shareQr = async () => {
+        if (!qrImageUrl) return;
+        try {
+            const res = await fetch(qrImageUrl);
+            const blob = await res.blob();
+            const file = new File([blob], `card-${currentCard.id}-qr.png`, { type: blob.type || 'image/png' });
+            const canShareFiles = typeof (navigator as any).canShare === 'function'
+                ? (navigator as any).canShare({ files: [file] })
+                : false;
+
+            if (canShareFiles && typeof (navigator as any).share === 'function') {
+                await (navigator as any).share({ files: [file], title: currentCard.name });
+                return;
+            }
+        } catch (e) {
+            // fall through to download
+        }
+        await downloadQr();
+    };
 
 
     return (
@@ -59,32 +129,47 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
                             <span>Add logo to QR Code</span>
                         </button>
 
-                        <button className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button onClick={copyLink} className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
                             <FaLink />
-                            <span>Copy link</span>
+                            <span>{copied ? 'Copied!' : 'Copy link'}</span>
                         </button>
 
-                        <button className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button
+                            onClick={shareSms}
+                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                        >
                             <FaSms />
                             <span>Text your card</span>
                         </button>
 
-                        <button className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button
+                            onClick={shareEmail}
+                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                        >
                             <FaEnvelope />
                             <span>Email your card</span>
                         </button>
 
-                        <button className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button
+                            onClick={shareLink}
+                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                        >
                             <FaShareAlt />
                             <span>Send another way</span>
                         </button>
 
-                        <button className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button
+                            onClick={downloadQr}
+                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                        >
                             <FaSave />
                             <span>Save QR code to photos</span>
                         </button>
 
-                        <button className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button
+                            onClick={shareQr}
+                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                        >
                             <FaQrcode />
                             <span>Send QR code</span>
                         </button>
