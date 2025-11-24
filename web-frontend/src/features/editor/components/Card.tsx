@@ -24,6 +24,7 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
     const [editingId, setEditingId] = useState<string | number | null>(null);
     const [editingFields, setEditingFields] = useState<Record<string, string>>({});
     const [draggingId, setDraggingId] = useState<string | null>(null);
+    const [dropTargetId, setDropTargetId] = useState<string | null>(null);
     const { id } = useParams();
 
     const getKey = (item: ItemType): string => String(item.id ?? item.client_id ?? item.position);
@@ -142,6 +143,7 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
 
     const onDragEnd = () => {
         setDraggingId(null);
+        setDropTargetId(null);
     };
 
     const onDropOnItem = (e: React.DragEvent, targetKey: string) => {
@@ -149,10 +151,12 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
         const sourceKey = draggingId ?? e.dataTransfer.getData('text/plain');
         if (!sourceKey || sourceKey === targetKey) {
             setDraggingId(null);
+            setDropTargetId(null);
             return;
         }
         reorderItems(sourceKey, targetKey);
         setDraggingId(null);
+        setDropTargetId(null);
     };
 
     const onDropToEnd = (e: React.DragEvent) => {
@@ -160,10 +164,12 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
         const sourceKey = draggingId ?? e.dataTransfer.getData('text/plain');
         if (!sourceKey) {
             setDraggingId(null);
+            setDropTargetId(null);
             return;
         }
         moveItemToEnd(sourceKey);
         setDraggingId(null);
+        setDropTargetId(null);
     };
 
     return (
@@ -190,25 +196,43 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
                             <div
                                 key={key}
                                 className="w-full"
-                                onDragOver={e => draggingId && e.preventDefault()}
+                                onDragOver={e => {
+                                    if (!draggingId) return;
+                                    e.preventDefault();
+                                    setDropTargetId(key);
+                                }}
+                                onDragEnter={e => {
+                                    if (!draggingId) return;
+                                    e.preventDefault();
+                                    setDropTargetId(key);
+                                }}
+                                onDragLeave={e => {
+                                    if (!draggingId) return;
+                                    // Only clear if leaving this card entirely
+                                    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                                        setDropTargetId(null);
+                                    }
+                                }}
                                 onDrop={e => onDropOnItem(e, key)}
                             >
+                                {dropTargetId === key && (
+                                    <div className="h-1 bg-blue-500 rounded-lg mb-2" />
+                                )}
                                 <div
                                     className={itemContainerClasses}
                                     onClick={() => editingId !== key && onEdit(item)}
+                                    draggable
+                                    onDragStart={e => onDragStart(e, key)}
+                                    onDragEnd={onDragEnd}
                                 >
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-2">
-                                            <button
-                                                className="text-gray-400 hover:text-gray-600 cursor-grab active:cursor-grabbing"
-                                                draggable
-                                                onDragStart={e => onDragStart(e, key)}
-                                                onDragEnd={onDragEnd}
-                                                aria-label="Reorder item"
-                                                onClick={e => e.stopPropagation()}
+                                            <span
+                                                className="text-gray-400 cursor-grab active:cursor-grabbing"
+                                                aria-hidden
                                             >
                                                 <FaGripVertical size={20} />
-                                            </button>
+                                            </span>
 
                                             {/* Left Icon */}
                                             <div className={`${config.accentClass} rounded-full p-2`}>
@@ -296,9 +320,17 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, itemErrors
                     <div
                         onClick={() => setOpen(true)}
                         onDragOver={e => draggingId && e.preventDefault()}
+                        onDragEnter={e => {
+                            if (!draggingId) return;
+                            e.preventDefault();
+                            setDropTargetId('end');
+                        }}
                         onDrop={onDropToEnd}
-                        className="w-full flex hover:bg-gray-100 rounded-lg justify-center cursor-pointer p-2"
+                        className="w-full flex hover:bg-gray-100 rounded-lg justify-center cursor-pointer p-2 flex-col items-center"
                     >
+                        {dropTargetId === 'end' && (
+                            <div className="h-1 bg-blue-500 rounded-lg mb-2 w-full" />
+                        )}
                         <div className="p-2 rounded-full bg-red-100">
                             <FaPlus className="text-xl text-primary-500" />
                         </div>
