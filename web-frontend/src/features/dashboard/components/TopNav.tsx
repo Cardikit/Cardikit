@@ -10,8 +10,8 @@ interface TopNavProps {
 
 const TopNav: React.FC<TopNavProps> = ({ openMenu, card, loading }) => {
     return (
-        <div className="fixed top-0 w-full z-10 px-4 md:px-8 py-3 md:py-6 lg:px-8 lg:py-4 flex items-center justify-between text-gray-800 bg-gray-300/80 backdrop-blur">
-            <MdOutlineMenu onClick={openMenu} className="text-3xl md:text-4xl cursor-pointer md:w-16" />
+        <div className="fixed top-0 w-full z-10 px-4 md:px-8 py-3 md:py-6 lg:px-8 lg:py-4 flex items-center justify-between lg:justify-center text-gray-800 bg-gray-300/80 backdrop-blur">
+            <MdOutlineMenu onClick={openMenu} className="text-3xl md:text-4xl cursor-pointer md:w-16 lg:hidden" />
             {loading ? (
                 <h1 className="text-xl md:text-2xl font-semibold font-inter">Fetching Cards...</h1>
             ) : (

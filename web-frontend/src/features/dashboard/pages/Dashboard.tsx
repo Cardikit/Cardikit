@@ -6,6 +6,7 @@ import QrCode from '@/features/dashboard/components/QrCode';
 import CardCarousel from '@/features/dashboard/components/CardCarousel';
 import EditQrDrawer from '@/features/dashboard/components/EditQrDrawer';
 import LogoModal from '@/features/dashboard/components/LogoModal';
+import DesktopNav from '@/features/dashboard/components/DesktopNav';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
 import type { CardType } from '@/types/card';
@@ -32,26 +33,11 @@ const Dashboard: React.FC = () => {
     return (
         <div className="h-dvh bg-gray-300 pt-16 md:pt-24 overflow-hidden">
             <TopNav openMenu={toggleMenu} card={currentCard} loading={loading} />
-            <div className="w-full h-full pb-20 px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-                <div className="hidden lg:block lg:col-span-2 xl:col-span-2">
-                    <div className="bg-white rounded-xl shadow p-4 space-y-4 sticky top-24">
-                        <p className="text-sm font-semibold text-gray-700 font-inter">Navigation</p>
-                        <button
-                            onClick={toggleMenu}
-                            className="w-full bg-gray-100 hover:bg-gray-200 rounded-lg py-3 font-semibold text-gray-800 cursor-pointer transition-colors"
-                        >
-                            Open menu
-                        </button>
-                        <div className="space-y-2">
-                            <p className="text-sm font-semibold text-gray-700 font-inter">Shortcuts</p>
-                            <ul className="text-sm text-gray-600 space-y-1 font-inter">
-                                <li>• Dashboard</li>
-                                <li>• Cards</li>
-                                <li>• Settings</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <div className="w-full h-full pb-20 px-4 lg:px-8 flex flex-col">
+
+                {/* DESKTOP SIDEBAR */}
+                <DesktopNav />
+                {/* END DESKTOP SIDEBAR */}
 
                 <div className="flex flex-col items-center space-y-6 lg:col-span-6 xl:col-span-7">
                     <div className="w-full flex justify-center">
@@ -66,7 +52,8 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="hidden lg:flex flex-col space-y-4 lg:col-span-4 xl:col-span-3">
+                {/* ACTIONS SIDEBAR */}
+                <div className="hidden lg:flex lg:fixed right-12 top-24 flex-col space-y-4 lg:col-span-4 xl:col-span-3 2xl:w-96">
                     <div className="bg-white rounded-xl shadow p-4 space-y-3">
                         <h3 className="text-lg font-bold text-gray-900 font-inter">Actions</h3>
                         <button
@@ -82,12 +69,12 @@ const Dashboard: React.FC = () => {
                         >
                             Edit card
                         </Link>
-                        <button
-                            onClick={() => setCurrentCard({ id: 0, name: 'Add Card', color: '#1D4ED8', items: [] })}
-                            className="w-full bg-gray-100 text-gray-800 py-2 rounded-lg font-semibold cursor-pointer hover:bg-gray-200 transition-colors"
+                        <Link
+                            to={`/editor`}
+                            className="w-full inline-block text-center bg-gray-100 text-gray-800 py-2 rounded-lg font-semibold cursor-pointer hover:bg-gray-200 transition-colors"
                         >
                             Create new card
-                        </button>
+                        </Link>
                     </div>
                     <div className="bg-white rounded-xl shadow p-4 space-y-2">
                         <h3 className="text-lg font-bold text-gray-900 font-inter">Current card</h3>
@@ -97,6 +84,8 @@ const Dashboard: React.FC = () => {
                         </p>
                     </div>
                 </div>
+                {/* END ACTIONS SIDEBAR */}
+
             </div>
 
             <button
