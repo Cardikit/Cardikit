@@ -107,7 +107,7 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
                         </DrawerClose>
                     </div>
 
-                    <div className="flex flex-col items-center space-y-4 h-96 overflow-y-scroll mt-4">
+                    <div className="flex flex-col items-center space-y-4 h-96 md:h-[600px] overflow-y-scroll mt-4">
 
                         <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center space-y-2">
                             <img
@@ -123,20 +123,20 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
 
                         <button
                             onClick={() => {setLogoModalOpen(true), setOpen(false)}}
-                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                            className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
                         >
                             <FaImage />
                             <span>Add logo to QR Code</span>
                         </button>
 
-                        <button onClick={copyLink} className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
+                        <button onClick={copyLink} className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">
                             <FaLink />
                             <span>{copied ? 'Copied!' : 'Copy link'}</span>
                         </button>
 
                         <button
                             onClick={shareSms}
-                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                            className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
                         >
                             <FaSms />
                             <span>Text your card</span>
@@ -144,7 +144,7 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
 
                         <button
                             onClick={shareEmail}
-                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                            className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
                         >
                             <FaEnvelope />
                             <span>Email your card</span>
@@ -152,7 +152,7 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
 
                         <button
                             onClick={shareLink}
-                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                            className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
                         >
                             <FaShareAlt />
                             <span>Send another way</span>
@@ -160,7 +160,7 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
 
                         <button
                             onClick={downloadQr}
-                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                            className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
                         >
                             <FaSave />
                             <span>Save QR code to photos</span>
@@ -168,7 +168,7 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
 
                         <button
                             onClick={shareQr}
-                            className="bg-primary-500 text-gray-100 py-2 w-full rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
+                            className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
                         >
                             <FaQrcode />
                             <span>Send QR code</span>
