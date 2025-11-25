@@ -51,7 +51,7 @@ const Options: React.FC<OptionsProps> = ({ open, setOpen, card, setCard }) => {
                     </div>
                     <div className="w-full flex justify-center flex-col">
                         <span className="text-gray-800 font-semibold font-inter text-center">Select a field below to add it</span>
-                        <div className="w-full grid grid-cols-3 gap-6 mt-6 overflow-y-auto h-72">
+                        <div className="w-full grid grid-cols-3 gap-6 mt-6 overflow-y-auto h-72 md:h-96">
                             {ITEM_ORDER.map(type => {
                                 const config = getItemConfig(type);
                                 const Icon = config.icon;

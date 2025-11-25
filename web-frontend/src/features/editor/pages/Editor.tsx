@@ -77,10 +77,10 @@ const Editor: React.FC = () => {
                     <TitleEditor setCard={setCard} card={card} open={titleEditorOpen} setOpen={setTitleEditorOpen} />
                     <Options card={card} setCard={setCard} open={optionsOpen} setOpen={setOptionsOpen} />
                     {id && (
-                        <div className="px-10 pb-6">
+                        <div className="px-10 pb-6 w-full flex justify-center">
                             <button
                                 onClick={() => setConfirmDeleteOpen(true)}
-                                className="w-full bg-red-500 text-white px-4 py-3 rounded-xl shadow-lg cursor-pointer hover:bg-red-600 transition-colors font-semibold"
+                                className="w-full md:w-3/4 bg-red-500 text-white px-4 py-3 rounded-xl shadow-lg cursor-pointer hover:bg-red-600 transition-colors font-semibold"
                             >
                                 Delete card
                             </button>
