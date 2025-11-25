@@ -22,28 +22,30 @@ const ColorPicker: React.FC<ColorPickerProps> = ({ card, setCard }) => {
     const selected = card.color ?? COLOR_OPTIONS[0];
 
     return (
-        <div className="px-6 pt-4">
-            <p className="text-sm text-gray-700 font-semibold mb-2 font-inter">Accent color</p>
-            <div className="flex flex-wrap gap-3">
-                {COLOR_OPTIONS.map(color => {
-                    const isActive = selected === color;
-                    return (
-                        <button
-                            key={color}
-                            type="button"
-                            className={[
-                                'w-10 h-10 rounded-full border-2 transition-transform',
-                                'flex items-center justify-center cursor-pointer',
-                                isActive ? 'border-gray-900 scale-105' : 'border-transparent',
-                            ].join(' ')}
-                            style={{ backgroundColor: color }}
-                            aria-label={`Select accent color ${color}`}
-                            onClick={() => setCard(prev => ({ ...prev, color }))}
-                        >
-                            {isActive && <span className="w-3 h-3 rounded-full bg-white" />}
-                        </button>
-                    );
-                })}
+        <div className="px-6 md:w-full md:flex md:justify-center pt-4">
+            <div>
+                <p className="text-sm text-gray-700 font-semibold mb-2 font-inter">Accent color</p>
+                <div className="flex flex-wrap gap-3">
+                    {COLOR_OPTIONS.map(color => {
+                        const isActive = selected === color;
+                        return (
+                            <button
+                                key={color}
+                                type="button"
+                                className={[
+                                    'w-10 h-10 rounded-full border-2 transition-transform',
+                                    'flex items-center justify-center cursor-pointer',
+                                    isActive ? 'border-gray-900 scale-105' : 'border-transparent',
+                                ].join(' ')}
+                                style={{ backgroundColor: color }}
+                                aria-label={`Select accent color ${color}`}
+                                onClick={() => setCard(prev => ({ ...prev, color }))}
+                            >
+                                {isActive && <span className="w-3 h-3 rounded-full bg-white" />}
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
         </div>
     );
