@@ -84,6 +84,11 @@ export const cardSchema = yup.object({
         .transform((v) => (v ?? '').trim())
         .matches(/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/, 'Color must be a valid hex code')
         .default('#1D4ED8'),
+    theme: yup.string()
+        .transform((v) => (v ?? '').trim())
+        .max(50, 'Theme is not supported')
+        .default('default')
+        .optional(),
     banner_image: yup.string().nullable().optional(),
     avatar_image: yup.string().nullable().optional(),
     card_items: yup.array().of(cardItemSchema).default([]),

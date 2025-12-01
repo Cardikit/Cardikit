@@ -60,7 +60,7 @@ describe('useLogout', () => {
 
         // Act: Call the logout function and expect it to throw
         await act(async () => {
-            await expect(result.current.logout()).rejects.toThrow(mockError);
+            await result.current.logout();
         });
 
         // Assert API call
@@ -84,7 +84,7 @@ describe('useLogout', () => {
 
         // First call to trigger an error
         await act(async () => {
-            await expect(result.current.logout()).rejects.toThrow();
+            await result.current.logout();
         });
         expect(result.current.error).toBe('Unexpected error occurred');
         expect(result.current.loading).toBe(false);

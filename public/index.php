@@ -35,6 +35,8 @@ Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], 
 
 Router::get('/api/v1/csrf-token', [AuthController::class, 'csrfToken']);
 
+Router::get('/api/v1/themes', [CardController::class, 'themes'], [new AuthMiddleware()]);
+
 Router::get('/c/:id', [PublicCardController::class, 'show']);
 
 Router::dispatch();

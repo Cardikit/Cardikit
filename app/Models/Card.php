@@ -20,7 +20,7 @@ class Card extends Model
     *
     * @since 0.0.1
     */
-    protected array $fillable = ['name', 'color', 'user_id', 'qr_url', 'qr_image'];
+    protected array $fillable = ['name', 'color', 'theme', 'user_id', 'qr_url', 'qr_image'];
 
     /**
     * Returns a user's cards
