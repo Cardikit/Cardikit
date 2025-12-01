@@ -17,13 +17,24 @@ class CsrfMiddleware
 {
     public function handle(Request $request): bool
     {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+
         $sessionToken = $_SESSION['csrf_token'] ?? null;
 
+        $headers = array_change_key_case($request->getHeaders(), CASE_LOWER);
+        $headerToken = $headers['x-csrf-token'] ?? $headers['x-xsrf-token'] ?? null;
+        $body = $request->body();
+        $bodyToken = $body['csrf_token'] ?? null;
+        $candidateToken = $headerToken ?? $bodyToken;
 
-        $headers = array_change_key_case($request->getHeaders(), CASE_UPPER);
-        $headerToken = $headers['X-CSRF-TOKEN'] ?? null;
+        if (!$sessionToken || !$candidateToken || !is_string($candidateToken) || strlen($candidateToken) !== 64) {
+            Response::json(['error' => 'Invalid CSRF token'], 403);
+            return false;
+        }
 
-        if (!$sessionToken || !$headerToken || !hash_equals($sessionToken, $headerToken)) {
+        if (!hash_equals($sessionToken, $candidateToken)) {
             Response::json(['error' => 'Invalid CSRF token'], 403);
             return false;
         }

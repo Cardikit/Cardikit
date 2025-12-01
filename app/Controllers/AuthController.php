@@ -19,8 +19,18 @@ class AuthController
 {
     protected function signIn(array $user): void
     {
-        // set session variable
+        session_regenerate_id(true);
         $_SESSION['user_id'] = $user['id'];
+        $this->issueCsrfToken();
+    }
+
+    protected function issueCsrfToken(): string
+    {
+        if (empty($_SESSION['csrf_token']) || strlen((string) $_SESSION['csrf_token']) !== 64) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+
+        return $_SESSION['csrf_token'];
     }
 
     /**
@@ -129,8 +139,16 @@ class AuthController
         session_unset();
         session_destroy();
 
-        // destroy cookie
-        setcookie(session_name(), '', time() - 3600, '/');
+        // destroy cookie using current parameters
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', [
+            'expires' => time() - 3600,
+            'path' => $params['path'] ?? '/',
+            'domain' => $params['domain'] ?? '',
+            'secure' => $params['secure'] ?? true,
+            'httponly' => $params['httponly'] ?? true,
+            'samesite' => $params['samesite'] ?? 'Lax',
+        ]);
 
         // return success message
         Response::json(['message' => 'Logged out successfully']);
@@ -147,8 +165,7 @@ class AuthController
     */
     public function csrfToken(): void
     {
-        $token = bin2hex(random_bytes(32));
-        $_SESSION['csrf_token'] = $token;
+        $token = $this->issueCsrfToken();
 
         Response::json(['csrf_token' => $token]);
     }

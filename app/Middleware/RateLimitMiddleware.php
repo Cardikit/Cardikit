@@ -56,6 +56,8 @@ class RateLimitMiddleware
 
     protected function resolveKey(Request $request): string
     {
-        return 'ip:' . ($request->ip() ?? 'unknown');
+        $method = $request->method();
+        $uri = $request->uri();
+        return 'ip:' . ($request->ip() ?? 'unknown') . ':' . $method . ':' . $uri;
     }
 }
