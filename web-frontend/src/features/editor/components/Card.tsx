@@ -183,9 +183,9 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, onOpenBann
     };
 
     return (
-        <div className="p-10">
+        <div className="py-6 flex flex-col items-center w-full lg:w-3/4">
             {loading && id ? (
-                <div data-testid="editor-skeleton" className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-4 animate-pulse">
+                <div data-testid="editor-skeleton" className="flex bg-white rounded-xl shadow min-h-[600px] md:min-h-[1000px] w-full md:w-3/4 p-4 flex-col space-y-4 animate-pulse">
                     <div className="h-32 w-full rounded-lg bg-gray-200" />
                     <div className="flex justify-center -mt-10">
                         <div className="w-20 h-20 rounded-full bg-gray-200 border-4 border-white" />
@@ -195,7 +195,7 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, onOpenBann
                     ))}
                 </div>
             ) : (
-                <div className="flex bg-white rounded-xl shadow h-[600px] w-full p-4 flex-col space-y-2">
+                <div className="flex bg-white rounded-xl shadow min-h-[600px] md:min-h-[1000px] w-full md:w-3/4 p-4 flex-col space-y-2">
                     <div className="w-full mb-2">
                         {/* Banner placeholder */}
                         <button

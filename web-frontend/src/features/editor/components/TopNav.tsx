@@ -122,16 +122,16 @@ const TopNav: React.FC<TopNavProps> = ({ card, setOpen, formError, setFormError,
     }
 
     return (
-        <div className="fixed top-0 w-full z-10 p-4 text-gray-800 bg-gray-300">
-            <div className="flex items-center justify-between">
-                <Link to="/dashboard" className="font-inter cursor-pointer">Cancel</Link>
+        <div className="fixed top-0 w-full z-10 px-4 md:px-8 py-3 md:py-6 lg:px-10 lg:py-4 text-gray-800 bg-gray-300/80 backdrop-blur">
+            <div className="flex items-center justify-between gap-4 max-w-6xl mx-auto">
+                <Link to="/dashboard" className="font-inter md:text-lg cursor-pointer">Cancel</Link>
                 <div onClick={() => setOpen(true)} className="flex items-center space-x-2 cursor-pointer">
-                    <h1 className="text-xl font-semibold font-inter">{card.name}</h1>
+                    <h1 className="text-xl md:text-2xl font-semibold font-inter">{card.name}</h1>
                     <MdModeEdit className="text-2xl" />
                 </div>
                 <p
                     onClick={!isSaving ? onSubmit : undefined}
-                    className={`font-inter ${isSaving ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
+                    className={`font-inter md:text-lg ${isSaving ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}`}
                 >
                     {isSaving ? 'Saving...' : 'Save'}
                 </p>

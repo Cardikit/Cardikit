@@ -30,13 +30,15 @@ interface AuthLayoutProps {
 */
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
     return (
-        <main className="w-full h-dvh overflow-x-hidden bg-[#E3E3E3] flex flex-col">
-            <Back />
-            <img className="w-3/4 mx-auto" src={Header} alt="Header Image" />
-            <div className="w-full bg-[#FBFBFB] rounded-t-4xl flex flex-col items-center flex-grow px-6 py-8 mt-8">
-                {children}
+        <main className="min-h-dvh overflow-x-hidden bg-[#E3E3E3] flex flex-col">
+            <div className="px-4 pt-6 sm:px-6 lg:px-10 lg:pt-8">
+                <Back />
             </div>
-            </main>
+            <img className="w-3/4 max-w-md mx-auto mt-4 sm:mt-6 lg:mt-8" src={Header} alt="Header Image" />
+            <div className="w-full bg-[#FBFBFB] rounded-t-4xl flex flex-col items-center flex-grow px-6 py-8 mt-8 shadow-lg">
+                <div className="w-full max-w-lg">{children}</div>
+            </div>
+        </main>
     );
 }
 

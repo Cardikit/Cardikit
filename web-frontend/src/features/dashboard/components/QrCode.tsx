@@ -8,18 +8,12 @@ interface QrCodeProps {
 
 const QrCode: React.FC<QrCodeProps> = ({ currentCard, loading, setOpen }) => {
 
-    const openQrDrawer = () => {
-        if (currentCard?.qr_image) {
-            setOpen(true);
-        }
-    }
-
     return (
-        <div onClick={openQrDrawer} className="flex-grow flex items-center justify-center cursor-pointer">
+        <div className="flex-grow flex items-center justify-center">
             {loading ? (
                 <div className="animate-pulse h-56 w-56 bg-gray-200 rounded-xl" />
             ) : currentCard?.qr_image ? (
-                <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center space-y-2">
+                <div onClick={() => setOpen(true)} className="bg-white rounded-xl shadow p-4 flex flex-col items-center space-y-2 cursor-pointer">
                     <img
                         src={`${currentCard.qr_image}?t=${Date.now()}`}
                         alt={`QR for ${currentCard.name}`}
