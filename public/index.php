@@ -5,6 +5,7 @@ use App\Controllers\AuthController;
 use App\Controllers\UserController;
 use App\Controllers\CardController;
 use App\Controllers\PublicCardController;
+use App\Controllers\LandingController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
 use App\Middleware\RateLimitMiddleware;
@@ -12,6 +13,8 @@ use App\Middleware\RateLimitMiddleware;
 require __DIR__ . '/../bootstrap.php';
 
 session_start();
+
+Router::get('/landing', [LandingController::class, 'show']);
 
 Router::post('/api/v1/register', [AuthController::class, 'register'], [new RateLimitMiddleware(5, 60)]);
 
