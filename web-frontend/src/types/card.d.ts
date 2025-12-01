@@ -2,6 +2,7 @@ export interface CardType {
     id: number;
     name: string;
     color?: string;
+    theme?: string;
     qr_url?: string;
     qr_image?: string;
     banner_image?: string | null;

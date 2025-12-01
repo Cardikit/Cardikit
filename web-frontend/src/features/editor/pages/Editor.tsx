@@ -4,11 +4,13 @@ import TitleEditor from '@/features/editor/components/TitleEditor';
 import Card from '@/features/editor/components/Card';
 import Options from '@/features/editor/components/Options';
 import ColorPicker from '@/features/editor/components/ColorPicker';
+import ThemePicker from '@/features/editor/components/ThemePicker';
 import ImageUploadModal from '@/features/editor/components/ImageUploadModal';
 import DesktopNav from '@/features/dashboard/components/DesktopNav';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 import { useDeleteCard } from '@/features/editor/hooks/useDeleteCard';
+import { useThemes } from '@/features/editor/hooks/useThemes';
 import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 
 const Editor: React.FC = () => {
@@ -23,6 +25,7 @@ const Editor: React.FC = () => {
     const cardId = id ? Number(id) : undefined;
     const { card, setCard, loading } = useFetchCard(cardId);
     const { deleteCard } = useDeleteCard();
+    const { themes } = useThemes();
     const navigate = useNavigate();
     const isExistingCard = Boolean(id);
     const isLoadingExisting = loading && isExistingCard;
@@ -31,6 +34,14 @@ const Editor: React.FC = () => {
         setFormError(null);
         setItemErrors({});
     }, [card.id]);
+
+    useEffect(() => {
+        if (!themes.length) return;
+        const hasTheme = themes.some(theme => theme.slug === card.theme);
+        if (!hasTheme) {
+            setCard(prev => ({ ...prev, theme: themes[0].slug }));
+        }
+    }, [themes, card.theme, setCard]);
 
     const onDelete = async () => {
         try {
@@ -74,6 +85,7 @@ const Editor: React.FC = () => {
                                 <h3 className="text-lg font-bold text-gray-900 font-inter">Card settings</h3>
                                 <p className="text-sm text-gray-600 font-inter">Update the accent color and review card basics.</p>
                                 <ColorPicker card={card} setCard={setCard} variant="compact" className="px-0" />
+                                <ThemePicker card={card} setCard={setCard} options={themes} />
                                 <div className="bg-gray-50 rounded-lg p-3 space-y-1">
                                     <p className="text-sm font-semibold text-gray-800 font-inter truncate">{card.name}</p>
                                     <p className="text-xs text-gray-600 font-inter">

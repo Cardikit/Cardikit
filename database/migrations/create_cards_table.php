@@ -19,6 +19,7 @@ return new class extends Migration {
                 color VARCHAR(20) NOT NULL DEFAULT '#FA3C25',
                 qr_url VARCHAR(512) DEFAULT NULL,
                 qr_image LONGTEXT DEFAULT NULL,
+                theme VARCHAR(255) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)

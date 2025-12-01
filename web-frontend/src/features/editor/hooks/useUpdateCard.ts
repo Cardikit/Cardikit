@@ -8,6 +8,7 @@ import { cardSchema } from '@/features/editor/validationSchema';
 interface Payload {
     name: string;
     color: string;
+    theme?: string;
     banner_image?: string | null;
     avatar_image?: string | null;
     card_items: ItemType[]
@@ -50,6 +51,7 @@ export const useUpdateCard = () => {
             const response = await api.put(`/@me/cards/${id}`, {
                 name: data.name,
                 color: data.color,
+                theme: data.theme,
                 banner_image: data.banner_image ?? null,
                 avatar_image: data.avatar_image ?? null,
                 card_items: data.card_items

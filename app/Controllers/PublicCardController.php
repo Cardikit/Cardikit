@@ -7,6 +7,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Config;
 use App\Services\ThemeRenderer;
+use App\Services\ThemeCatalog;
 
 class PublicCardController
 {
@@ -44,7 +45,12 @@ class PublicCardController
 
         header('Content-Type: text/html; charset=utf-8');
 
-        $theme = Config::get('CARD_THEME', 'default');
+        $catalog = new ThemeCatalog();
+        $availableThemes = $catalog->getSlugs();
+        $theme = strtolower(trim((string) ($card['theme'] ?? Config::get('CARD_THEME', 'default'))));
+        if ($theme === '' || !in_array($theme, $availableThemes, true)) {
+            $theme = $availableThemes[0] ?? Config::get('CARD_THEME', 'default');
+        }
         $renderer = new ThemeRenderer();
         echo $renderer->render($theme, $card, $qrImageUrl);
     }

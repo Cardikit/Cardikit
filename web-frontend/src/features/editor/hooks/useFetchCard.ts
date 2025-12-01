@@ -6,6 +6,7 @@ const defaultCard: CardType = {
     id: 0,
     name: 'New Card',
     color: '#1D4ED8',
+    theme: 'default',
     banner_image: null,
     avatar_image: null,
     items: []
@@ -58,9 +59,11 @@ export const useFetchCard = (id?: number) => {
         try {
             const response = await api.get<CardType>(`/@me/cards/${id}`);
             const color = response.data.color ?? defaultCard.color;
+            const theme = response.data.theme ?? defaultCard.theme;
             setCard({
                 ...response.data,
                 color,
+                theme,
                 banner_image: response.data.banner_image ?? null,
                 avatar_image: response.data.avatar_image ?? null,
             });

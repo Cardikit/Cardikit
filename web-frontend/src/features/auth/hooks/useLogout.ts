@@ -38,7 +38,7 @@ export const useLogout = () => {
         } catch (error: any) {
             setError('Unexpected error occurred');
             console.error(error);
-            throw error;
+            return null;
         } finally {
             setLoading(false);
         }

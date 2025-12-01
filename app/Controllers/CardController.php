@@ -7,9 +7,11 @@ use App\Core\Response;
 use App\Core\Request;
 use App\Core\Validator;
 use App\Core\Database;
+use App\Core\Config;
 use App\Services\CardItemService;
 use App\Services\QrCodeService;
 use App\Services\ImageStorageService;
+use App\Services\ThemeCatalog;
 
 class CardController
 {
@@ -36,12 +38,30 @@ class CardController
         Response::json($card);
     }
 
+    public function themes(): void
+    {
+        $themes = (new ThemeCatalog())->getThemes();
+        Response::json($themes);
+    }
+
     public function create(Request $request): void
     {
         $data = $request->body();
 
         // normalize defaults
         $data['color'] = $this->normalizeColor($data['color'] ?? null, '#1D4ED8');
+        $themes = new ThemeCatalog();
+        $availableThemeSlugs = $themes->getSlugs();
+        $defaultTheme = $this->pickDefaultTheme($availableThemeSlugs);
+        $requestedTheme = isset($data['theme']) ? strtolower(trim((string) $data['theme'])) : null;
+        if ($requestedTheme !== null && $requestedTheme !== '' && !in_array($requestedTheme, $availableThemeSlugs, true)) {
+            Response::json([
+                'message' => 'Theme not available',
+                'errors' => ['theme' => ['Unsupported theme.']]
+            ], 422);
+            return;
+        }
+        $data['theme'] = $this->normalizeTheme($data['theme'] ?? null, $defaultTheme, $availableThemeSlugs);
         $hasBanner = array_key_exists('banner_image', $data);
         $hasAvatar = array_key_exists('avatar_image', $data);
         $bannerPayload = $hasBanner ? ($data['banner_image'] ?? '') : null;
@@ -52,6 +72,7 @@ class CardController
         $valid = $validator->validate($data, [
             'name' => 'required|min:2|max:50|type:string|unique:App\Models\Card:name',
             'color' => 'required|type:string|hexcolor|max:20',
+            'theme' => 'type:string|max:50',
         ]);
 
         // return error if input is invalid
@@ -149,6 +170,18 @@ class CardController
         }
 
         $data['color'] = $this->normalizeColor($data['color'] ?? null, $card['color'] ?? '#1D4ED8');
+        $themes = new ThemeCatalog();
+        $availableThemeSlugs = $themes->getSlugs();
+        $defaultTheme = $this->pickDefaultTheme($availableThemeSlugs, $card['theme'] ?? null);
+        $requestedTheme = isset($data['theme']) ? strtolower(trim((string) $data['theme'])) : null;
+        if ($requestedTheme !== null && $requestedTheme !== '' && !in_array($requestedTheme, $availableThemeSlugs, true)) {
+            Response::json([
+                'message' => 'Theme not available',
+                'errors' => ['theme' => ['Unsupported theme.']]
+            ], 422);
+            return;
+        }
+        $data['theme'] = $this->normalizeTheme($data['theme'] ?? null, $defaultTheme, $availableThemeSlugs);
         $hasBanner = array_key_exists('banner_image', $data);
         $hasAvatar = array_key_exists('avatar_image', $data);
         $bannerPayload = $hasBanner ? ($data['banner_image'] ?? '') : null;
@@ -171,6 +204,7 @@ class CardController
         $valid = $validator->validate($data, [
             'name' => $nameRule,
             'color' => 'type:string|hexcolor|max:20',
+            'theme' => 'type:string|max:50',
         ]);
 
         // return error if input is invalid
@@ -389,5 +423,35 @@ class CardController
         }
 
         return $fallback;
+    }
+
+    protected function normalizeTheme(?string $raw, string $fallback, array $allowed): string
+    {
+        $theme = strtolower(trim((string) $raw));
+
+        if ($theme !== '' && in_array($theme, $allowed, true)) {
+            return $theme;
+        }
+
+        if ($fallback !== '' && in_array($fallback, $allowed, true)) {
+            return $fallback;
+        }
+
+        return $allowed[0] ?? 'default';
+    }
+
+    protected function pickDefaultTheme(array $allowed, ?string $preferred = null): string
+    {
+        $preferred = trim((string) $preferred);
+        if ($preferred !== '' && in_array(strtolower($preferred), $allowed, true)) {
+            return strtolower($preferred);
+        }
+
+        $env = Config::get('CARD_THEME', 'default');
+        if ($env && in_array(strtolower($env), $allowed, true)) {
+            return strtolower($env);
+        }
+
+        return $allowed[0] ?? 'default';
     }
 }
