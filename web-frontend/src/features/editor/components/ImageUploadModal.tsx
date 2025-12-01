@@ -46,7 +46,7 @@ const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ open, onClose, onSa
 
     return (
         <Drawer open={open} onOpenChange={(o) => !o && onClose()}>
-            <DrawerContent className="bg-gray-100 px-6 py-4">
+            <DrawerContent className="bg-gray-100 px-6 py-4 lg:px-72">
                 <div className="absolute top-4 left-1/2 -translate-x-1/2 w-1/3 bg-gray-400 h-1 rounded-full cursor-grab" />
                 <div className="w-full">
                     <div className="w-full flex justify-end">

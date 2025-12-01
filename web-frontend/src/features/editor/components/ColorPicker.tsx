@@ -3,6 +3,8 @@ import type { CardType } from '@/types/card';
 interface ColorPickerProps {
     card: CardType;
     setCard: React.Dispatch<React.SetStateAction<CardType>>;
+    className?: string;
+    variant?: 'default' | 'compact';
 }
 
 const COLOR_OPTIONS = [
@@ -18,11 +20,14 @@ const COLOR_OPTIONS = [
     '#EF4444', // red
 ];
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ card, setCard }) => {
+const ColorPicker: React.FC<ColorPickerProps> = ({ card, setCard, className = '', variant = 'default' }) => {
     const selected = card.color ?? COLOR_OPTIONS[0];
+    const containerClasses = variant === 'compact'
+        ? 'pt-2'
+        : 'px-6 md:w-full md:flex md:justify-center pt-4';
 
     return (
-        <div className="px-6 md:w-full md:flex md:justify-center pt-4">
+        <div className={`${containerClasses} ${className}`}>
             <div>
                 <p className="text-sm text-gray-700 font-semibold mb-2 font-inter">Accent color</p>
                 <div className="flex flex-wrap gap-3">

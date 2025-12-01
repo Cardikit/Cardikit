@@ -183,7 +183,7 @@ const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, onOpenBann
     };
 
     return (
-        <div className="p-10 flex flex-col items-center">
+        <div className="py-6 flex flex-col items-center w-full lg:w-3/4">
             {loading && id ? (
                 <div data-testid="editor-skeleton" className="flex bg-white rounded-xl shadow min-h-[600px] md:min-h-[1000px] w-full md:w-3/4 p-4 flex-col space-y-4 animate-pulse">
                     <div className="h-32 w-full rounded-lg bg-gray-200" />
