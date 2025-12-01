@@ -4,7 +4,7 @@ use App\Core\Router;
 use App\Controllers\AuthController;
 
 test('GET /csrf-token returns a token and stores it in the session', function () {
-    $_SESSION = [];
+    $_SESSION = ['user_id' => 1];
 
     Router::get('/csrf-token', [AuthController::class, 'csrfToken']);
 

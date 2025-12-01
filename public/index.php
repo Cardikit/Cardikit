@@ -10,6 +10,7 @@ use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
 use App\Middleware\EnforceTlsMiddleware;
 use App\Middleware\RateLimitMiddleware;
+use App\Core\Config;
 
 require __DIR__ . '/../bootstrap.php';
 
@@ -23,7 +24,7 @@ ini_set('session.use_only_cookies', '1');
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
-    'domain' => '',
+    'domain' => Config::get('SESSION_DOMAIN', ''),
     'secure' => $isHttps,
     'httponly' => true,
     'samesite' => 'Lax',
@@ -59,7 +60,7 @@ Router::delete('/api/v1/@me/cards/:id', [CardController::class, 'delete'], $muta
 
 Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], $mutating);
 
-Router::get('/api/v1/csrf-token', [AuthController::class, 'csrfToken'], array_merge($tls, [new RateLimitMiddleware(30, 60)]));
+Router::get('/api/v1/csrf-token', [AuthController::class, 'csrfToken'], array_merge($auth, [new RateLimitMiddleware(30, 60)]));
 
 Router::get('/api/v1/themes', [CardController::class, 'themes'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
 

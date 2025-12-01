@@ -8,7 +8,9 @@ export const useThemes = () => {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchThemes();
+        if (typeof window !== 'undefined') {
+            fetchThemes();
+        }
     }, []);
 
     const fetchThemes = async () => {

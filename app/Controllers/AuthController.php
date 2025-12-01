@@ -165,6 +165,11 @@ class AuthController
     */
     public function csrfToken(): void
     {
+        if (!isset($_SESSION['user_id'])) {
+            Response::json(['error' => 'Unauthorized'], 401);
+            return;
+        }
+
         $token = $this->issueCsrfToken();
 
         Response::json(['csrf_token' => $token]);
