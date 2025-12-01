@@ -74,7 +74,7 @@ describe('Dashboard page', () => {
         renderDashboard();
 
         await waitFor(() => {
-            expect(screen.getByText('Personal Card')).toBeInTheDocument();
+            expect(screen.getAllByRole('heading', { name: 'Personal Card' }).length).toBeGreaterThan(0);
         });
 
         expect(screen.getByTestId('card-carousel')).toHaveTextContent('cards:2');

@@ -69,7 +69,8 @@ describe('Editor page', () => {
         renderEditor();
 
         // Open confirmation modal
-        fireEvent.click(screen.getByRole('button', { name: /delete card/i }));
+        const [deleteButton] = screen.getAllByRole('button', { name: /delete card/i });
+        fireEvent.click(deleteButton);
         // Confirm deletion
         fireEvent.click(screen.getByRole('button', { name: /^delete$/i }));
 
