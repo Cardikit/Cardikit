@@ -8,6 +8,7 @@ import Login from '@/features/auth/pages/Login';
 import Register from '@/features/auth/pages/Register';
 import Welcome from '@/features/auth/pages/Welcome';
 import NotFound from '@/pages/NotFound';
+import ComingSoon from '@/pages/ComingSoon';
 
 /**
 * AppRoutes
@@ -42,6 +43,7 @@ const AppRoutes: React.FC = () => {
                         <Route path="/editor/:id" element={<Editor />} />
                     </Route>
 
+                    <Route path="/coming-soon" element={<ComingSoon />} />
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </AuthProvider>
