@@ -23,9 +23,11 @@ return new class extends Migration {
                 slug VARCHAR(255) NOT NULL UNIQUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                FOREIGN KEY (user_id) REFERENCES users(id)
-            )"
-        );
+                CONSTRAINT fk_cards_user
+                    FOREIGN KEY (user_id) REFERENCES users(id)
+                    ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
     }
 
     public function down(): void

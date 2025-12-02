@@ -36,7 +36,7 @@ const DesktopNav = () => {
                 </Link>
                 <hr className="border-gray-300" />
                 <p className="text-sm text-gray-600 font-inter">Account</p>
-                <Link to="/coming-soon" className="flex items-center space-x-2 hover:text-primary-700">
+                <Link to="/account" className="flex items-center space-x-2 hover:text-primary-700">
                     <IoPersonSharp className="text-xl text-gray-800" />
                     <p className="font-inter text-gray-800">Manage account</p>
                 </Link>

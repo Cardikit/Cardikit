@@ -47,6 +47,8 @@ Router::post('/api/v1/login', [AuthController::class, 'login'], array_merge($tls
 Router::post('/api/v1/logout', [AuthController::class, 'logout'], array_merge($auth, [new CsrfMiddleware(), new RateLimitMiddleware(20, 60)]));
 
 Router::get('/api/v1/@me', [UserController::class, 'me'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
+Router::put('/api/v1/@me', [UserController::class, 'update'], $mutating);
+Router::delete('/api/v1/@me', [UserController::class, 'delete'], $mutating);
 
 Router::get('/api/v1/@me/cards', [CardController::class, 'index'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
 
