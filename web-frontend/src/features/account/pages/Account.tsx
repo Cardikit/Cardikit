@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/assets/header.webp';
 import { useAuth } from '@/contexts/AuthContext';
 import api from '@/lib/axios';
 import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 import Back from '@/components/Back';
-import { useNavigate } from 'react-router-dom';
 
 type FieldErrors = Record<string, string>;
 
@@ -111,6 +110,47 @@ const Account: React.FC = () => {
         }
     };
 
+    const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+    const [deletePassword, setDeletePassword] = useState('');
+    const [deleting, setDeleting] = useState(false);
+
+    const onDeleteAccount = async () => {
+        setError(null);
+        setSuccess(null);
+        setFieldErrors({});
+
+        if (!deletePassword.trim()) {
+            setFieldErrors({ delete_password: 'Password is required to delete your account.' });
+            return;
+        }
+
+        setDeleting(true);
+        try {
+            await fetchCsrfToken();
+            await api.delete('/@me', { data: { password: deletePassword } });
+            setDeleteConfirmOpen(false);
+            setDeletePassword('');
+            await refresh();
+            navigate('/login');
+        } catch (err: any) {
+            const apiErrors = err?.response?.data?.errors;
+            const apiMessage = err?.response?.data?.message || err?.response?.data?.error;
+
+            if (apiErrors && typeof apiErrors === 'object') {
+                const errors: FieldErrors = {};
+                Object.entries(apiErrors).forEach(([field, msgs]) => {
+                    if (Array.isArray(msgs) && msgs.length > 0) {
+                        errors[field === 'password' ? 'delete_password' : field] = String(msgs[0]);
+                    }
+                });
+                setFieldErrors(errors);
+            }
+            setError(apiMessage || 'Failed to delete account');
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     return (
         <main className="min-h-dvh bg-[#E3E3E3] flex flex-col">
             <Back />
@@ -213,9 +253,66 @@ const Account: React.FC = () => {
                                 </button>
                             </div>
                         </form>
+
                     </div>
                 </div>
+
+                <div className="w-full bg-[#FBFBFB] rounded-4xl flex flex-col items-center flex-1 px-6 py-10 mt-8 shadow-lg">
+                    <div className="border border-red-200 bg-red-50 rounded-2xl p-4 mt-6 w-full">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h2 className="text-lg font-semibold text-red-700">Delete account</h2>
+                                <p className="text-sm text-red-600">Permanently remove your account and all cards.</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => { setDeleteConfirmOpen(true); setError(null); setFieldErrors({}); }}
+                                className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
+            {deleteConfirmOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
+                    <div className="bg-white rounded-2xl w-full max-w-md p-6 space-y-4 shadow-lg">
+                        <h3 className="text-xl font-semibold text-gray-900">Confirm deletion</h3>
+                        <p className="text-gray-600">This will permanently delete your account and all your cards. Please enter your password to continue.</p>
+                        <input
+                            type="password"
+                            value={deletePassword}
+                            onChange={(e) => setDeletePassword(e.target.value)}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                            placeholder="Current password"
+                            autoFocus
+                        />
+                        {fieldErrors.delete_password && <p className="text-sm text-red-600">{fieldErrors.delete_password}</p>}
+                        {(error && !success) && <p className="text-sm text-red-600">{error}</p>}
+                        <div className="flex flex-col sm:flex-row sm:justify-end gap-3 pt-2">
+                            <button
+                                type="button"
+                                onClick={() => { setDeleteConfirmOpen(false); setDeletePassword(''); setFieldErrors({}); setError(null); }}
+                                className="w-full sm:w-auto border border-gray-300 text-gray-800 py-2 px-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                                disabled={deleting}
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={onDeleteAccount}
+                                disabled={deleting}
+                                className={`w-full sm:w-auto bg-red-600 text-white py-2 px-4 rounded-lg font-semibold shadow hover:bg-red-700 transition-colors ${deleting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            >
+                                {deleting ? 'Deleting...' : 'Confirm delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 };

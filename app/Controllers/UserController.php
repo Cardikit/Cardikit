@@ -120,4 +120,48 @@ class UserController
             'user' => User::findLoggedInUser()
         ], 200);
     }
+
+    /**
+     * Delete the authenticated user's account after confirming password.
+     */
+    public function delete(Request $request): void
+    {
+        $userId = $_SESSION['user_id'] ?? null;
+        $user = $userId ? User::findById((int) $userId) : null;
+
+        if (!$user) {
+            Response::json(['message' => 'Unauthorized'], 401);
+            return;
+        }
+
+        $data = $request->body();
+        $validator = new Validator();
+        $valid = $validator->validate($data, [
+            'password' => 'required|type:string',
+        ]);
+
+        if (!$valid) {
+            Response::json(['errors' => $validator->errors()], 422);
+            return;
+        }
+
+        if (!password_verify((string) $data['password'], $user['password'])) {
+            Response::json(['message' => 'Invalid password'], 401);
+            return;
+        }
+
+        // Delete user and cascade manually for related records as needed.
+        $dbUser = new User();
+        $deleted = $dbUser->deleteById((int) $user['id']);
+
+        if (!$deleted) {
+            Response::json(['message' => 'Failed to delete account'], 500);
+            return;
+        }
+
+        session_unset();
+        session_destroy();
+
+        Response::json(['message' => 'Account deleted']);
+    }
 }
