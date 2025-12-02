@@ -11,9 +11,9 @@ use App\Services\ThemeCatalog;
 
 class PublicCardController
 {
-    public function show(Request $request, int $id): void
+    public function show(Request $request, string $slug): void
     {
-        $card = Card::findWithItems($id);
+        $card = Card::findWithItemsBySlug($slug);
 
         if (!$card) {
             http_response_code(404);
@@ -21,10 +21,12 @@ class PublicCardController
             return;
         }
 
+        $id = $card['id'] ?? null;
+
         $qrImageUrl = $card['qr_image'] ?? null;
         if (!$qrImageUrl) {
             $publicRoot = dirname(__DIR__, 2) . '/public';
-            $matches = glob($publicRoot . "/qrcodes/card-{$id}-*.png");
+            $matches = $id ? glob($publicRoot . "/qrcodes/card-{$id}-*.png") : [];
             if (!empty($matches)) {
                 // pick the latest file
                 usort($matches, fn($a, $b) => filemtime($b) <=> filemtime($a));

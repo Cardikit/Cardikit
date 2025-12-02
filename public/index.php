@@ -38,7 +38,7 @@ session_name('cardikit_session');
 session_start();
 
 Router::get('/landing', [LandingController::class, 'show'], $tls);
-Router::get('/c/:id', [PublicCardController::class, 'show'], $tls);
+Router::get('/c/:slug', [PublicCardController::class, 'show'], $tls);
 
 Router::post('/api/v1/register', [AuthController::class, 'register'], array_merge($tls, [new RateLimitMiddleware(5, 60)]));
 

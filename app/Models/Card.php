@@ -20,7 +20,7 @@ class Card extends Model
     *
     * @since 0.0.1
     */
-    protected array $fillable = ['name', 'color', 'theme', 'user_id', 'qr_url', 'qr_image'];
+    protected array $fillable = ['name', 'color', 'theme', 'user_id', 'qr_url', 'qr_image', 'slug'];
 
     /**
     * Returns a user's cards
@@ -135,6 +135,42 @@ class Card extends Model
     */
     public static function findWithItems(int $cardId): ?array
     {
+        return self::findWithItemsBy('id', $cardId);
+    }
+
+    /**
+     * Returns a single card with its items by slug.
+     */
+    public static function findWithItemsBySlug(string $slug): ?array
+    {
+        return self::findWithItemsBy('slug', $slug);
+    }
+
+    /**
+     * Generate a unique slug for a card.
+     */
+    public static function generateUniqueSlug(int $length = 12): string
+    {
+        $instance = new static();
+
+        for ($i = 0; $i < 5; $i++) {
+            $slug = substr(bin2hex(random_bytes((int) ceil($length / 2))), 0, $length);
+            if (!$instance->findBy('slug', $slug)) {
+                return $slug;
+            }
+        }
+
+        throw new \RuntimeException('Unable to generate unique card slug');
+    }
+
+    /**
+     * Internal helper to load a card + items by column.
+     */
+    protected static function findWithItemsBy(string $column, mixed $value): ?array
+    {
+        if (!in_array($column, ['id', 'slug'], true)) {
+            throw new \InvalidArgumentException('Unsupported lookup column');
+        }
         $instance = new static();
 
         $sql = "
@@ -155,12 +191,12 @@ class Card extends Model
                 ci.updated_at AS item_updated_at
             FROM cards c
             LEFT JOIN card_items ci ON ci.card_id = c.id
-            WHERE c.id = :card_id
+            WHERE c.{$column} = :value
             ORDER BY ci.position, ci.id
         ";
 
         $stmt = $instance->db->prepare($sql);
-        $stmt->execute(['card_id' => $cardId]);
+        $stmt->execute(['value' => $value]);
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         if (!$rows) {

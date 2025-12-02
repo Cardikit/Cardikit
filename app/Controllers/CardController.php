@@ -35,6 +35,13 @@ class CardController
             return;
         }
 
+        if ($card['user_id'] !== $_SESSION['user_id']) {
+            Response::json([
+                'message' => 'Unauthorized'
+            ], 401);
+            return;
+        }
+
         Response::json($card);
     }
 
@@ -47,6 +54,7 @@ class CardController
     public function create(Request $request): void
     {
         $data = $request->body();
+        $data['slug'] = Card::generateUniqueSlug();
 
         // normalize defaults
         $data['color'] = $this->normalizeColor($data['color'] ?? null, '#1D4ED8');
@@ -121,7 +129,7 @@ class CardController
             $banner = $imageService->storeOrKeep($bannerPayload, $card['id'], 'banner', null, null);
             $avatar = $imageService->storeOrKeep($avatarPayload, $card['id'], 'avatar', null, null);
 
-            $qr = (new QrCodeService())->generateForCard($card['id']);
+            $qr = (new QrCodeService())->generateForCard($card['id'], $card['slug']);
             (new Card())->updateById($card['id'], [
                 'qr_url' => $qr['card_url'],
                 'qr_image' => $qr['image_url'],
@@ -149,6 +157,7 @@ class CardController
     public function update(Request $request, int $id): void
     {
         $data = $request->body();
+        unset($data['slug']); // slug is immutable
 
         // Ensure card exists
         $cardModel = new Card();
@@ -325,7 +334,7 @@ class CardController
         $logoData = $body['logo'] ?? null;
 
         try {
-            $qr = (new QrCodeService())->generateForCard($id, $logoData, $card['qr_image'] ?? null);
+            $qr = (new QrCodeService())->generateForCard($id, $card['slug'] ?? '', $logoData, $card['qr_image'] ?? null);
         } catch (\InvalidArgumentException $e) {
             Response::json([
                 'message' => $e->getMessage()

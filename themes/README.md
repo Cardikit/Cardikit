@@ -1,6 +1,6 @@
 # Card themes
 
-Public card pages (`/c/{id}`) are rendered from templates in this directory.
+Public card pages (`/c/{slug}`) are rendered from templates in this directory.
 
 - `default/` dark glass theme.
 - `minimal/` clean light theme.

@@ -19,12 +19,13 @@ class QrCodeService
      * Build and store a PNG QR code for the given card.
      *
      * @param int $cardId
+     * @param string $slug Public share identifier (unguessable).
      * @param string|null $logoData Base64 (optionally data URI) image to overlay in the center of the QR.
      * @param string|null $existingImageUrl Existing QR image URL to delete/replace (for cache busting).
      *
      * @return array{card_url: string, image_url: string, image_path: string}
      */
-    public function generateForCard(int $cardId, ?string $logoData = null, ?string $existingImageUrl = null): array
+    public function generateForCard(int $cardId, string $slug, ?string $logoData = null, ?string $existingImageUrl = null): array
     {
         $logoImage = $logoData ? $this->createLogoImage($logoData) : null;
 
@@ -47,7 +48,7 @@ class QrCodeService
             'logoSpaceHeight' => $logoImage ? 13 : null,
         ]);
 
-        $cardUrl = $this->cardUrl($cardId);
+        $cardUrl = $this->cardUrl($cardId, $slug);
         $qrImage = (new QRCode($options))->render($cardUrl);
 
         if (!($qrImage instanceof GdImage)) {
@@ -96,10 +97,11 @@ class QrCodeService
         }
     }
 
-    protected function cardUrl(int $cardId): string
+    protected function cardUrl(int $cardId, string $slug): string
     {
         $baseUrl = rtrim(Config::get('APP_URL', 'http://localhost:8080'), '/');
-        return $baseUrl . '/c/' . $cardId;
+        $identifier = trim($slug) !== '' ? trim($slug) : (string) $cardId;
+        return $baseUrl . '/c/' . rawurlencode($identifier);
     }
 
     /**

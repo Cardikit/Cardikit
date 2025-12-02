@@ -20,6 +20,7 @@ return new class extends Migration {
                 qr_url VARCHAR(512) DEFAULT NULL,
                 qr_image LONGTEXT DEFAULT NULL,
                 theme VARCHAR(255) NOT NULL,
+                slug VARCHAR(255) NOT NULL UNIQUE,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id)
