@@ -58,7 +58,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
                     </Link>
                     <hr className="border-gray-300" />
                     <p className="text-sm text-gray-600 font-inter">Account</p>
-                    <Link to="/coming-soon" onClick={closeMenu} className="flex items-center space-x-2 hover:text-primary-700">
+                    <Link to="/account" onClick={closeMenu} className="flex items-center space-x-2 hover:text-primary-700">
                         <IoPersonSharp className="text-xl text-gray-800" />
                         <p className="font-inter text-gray-800">Manage account</p>
                     </Link>

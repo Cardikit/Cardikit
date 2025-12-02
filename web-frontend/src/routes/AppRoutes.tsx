@@ -9,6 +9,7 @@ import Register from '@/features/auth/pages/Register';
 import Welcome from '@/features/auth/pages/Welcome';
 import NotFound from '@/pages/NotFound';
 import ComingSoon from '@/pages/ComingSoon';
+import Account from '@/features/account/pages/Account';
 
 /**
 * AppRoutes
@@ -41,6 +42,7 @@ const AppRoutes: React.FC = () => {
                         <Route path="/dashboard" element={<Dashboard />} />
                         <Route path="/editor" element={<Editor />} />
                         <Route path="/editor/:id" element={<Editor />} />
+                        <Route path="/account" element={<Account />} />
                     </Route>
 
                     <Route path="/coming-soon" element={<ComingSoon />} />
