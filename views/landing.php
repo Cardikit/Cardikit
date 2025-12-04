@@ -4,6 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Cardikit - Create a free digital business card you can share with a tap, QR code, or link. Never run out of business cards again.">
+    <meta name="keywords" content="digital business card, QR code card, NFC card, contact sharing, Cardikit">
+    <meta name="theme-color" content="#fa3c25">
+    <link rel="canonical" href="https://cardikit.com/">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
+    <link rel="apple-touch-icon" href="/assets/smaller-logo-no-background.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Cardikit - Open Source Digital Business Card Maker">
+    <meta property="og:description" content="Create and share digital business cards with QR codes and NFC-ready links.">
+    <meta property="og:url" content="https://cardikit.com/">
+    <meta property="og:image" content="https://cardikit.com/assets/header-FA0IEdgE.webp">
+    <meta property="og:image:alt" content="Cardikit header graphic">
+    <meta property="og:site_name" content="Cardikit">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cardikit - Open Source Digital Business Card Maker">
+    <meta name="twitter:description" content="Create and share digital business cards with QR codes and NFC-ready links.">
+    <meta name="twitter:image" content="https://cardikit.com/assets/hero-image-DloX0uJB.webp">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Cardikit",
+      "url": "https://cardikit.com",
+      "logo": "https://cardikit.com/assets/smaller-logo-no-background.png",
+      "description": "Create and share digital business cards with QR codes and NFC-ready links.",
+      "sameAs": [
+        "https://cardikit.com",
+        "https://cardikit.com/app"
+      ]
+    }
+    </script>
+
     <title>Cardikit - Open Source Digital Business Card Maker</title>
     <link rel="stylesheet" href="landing.css">
 </head>

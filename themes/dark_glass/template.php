@@ -109,7 +109,19 @@ $buildHref = function (?string $type, string $value) use ($normalizeUrl): ?strin
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?= $title; ?></title>
+    <title><?= $title; ?> | Cardikit Digital Card</title>
+    <meta name="description" content="View <?= $title; ?>'s digital business card, created with Cardikit." />
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" content="<?= $title; ?> | Cardikit Digital Card" />
+    <meta property="og:description" content="Tap to view and save <?= $title; ?>'s contact details." />
+    <?php
+        $appUrl = rtrim($_ENV['APP_URL'] ?? '', '/');
+        $logoUrl = $appUrl !== '' ? $appUrl . '/assets/smaller-logo-no-background.png' : '/assets/smaller-logo-no-background.png';
+        $shareImage = $banner ?: ($qrImageUrl ?: $logoUrl);
+    ?>
+    <meta property="og:image" content="<?= $escape($shareImage); ?>" />
+    <meta property="og:image:alt" content="<?= $escape($title); ?>'s card" />
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= $escape($logoUrl); ?>" />
     <style>
         <?php
             $cssPath = __DIR__ . '/style.css';
@@ -181,7 +193,7 @@ $buildHref = function (?string $type, string $value) use ($normalizeUrl): ?strin
             </div>
         </div>
         <div class="brand">
-            <img src="http://localhost:8080/assets/smaller-logo-no-background.png" alt="Cardikit logo" />
+            <img src="/assets/smaller-logo-no-background.png" alt="Cardikit logo" />
             <span>Powered by Cardikit</span>
         </div>
     </div>
