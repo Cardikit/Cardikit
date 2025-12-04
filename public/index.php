@@ -6,6 +6,7 @@ use App\Controllers\UserController;
 use App\Controllers\CardController;
 use App\Controllers\PublicCardController;
 use App\Controllers\LandingController;
+use App\Controllers\SpaController;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
 use App\Middleware\EnforceTlsMiddleware;
@@ -37,8 +38,31 @@ $mutating = array_merge($auth, [new CsrfMiddleware(), new RateLimitMiddleware(60
 session_name('cardikit_session');
 session_start();
 
+$publicPath = __DIR__;
+$requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+$candidateFile = realpath($publicPath . $requestPath);
+
+// Serve built assets directly if they exist under /public
+if ($candidateFile && str_starts_with($candidateFile, realpath($publicPath)) && is_file($candidateFile)) {
+    $mime = mime_content_type($candidateFile) ?: 'application/octet-stream';
+    header('Content-Type: ' . $mime);
+    readfile($candidateFile);
+    return;
+}
+
+// Serve SPA for any /app* path (falls back to /public/app or /public/dist)
+if (str_starts_with($requestPath, '/app')) {
+    (new SpaController())->show();
+    return;
+}
+
+Router::get('/', [LandingController::class, 'show'], $tls);
 Router::get('/landing', [LandingController::class, 'show'], $tls);
 Router::get('/c/:slug', [PublicCardController::class, 'show'], $tls);
+Router::get('/app', [SpaController::class, 'show'], $tls);
+Router::get('/app/:path', [SpaController::class, 'show'], $tls);
+Router::get('/app/:path/:subpath', [SpaController::class, 'show'], $tls);
+Router::get('/app/:path/:subpath/:child', [SpaController::class, 'show'], $tls);
 
 Router::post('/api/v1/register', [AuthController::class, 'register'], array_merge($tls, [new RateLimitMiddleware(5, 60)]));
 

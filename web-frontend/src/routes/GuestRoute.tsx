@@ -22,5 +22,5 @@ export default function GuestRoute() {
 
     if (loading) return <Loading />
 
-    return !user ? <Outlet /> : <Navigate to="/dashboard" replace />
+    return !user ? <Outlet /> : <Navigate to="/" replace />
 }

@@ -65,7 +65,7 @@ describe('GuestRoute', () => {
     render(
       <MemoryRouter initialEntries={['/login']}>
         <Routes>
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Dashboard />} />
           <Route element={<GuestRoute />}>
             <Route path="/login" element={<TestPage />} />
           </Route>
@@ -76,4 +76,3 @@ describe('GuestRoute', () => {
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
   });
 });
-

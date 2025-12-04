@@ -18,13 +18,13 @@ const NotFound: React.FC = () => {
 
                     <div className="w-full max-w-md mt-10 space-y-4">
                         <Link
-                            to="/dashboard"
+                            to="/"
                             className="block w-full bg-primary-500 text-gray-100 py-3 rounded-xl font-semibold text-center shadow hover:bg-primary-900 transition-colors"
                         >
                             Go to Dashboard
                         </Link>
                         <Link
-                            to="/"
+                            to="/welcome"
                             className="block w-full border border-gray-300 text-gray-800 py-3 rounded-xl font-semibold text-center hover:bg-gray-100 transition-colors"
                         >
                             Back to Home
