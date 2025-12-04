@@ -22,8 +22,8 @@
                 <li><a href="#features" class="nav-link">Features</a></li>
                 <li><a href="#how-it-works" class="nav-link">How it works</a></li>
                 <li><a href="#faq" class="nav-link">FAQ</a></li>
-                <li><a href="/register" class="btn btn-primary nav-cta">Create my free card</a></li>
-                <li><a href="/login" class="btn btn-outline nav-cta">Log in</a></li>
+                <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
+                <li><a href="/app/login" class="btn btn-outline nav-cta">Log in</a></li>
             </ul>
         </nav>
     </header>
@@ -36,7 +36,7 @@
                     <h1 class="hero-headline">Your Personal Brand,<br><span class="hero-highlight">Upgraded.</span></h1>
                     <p class="hero-subheadline">Cardikit lets you create a free digital business card you can share with a tap, QR code, or link. Update it in seconds, and make sure every connection always has your latest details.</p>
                     <div class="hero-cta">
-                        <a href="/register" class="btn btn-primary btn-large">Create my free card</a>
+                        <a href="/app/register" class="btn btn-primary btn-large">Create my free card</a>
                         <a href="#use-cases" class="hero-secondary-link">See a sample card</a>
                     </div>
                     <p class="hero-reassurance">Free to start. No credit card required. Open source.</p>
@@ -161,7 +161,7 @@
                 </div>
                 <div class="features-cta">
                     <p>Ready to build yours?</p>
-                    <a href="/register" class="btn btn-primary">Create my free card</a>
+                    <a href="/app/register" class="btn btn-primary">Create my free card</a>
                 </div>
             </div>
         </section>
@@ -249,7 +249,7 @@
                 </div>
                 <div class="comparison-cta">
                     <p>Skip the stack of paper cards. Create your free digital card today.</p>
-                    <a href="/register" class="btn btn-outline">Get started free</a>
+                    <a href="/app/register" class="btn btn-outline">Get started free</a>
                 </div>
             </div>
         </section>
@@ -322,7 +322,7 @@
             <div class="container">
                 <h2 class="final-cta-heading">Ready to replace your paper cards?</h2>
                 <p class="final-cta-text">Create your free digital business card in minutes and make sure every introduction sticks.</p>
-                <a href="/register" class="btn btn-primary btn-large">Create my free card</a>
+                <a href="/app/register" class="btn btn-primary btn-large">Create my free card</a>
                 <p class="final-cta-note">Takes about 2 minutes. No credit card required.</p>
             </div>
         </section>

@@ -10,6 +10,7 @@ import Welcome from '@/features/auth/pages/Welcome';
 import NotFound from '@/pages/NotFound';
 import ComingSoon from '@/pages/ComingSoon';
 import Account from '@/features/account/pages/Account';
+import { appBasePath } from '@/lib/env';
 
 /**
 * AppRoutes
@@ -21,25 +22,26 @@ import Account from '@/features/account/pages/Account';
 * - `PrivateRoute`: for protected pages that require authentication.
 *
 * Routes:
-* - `/` and `/register`, `/login`: public pages
-* - `/dashboard`: private/protected route
+* - `/dashboard/*`: app base (protected)
+* - `/dashboard/login`, `/dashboard/register`, `/dashboard/welcome`: public pages
+* - `/c/*`: handled elsewhere (card sharing)
 * - `*`: 404 Not Found fallback
 *
 * @since 0.0.1
 */
 const AppRoutes: React.FC = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename={appBasePath}>
             <AuthProvider>
                 <Routes>
                     <Route element={<GuestRoute />}>
                         <Route path="/login" element={<Login />} />
-                        <Route path="/" element={<Welcome />} />
                         <Route path="/register" element={<Register />} />
+                        <Route path="/welcome" element={<Welcome />} />
                     </Route>
 
                     <Route element={<PrivateRoute />}>
-                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route index element={<Dashboard />} />
                         <Route path="/editor" element={<Editor />} />
                         <Route path="/editor/:id" element={<Editor />} />
                         <Route path="/account" element={<Account />} />

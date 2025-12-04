@@ -20,10 +20,10 @@ describe('PrivateRoute', () => {
     (useAuth as any).mockReturnValue({ user: null, loading: true });
 
     render(
-      <MemoryRouter initialEntries={['/dashboard']}>
+      <MemoryRouter initialEntries={['/']}>
         <Routes>
           <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<ProtectedPage />} />
+            <Route path="/" element={<ProtectedPage />} />
           </Route>
         </Routes>
       </MemoryRouter>
@@ -39,10 +39,10 @@ describe('PrivateRoute', () => {
     });
 
     render(
-      <MemoryRouter initialEntries={['/dashboard']}>
+      <MemoryRouter initialEntries={['/']}>
         <Routes>
           <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<ProtectedPage />} />
+            <Route path="/" element={<ProtectedPage />} />
           </Route>
         </Routes>
       </MemoryRouter>
@@ -55,11 +55,11 @@ describe('PrivateRoute', () => {
     (useAuth as any).mockReturnValue({ user: null, loading: false });
 
     render(
-      <MemoryRouter initialEntries={['/dashboard']}>
+      <MemoryRouter initialEntries={['/']}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<PrivateRoute />}>
-            <Route path="/dashboard" element={<ProtectedPage />} />
+            <Route path="/" element={<ProtectedPage />} />
           </Route>
         </Routes>
       </MemoryRouter>
@@ -68,4 +68,3 @@ describe('PrivateRoute', () => {
     expect(screen.getByText('Login Page')).toBeInTheDocument();
   });
 });
-

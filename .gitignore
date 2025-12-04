@@ -18,6 +18,7 @@
 /web-frontend/yarn-error.log*
 /web-frontend/pnpm-debug.log*
 /web-frontend/lerna-debug.log*
+/web-frontend/.env
 
 /web-frontend/dist/
 /web-frontend/dist-ssr

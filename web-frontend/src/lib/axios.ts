@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { apiBaseUrl } from '@/lib/env';
 
 /**
 * Creates an axios instance with the base URL and credentials set.
@@ -8,7 +9,7 @@ import axios from 'axios';
 * @since 0.0.1
 */
 const api = axios.create({
-    baseURL: 'http://localhost/api/v1',
+    baseURL: apiBaseUrl,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'

@@ -77,7 +77,7 @@ describe('Editor page', () => {
         await waitFor(() => {
             expect(mockedFetchCsrf).toHaveBeenCalled();
             expect(deleteCardMock).toHaveBeenCalledWith(1);
-            expect(navigateMock).toHaveBeenCalledWith('/dashboard');
+            expect(navigateMock).toHaveBeenCalledWith('/');
         });
     });
 });

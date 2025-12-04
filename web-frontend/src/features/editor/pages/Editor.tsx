@@ -47,7 +47,7 @@ const Editor: React.FC = () => {
         try {
             await fetchCsrfToken();
             await deleteCard(card.id);
-            navigate('/dashboard');
+            navigate('/');
         } catch (error) {
             console.error('Error deleting card:', error);
         }

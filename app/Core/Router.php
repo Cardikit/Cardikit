@@ -115,7 +115,11 @@ class Router
         foreach ($routes as $route => $action) {
             // Convert route with :param to regex pattern
             $pattern = preg_replace('/:\w+/', '([^/]+)', $route);
-            $pattern = "#^" . rtrim($pattern, '/') . "$#";
+            if ($route === '/') {
+                $pattern = "#^/$#";
+            } else {
+                $pattern = "#^" . rtrim($pattern, '/') . "$#";
+            }
 
             // If the current route matches
             if (preg_match($pattern, $uri, $matches)) {

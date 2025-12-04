@@ -89,7 +89,7 @@ const Account: React.FC = () => {
             setPasswordConfirmation('');
             setCurrentPassword('');
             await refresh();
-            navigate('/dashboard');
+            navigate('/');
         } catch (err: any) {
             const apiErrors = err?.response?.data?.errors;
             const apiMessage = err?.response?.data?.message || err?.response?.data?.error;
@@ -237,7 +237,7 @@ const Account: React.FC = () => {
 
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
                                 <Link
-                                    to="/dashboard"
+                                    to="/"
                                     className="text-center w-full sm:w-auto border border-gray-300 text-gray-800 py-3 px-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors"
                                 >
                                     Cancel
