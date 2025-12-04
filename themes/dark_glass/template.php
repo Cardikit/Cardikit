@@ -181,7 +181,7 @@ $buildHref = function (?string $type, string $value) use ($normalizeUrl): ?strin
             </div>
         </div>
         <div class="brand">
-            <img src="http://localhost:8080/assets/smaller-logo-no-background.png" alt="Cardikit logo" />
+            <img src="/assets/smaller-logo-no-background.png" alt="Cardikit logo" />
             <span>Powered by Cardikit</span>
         </div>
     </div>
