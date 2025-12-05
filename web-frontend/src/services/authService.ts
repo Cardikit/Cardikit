@@ -1,4 +1,4 @@
-import { httpClient, ApiError } from './httpClient';
+import { httpClient } from './httpClient';
 import type { User } from '@/types/user';
 
 export interface LoginPayload {

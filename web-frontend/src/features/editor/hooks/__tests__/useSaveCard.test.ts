@@ -57,7 +57,7 @@ describe('useSaveCard', () => {
 
         await act(async () => {
             await result.current.save({
-                card: { ...baseCard, items: [{ id: 1, type: 'name', label: 'Name', value: '' }] },
+                card: { ...baseCard, items: [{ id: 1, type: 'name', label: 'Name', value: '', position: 0 }] },
                 setFormError,
                 setItemErrors,
             });
