@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import api from '@/lib/axios';
-import axios from 'axios';
+import { authService } from '@/services/authService';
+import { extractErrorMessage } from '@/services/errorHandling';
+import { ApiError } from '@/services/httpClient';
 
 interface RegisterPayload {
     name: string;
@@ -40,25 +41,24 @@ export const useRegisterUser = () => {
         setError(null);
 
         try {
-            const response = await api.post('/register', {
+            const response = await authService.register({
                 name: data.name,
                 email: data.email,
                 password: data.password
             });
-            return response.data;
+            return response;
         } catch (error: any) {
-            if (axios.isAxiosError(error)) {
-                // Check for specific backend error (e.g. 422 conflict)
-                if (error.response?.data?.errors?.email) {
-                    setError(error.response?.data?.errors?.email[0]);
-                }
-                if (error.response?.data?.error) {
-                    setError(error.response?.data?.error);
+            if (error instanceof ApiError) {
+                const data: any = error.data;
+                if (data?.errors?.email) {
+                    setError(data.errors.email[0]);
+                } else if (data?.error || data?.message) {
+                    setError(data.error || data.message);
                 } else {
-                    setError('An unknown API error occurred. Please try again.');
+                    setError(extractErrorMessage(error, 'An unknown API error occurred. Please try again.'));
                 }
             } else {
-                setError('Unexpected error occurred');
+                setError(extractErrorMessage(error, 'Unexpected error occurred'));
             }
             throw error;
         } finally {

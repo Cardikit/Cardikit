@@ -3,10 +3,19 @@ import { ImEmbed2 } from 'react-icons/im';
 import { FaNfcSymbol } from 'react-icons/fa6';
 import { IoPersonSharp, IoLogOut } from "react-icons/io5";
 import { useLogout } from '@/features/auth/hooks/useLogout';
-import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 
+/**
+ * DesktopNav
+ * ----------
+ * Left-hand navigation for large screens:
+ * - Quick links to widget/NFC placeholders and account page.
+ * - Triggers logout via auth hooks, then refreshes auth context.
+ * - Hidden on mobile in favor of NavMenu.
+ *
+ * @since 0.0.2
+ */
 const DesktopNav = () => {
 
     const { logout } = useLogout();
@@ -14,7 +23,6 @@ const DesktopNav = () => {
 
     const onLogout = async () => {
         try {
-            await fetchCsrfToken();
             await logout();
             await refresh();
         } catch (err) {

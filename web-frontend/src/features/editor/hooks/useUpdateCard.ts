@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import api from '@/lib/axios';
-import axios from 'axios';
 import type { ItemType } from '@/types/card';
 import * as yup from 'yup';
-import { cardSchema } from '@/features/editor/validationSchema';
+import { cardService } from '@/services/cardService';
+import { extractErrorMessage } from '@/services/errorHandling';
+import { ApiError } from '@/services/httpClient';
 
 interface Payload {
     name: string;
@@ -46,9 +46,7 @@ export const useUpdateCard = () => {
         setError(null);
 
         try {
-            await cardSchema.validate(data, { abortEarly: false });
-
-            const response = await api.put(`/@me/cards/${id}`, {
+            const response = await cardService.update(id, {
                 name: data.name,
                 color: data.color,
                 theme: data.theme,
@@ -56,23 +54,19 @@ export const useUpdateCard = () => {
                 avatar_image: data.avatar_image ?? null,
                 card_items: data.card_items
             });
-            return response.data;
+            return response;
         } catch (error: any) {
             if (error instanceof yup.ValidationError) {
                 setError(error.errors[0]);
-            } else if (axios.isAxiosError(error)) {
-                // Check for specific backend error (e.g. 422 conflict)
-                if (error.response?.data?.errors?.name) {
-                    setError(error.response?.data?.errors?.name[0]);
-                } else if (error.response?.data?.message) {
-                    setError(error.response?.data?.message);
-                } else if (error.response?.data?.error) {
-                    setError(error.response?.data?.error);
-                } else {
-                    setError('An unknown API error occurred. Please try again.');
-                }
+            } else if (error instanceof ApiError) {
+                const data: any = error.data;
+                const apiError =
+                    data?.errors?.name?.[0] ??
+                    data?.message ??
+                    data?.error;
+                setError(apiError || 'An unknown API error occurred. Please try again.');
             } else {
-                setError('Unexpected error occurred');
+                setError(extractErrorMessage(error, 'Unexpected error occurred'));
             }
             throw error;
         } finally {

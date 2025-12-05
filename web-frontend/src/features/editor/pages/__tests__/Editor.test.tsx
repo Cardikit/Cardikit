@@ -4,15 +4,12 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import Editor from '@/features/editor/pages/Editor';
 import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 import { useDeleteCard } from '@/features/editor/hooks/useDeleteCard';
-import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 
 vi.mock('@/features/editor/hooks/useFetchCard');
 vi.mock('@/features/editor/hooks/useDeleteCard');
-vi.mock('@/lib/fetchCsrfToken');
 
 const mockedUseFetchCard = vi.mocked(useFetchCard);
 const mockedUseDeleteCard = vi.mocked(useDeleteCard);
-const mockedFetchCsrf = vi.mocked(fetchCsrfToken);
 
 // Override navigate + params
 const navigateMock = vi.fn();
@@ -37,7 +34,6 @@ const renderEditor = () =>
 describe('Editor page', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        mockedFetchCsrf.mockResolvedValue(undefined);
     });
 
     it('shows loading state when fetching card by id', () => {
@@ -75,7 +71,6 @@ describe('Editor page', () => {
         fireEvent.click(screen.getByRole('button', { name: /^delete$/i }));
 
         await waitFor(() => {
-            expect(mockedFetchCsrf).toHaveBeenCalled();
             expect(deleteCardMock).toHaveBeenCalledWith(1);
             expect(navigateMock).toHaveBeenCalledWith('/');
         });

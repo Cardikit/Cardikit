@@ -23,6 +23,48 @@ interface EditQrDrawerProps {
     setLogoModalOpen: (open: boolean) => void
 }
 
+/**
+ * EditQrDrawer
+ * ------------
+ * Bottom drawer that provides all QR-code–related actions for a card.
+ * Designed for mobile-first interaction within the Cardikit dashboard.
+ *
+ * Responsibilities:
+ * - Display the card’s QR code in a centered, padded preview.
+ * - Provide multiple sharing and export actions:
+ *   - Add a logo to the QR code (opens external modal via `setLogoModalOpen`)
+ *   - Copy link to clipboard with success feedback
+ *   - Share via SMS (`sms:` protocol)
+ *   - Share via email (`mailto:` protocol)
+ *   - Use the Web Share API (link or file-based QR sharing when supported)
+ *   - Download the QR image locally as a PNG
+ *
+ * Drawer behavior:
+ * - Controlled open/close state via `open` and `setOpen`.
+ * - Uses `DrawerContent` to render a scrollable action panel.
+ * - Provides a “Done” button (via `DrawerClose`) to dismiss the drawer.
+ *
+ * Sharing logic:
+ * - Determines a shareable URL from `qr_url` or `qr_image`.
+ * - Copy fallback is used when Web Share is not supported.
+ * - File-sharing via Web Share (Level 2) is supported when the browser
+ *   exposes `navigator.canShare({ files })`.
+ * - Gracefully falls back to download if file-share is unsupported.
+ *
+ * UI notes:
+ * - Action buttons use the brand primary color and icon + label layout.
+ * - Shows a transient “Copied!” state after copying.
+ * - Scrollable content (`overflow-y-scroll`) to fit small screens.
+ *
+ * Props:
+ * - `open`: Whether the drawer is currently visible.
+ * - `setOpen`: Toggles drawer visibility.
+ * - `currentCard`: Card whose QR code is being managed.
+ * - `setLogoModalOpen`: Opens the modal for editing / adding a QR logo.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard, setLogoModalOpen }) => {
     const [copied, setCopied] = useState(false);
 

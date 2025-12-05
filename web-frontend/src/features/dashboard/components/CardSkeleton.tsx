@@ -1,3 +1,26 @@
+/**
+ * CardSkeleton
+ * ------------
+ * Loading placeholder for a digital card preview within the dashboard.
+ *
+ * Responsibilities:
+ * - Mimics the layout and vertical spacing of a real Card component while
+ *   data is loading.
+ * - Uses animated gray blocks (`animate-pulse`) to represent:
+ *   - Banner / header text placeholders
+ *   - Multiple item rows
+ *   - Action or content blocks at the bottom
+ * - Ensures consistent sizing with real cards (`h-[600px]`) so the carousel
+ *   and surrounding layout do not shift during loading.
+ *
+ * UX notes:
+ * - Placed inside the CardCarousel while cards are being fetched.
+ * - Provides a smooth, modern skeleton-loading effect that feels responsive
+ *   and familiar to users.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const CardSkeleton: React.FC = () => {
 
     return (

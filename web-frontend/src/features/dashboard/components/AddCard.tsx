@@ -1,6 +1,25 @@
 import { Link } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 
+/**
+ * AddCard
+ * -------
+ * Simple UI entry point for creating a new Cardikit card.
+ *
+ * Responsibilities:
+ * - Renders a stylized card with a plus icon.
+ * - Wraps the entire element in a <Link> that navigates to `/editor`,
+ *   where the user can create a new digital business card.
+ * - Provides consistent spacing and layout for mobile and desktop.
+ *
+ * Visual notes:
+ * - Large centered plus icon inside a red-tinted circle.
+ * - Uses a tall, clickable container to match the visual style
+ *   of other card tiles in the dashboard.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const AddCard: React.FC = () => {
     return (
         <div className="p-10 flex flex-col items-center">
