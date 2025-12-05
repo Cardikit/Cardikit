@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import api from '@/lib/axios';
-import axios from 'axios';
+import { cardService } from '@/services/cardService';
+import { extractErrorMessage } from '@/services/errorHandling';
+import { ApiError } from '@/services/httpClient';
 
 /**
 * useRegisterUser Hook
@@ -34,21 +35,18 @@ export const useDeleteCard = () => {
         setError(null);
 
         try {
-            const response = await api.delete(`/@me/cards/${id}`);
-            return response.data;
+            const response = await cardService.delete(id);
+            return response;
         } catch (error: any) {
-            if (axios.isAxiosError(error)) {
-                // Check for specific backend error (e.g. 422 conflict)
-                if (error.response?.data?.errors?.name) {
-                    setError(error.response?.data?.errors?.name[0]);
-                }
-                if (error.response?.data?.error) {
-                    setError(error.response?.data?.error);
-                } else {
-                    setError('An unknown API error occurred. Please try again.');
-                }
+            if (error instanceof ApiError) {
+                const data: any = error.data;
+                const apiError =
+                    data?.errors?.name?.[0] ??
+                    data?.error ??
+                    data?.message;
+                setError(apiError || 'An unknown API error occurred. Please try again.');
             } else {
-                setError('Unexpected error occurred');
+                setError(extractErrorMessage(error, 'Unexpected error occurred'));
             }
             throw error;
         } finally {

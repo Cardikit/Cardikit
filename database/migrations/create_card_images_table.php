@@ -3,8 +3,11 @@
 use App\Core\Migration;
 
 /**
- * Create a card_images table to store banner and avatar images per card.
- */
+* Create the card_images table with specified columns.
+* Contains up and down methods for migration commands.
+*
+* @since 0.0.2
+*/
 return new class extends Migration {
     public function up(): void
     {

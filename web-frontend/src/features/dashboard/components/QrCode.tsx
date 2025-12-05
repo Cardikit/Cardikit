@@ -6,6 +6,34 @@ interface QrCodeProps {
     setOpen: (open: boolean) => void
 }
 
+/**
+ * QrCode
+ * ------
+ * Displays the QR code for the currently selected card and provides access
+ * to the full QR management drawer.
+ *
+ * Responsibilities:
+ * - Show a loading placeholder while QR data is being fetched.
+ * - Render the card's QR code when available:
+ *   - Wrapped in a clickable container that opens the QR actions drawer
+ *     via `setOpen(true)`.
+ *   - Adds a timestamp query (`?t=...`) to the `<img>` to ensure the QR
+ *     image is always fresh and avoids browser caching issues.
+ * - Provide a friendly fallback when no QR code exists for the card.
+ *
+ * UI details:
+ * - Centers content both vertically and horizontally.
+ * - Uses a white rounded card-style container for both loaded and fallback states.
+ * - Includes a “Scan to view card” hint under the QR code for clarity.
+ *
+ * Props:
+ * - `currentCard`: The card whose QR code should be displayed.
+ * - `loading`: When true, shows a pulsing skeleton block.
+ * - `setOpen`: Opens the EditQrDrawer when the QR image is clicked.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const QrCode: React.FC<QrCodeProps> = ({ currentCard, loading, setOpen }) => {
 
     return (

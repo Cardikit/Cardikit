@@ -1,9 +1,21 @@
 import { useState } from 'react';
-import api from '@/lib/axios';
-import axios from 'axios';
 import type { ItemType } from '@/types/card';
 import * as yup from 'yup';
-import { cardSchema } from '@/features/editor/validationSchema';
+import { cardService } from '@/services/cardService';
+import { extractErrorMessage } from '@/services/errorHandling';
+import { ApiError } from '@/services/httpClient';
+
+/**
+ * useCreateCard
+ * -------------
+ * Client-side hook for validating and creating a card via the cardService.
+ *
+ * - Runs yup validation before hitting the API.
+ * - Normalizes error messages from validation and ApiError responses.
+ * - Exposes loading/error state for UI feedback.
+ *
+ * @since 0.0.2
+ */
 
 interface Payload {
     name: string;
@@ -46,9 +58,7 @@ export const useCreateCard = () => {
         setError(null);
 
         try {
-            await cardSchema.validate(data, { abortEarly: false });
-
-            const response = await api.post('/@me/cards', {
+            const response = await cardService.create({
                 name: data.name,
                 color: data.color,
                 theme: data.theme,
@@ -56,23 +66,19 @@ export const useCreateCard = () => {
                 avatar_image: data.avatar_image ?? null,
                 card_items: data.card_items
             });
-            return response.data;
+            return response;
         } catch (error: any) {
             if (error instanceof yup.ValidationError) {
                 setError(error.errors[0]);
-            } else if (axios.isAxiosError(error)) {
-                // Check for specific backend error (e.g. 422 conflict)
-                if (error.response?.data?.errors?.name) {
-                    setError(error.response?.data?.errors?.name[0]);
-                } else if (error.response?.data?.message) {
-                    setError(error.response?.data?.message);
-                } else if (error.response?.data?.error) {
-                    setError(error.response?.data?.error);
-                } else {
-                    setError('An unknown API error occurred. Please try again.');
-                }
+            } else if (error instanceof ApiError) {
+                const data: any = error.data;
+                const apiError =
+                    data?.errors?.name?.[0] ??
+                    data?.message ??
+                    data?.error;
+                setError(apiError || 'An unknown API error occurred. Please try again.');
             } else {
-                setError('Unexpected error occurred');
+                setError(extractErrorMessage(error, 'Unexpected error occurred'));
             }
             throw error;
         } finally {

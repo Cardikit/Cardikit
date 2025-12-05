@@ -1,25 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useRegisterUser } from '@/features/auth/hooks/useRegisterUser';
-import api from '@/lib/axios';
+import { authService } from '@/services/authService';
+import { ApiError } from '@/services/httpClient';
 
-vi.mock('@/lib/axios', () => ({
-    default: {
-        post: vi.fn()
+vi.mock('@/services/authService', () => ({
+    authService: {
+        register: vi.fn(),
     }
 }));
 
-const mockedApiPost = vi.mocked(api.post);
+const mockedRegister = vi.mocked(authService.register);
 
 describe('useRegister', () => {
     beforeEach(() => {
-        mockedApiPost.mockReset();
+        mockedRegister.mockReset();
     });
 
     // Test Case 1: Successful Registration
     it('should successfully register a user and update states', async () => {
         const mockResponseData = { message: 'Registration successful', token: 'fake-token' };
-        mockedApiPost.mockResolvedValueOnce({ data: mockResponseData, status: 200, statusText: 'OK', headers: {}, config: {} } as any);
+        mockedRegister.mockResolvedValueOnce(mockResponseData as any);
 
         const { result } = renderHook(() => useRegisterUser());
 
@@ -32,8 +33,8 @@ describe('useRegister', () => {
             returnedData = await result.current.register({ name: 'John Doe', email: 'test@example.com', password: 'password123' });
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
-        expect(mockedApiPost).toHaveBeenCalledWith('/register', {
+        expect(mockedRegister).toHaveBeenCalledTimes(1);
+        expect(mockedRegister).toHaveBeenCalledWith({
             name: 'John Doe',
             email: 'test@example.com',
             password: 'password123',
@@ -46,16 +47,8 @@ describe('useRegister', () => {
     // Test Case 2: Failed Registration (Axios Error with specific backend message)
     it('should handle Axios errors with a specific backend message', async () => {
         const mockErrorMessage = 'User with this email already exists.';
-        const mockAxiosError = {
-            response: { data: { error: mockErrorMessage }, status: 422, statusText: 'Unprocessable Entity', headers: {}, config: {} },
-            isAxiosError: true,
-            name: 'AxiosError',
-            message: 'Request failed with status code 422',
-            config: {},
-            toJSON: () => ({}),
-        };
-
-        mockedApiPost.mockRejectedValueOnce(mockAxiosError as any);
+        const mockError = new ApiError(mockErrorMessage, 422, { error: mockErrorMessage });
+        mockedRegister.mockRejectedValueOnce(mockError);
 
         const { result } = renderHook(() => useRegisterUser());
 
@@ -67,23 +60,14 @@ describe('useRegister', () => {
                 .rejects.toThrow();
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
+        expect(mockedRegister).toHaveBeenCalledTimes(1);
         expect(result.current.loading).toBe(false);
         expect(result.current.error).toBe(mockErrorMessage);
     });
 
     // Test Case 3: Failed Register (Axios Error without specific backend error message)
     it('should handle Axios errors without a specific backend message', async () => {
-        const mockAxiosError = {
-            response: { status: 500, statusText: 'Internal Server Error', headers: {}, config: {} },
-            isAxiosError: true,
-            name: 'AxiosError',
-            message: 'Network Error',
-            config: {},
-            toJSON: () => ({}),
-        };
-
-        mockedApiPost.mockRejectedValueOnce(mockAxiosError as any);
+        mockedRegister.mockRejectedValueOnce(new ApiError('Network Error', 500));
 
         const { result } = renderHook(() => useRegisterUser());
 
@@ -95,15 +79,15 @@ describe('useRegister', () => {
                 .rejects.toThrow();
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
+        expect(mockedRegister).toHaveBeenCalledTimes(1);
         expect(result.current.loading).toBe(false);
-        expect(result.current.error).toBe('An unknown API error occurred. Please try again.');
+        expect(result.current.error).toBe('Network Error');
     });
 
     // Test Case 4: Failed Login (Non-Axios Error)
     it('should handle non-Axios errors', async () => {
         const mockGenericError = new Error('Something truly unexpected happened!');
-        mockedApiPost.mockRejectedValueOnce(mockGenericError);
+        mockedRegister.mockRejectedValueOnce(mockGenericError);
 
         const { result } = renderHook(() => useRegisterUser());
 
@@ -115,24 +99,15 @@ describe('useRegister', () => {
                 .rejects.toThrow(mockGenericError);
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
+        expect(mockedRegister).toHaveBeenCalledTimes(1);
         expect(result.current.loading).toBe(false);
-        expect(result.current.error).toBe('Unexpected error occurred');
+        expect(result.current.error).toBe('Something truly unexpected happened!');
     });
 
     // Test Case 5: Error state is cleared on subsequent calls
     it('should clear previous errors on new register attempt', async () => {
         const mockErrorMessage = 'Initial error';
-        const mockAxiosError = {
-            response: { data: { error: mockErrorMessage }, status: 422, statusText: 'Unprocessable Entity', headers: {}, config: {} },
-            isAxiosError: true,
-            name: 'AxiosError',
-            message: 'Request failed with status code 422',
-            config: {},
-            toJSON: () => ({})
-        };
-
-        mockedApiPost.mockRejectedValueOnce(mockAxiosError as any); // First call fails
+        mockedRegister.mockRejectedValueOnce(new ApiError(mockErrorMessage, 422, { error: mockErrorMessage })); // First call fails
 
         const { result } = renderHook(() => useRegisterUser());
 
@@ -145,7 +120,7 @@ describe('useRegister', () => {
 
         // Mock the second call to succeed
         const mockSuccessResponse = { message: 'Registration successful' };
-        mockedApiPost.mockResolvedValueOnce({ data: mockSuccessResponse, status: 200, statusText: 'OK', headers: {}, config: {} } as any);
+        mockedRegister.mockResolvedValueOnce(mockSuccessResponse as any);
 
         // Second call (success this time)
         await act(async () => {
@@ -154,6 +129,6 @@ describe('useRegister', () => {
 
         expect(result.current.error).toBeNull(); // Error should be cleared
         expect(result.current.loading).toBe(false);
-        expect(mockedApiPost).toHaveBeenCalledTimes(2); // Called twice
+        expect(mockedRegister).toHaveBeenCalledTimes(2); // Called twice
     });
 });

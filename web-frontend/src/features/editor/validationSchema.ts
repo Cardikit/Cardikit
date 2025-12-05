@@ -1,5 +1,76 @@
 import * as yup from 'yup';
 
+/**
+ * Card & Card Item Validation Schemas
+ * -----------------------------------
+ * Centralized Yup schemas used by the editor when creating or updating cards.
+ * These schemas enforce data correctness before the API request is sent and
+ * produce human-readable, context-aware error messages for each field.
+ *
+ * ⚙️ `itemLabel(type)`
+ * - Maps internal card item `type` → human-friendly label prefix.
+ * - Used to dynamically generate validation error messages such as:
+ *   - “Email item empty”
+ *   - “Phone item must be at least 2 characters”
+ * - Unknown types fall back to the generic label: `"Card item"`.
+
+ * 🧩 `cardItemSchema`
+ * Validates a single card item inside `card_items[]`.
+ *
+ * Fields:
+ * - `id` (optional): Existing card item ID if persisted.
+ * - `card_id` (optional): Parent card ID for updates.
+ * - `type` (required): Must be defined; determines error label context.
+ * - `label`:
+ *     - Optional.
+ *     - Max length: 255 chars.
+ * - `value`:
+ *     - Required (after trimming).
+ *     - Error messages depend on the item type.
+ *     - Minimum length: 2 characters.
+ *     - Maximum length: 255 characters.
+ * - `position`:
+ *     - Optional numeric sort index.
+ * - `meta`:
+ *     - Arbitrary JSON metadata (optional).
+ *
+ * Validation behavior:
+ * - `.transform()` is used to normalize whitespace.
+ * - Error messages reference the item’s type for clearer UX.
+ *   Example: “LinkedIn item empty”, “Website item must be less than 255 characters”.
+ *
+ * 🗂️ `cardSchema`
+ * Validates the entire card object submitted to the API.
+ *
+ * Fields:
+ * - `name`:
+ *     - Required.
+ *     - Trimmed.
+ *     - 2–50 characters.
+ * - `color`:
+ *     - Must be a 3- or 6-digit hex string (`#RRGGBB` or `#RGB`).
+ *     - Defaults to Cardikit primary: `#1D4ED8`.
+ * - `theme`:
+ *     - Optional.
+ *     - Max length 50 (prevents invalid slugs).
+ *     - Defaults to `"default"` if not set.
+ * - `banner_image`:
+ *     - Optional string (typically an S3 or base64 ref).
+ * - `avatar_image`:
+ *     - Optional string.
+ * - `card_items`:
+ *     - Array of cardItemSchema entries.
+ *     - Defaults to empty array for new cards.
+ *
+ * Usage Notes:
+ * - The editor uses `.validate(payload, { abortEarly: false })` so all errors
+ *   return at once and can be mapped to per-field or per-item states.
+ * - This schema is intentionally strict to prevent malformed submissions
+ *   and simplify backend-side validation.
+ *
+ * @module validationSchema
+ * @since 0.0.2
+ */
 const itemLabel = (type?: string) => {
     const labels: Record<string, string> = {
         name: 'Name item',

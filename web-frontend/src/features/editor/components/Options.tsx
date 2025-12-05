@@ -13,6 +13,44 @@ interface OptionsProps {
     setCard: (card: CardType) => void;
 }
 
+/**
+ * Options
+ * -------
+ * Field-picker drawer for adding new items to a card in the editor.
+ *
+ * Responsibilities:
+ * - Present a grid of available field types (driven by `ITEM_ORDER` +
+ *   `getItemConfig`) that the user can add to their card.
+ * - Create a new item when a field type is selected:
+ *   - Uses `type` from the selected option.
+ *   - Initializes `value` as an empty string.
+ *   - Sets `position` to the next index (items.length + 1).
+ *   - Generates a unique `client_id` for local identification.
+ *   - Includes an empty `label` when the config defines a label field.
+ * - Append the new item to `card.items` and close the drawer.
+ *
+ * Drawer behavior:
+ * - Controlled by `open` and `setOpen`.
+ * - Includes a “Done” button (`DrawerClose`) to dismiss without adding.
+ *
+ * UI details:
+ * - Title text: “Select a field below to add it”.
+ * - Renders all fields in a responsive 3-column grid.
+ * - Each option shows:
+ *   - Icon with accent styling (`config.accentClass` + `config.iconClass`).
+ *   - Display name (`config.displayName`).
+ *   - A small line describing the field composition (joined `fields[].label`,
+ *     e.g., “Label + Value”).
+ *
+ * Props:
+ * - `open`    → Whether the drawer is currently visible.
+ * - `setOpen` → Toggles the drawer open/closed.
+ * - `card`    → The current card being edited.
+ * - `setCard` → Setter used to append newly created items.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const Options: React.FC<OptionsProps> = ({ open, setOpen, card, setCard }) => {
 
     const addItem = (type: string) => {

@@ -18,7 +18,7 @@ export interface ItemType {
     position: number;
     id?: number;
     card_id?: number;
-    meta?: string;
+    meta?: string | null;
     created_at?: string;
     updated_at?: string;
     client_id?: string;

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import api from '@/lib/axios';
+import { authService } from '@/services/authService';
+import { extractErrorMessage } from '@/services/errorHandling';
 import type { User } from '@/types/user';
 
 /**
@@ -46,10 +47,10 @@ export const useAuthenticatedUser = () => {
     */
     const fetchAuthenticatedUser = async () => {
         try {
-            const response = await api.get<User>('/@me');
-            setUser(response.data);
+            const me = await authService.me();
+            setUser(me);
         } catch (err: any) {
-            setError(err?.response?.data?.message || 'Failed to fetch user');
+            setError(extractErrorMessage(err, 'Failed to fetch user'));
             setUser(null);
         } finally {
             setLoading(false);

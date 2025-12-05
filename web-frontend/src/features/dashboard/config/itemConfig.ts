@@ -40,6 +40,51 @@ export interface ItemTypeConfig {
     fields: ItemFieldConfig;
 }
 
+/**
+ * Item Config Definitions
+ * -----------------------
+ * Central configuration map describing how each card item type should be
+ * rendered inside Cardikit cards. This determines:
+ *
+ *  - Which icon to display
+ *  - Whether the item should behave as a link (clickable, <a> tag)
+ *  - Whether the item has a label/value structure (e.g., "Phone: 555-1234")
+ *
+ * The UI layer (Card component) relies on this map to dynamically:
+ *  - Pick the correct icon component
+ *  - Decide if the item should be wrapped in an <a> tag
+ *  - Format primary and secondary text based on `label: true|false`
+ *
+ * Types:
+ * - `ItemFieldConfig`:
+ *      link:   If true, the item value is treated as a URL and rendered clickable.
+ *      label:  If true, the item contains a label/value pair. If false, only value is shown.
+ *
+ * - `ItemTypeConfig`:
+ *      icon:       React icon component to display.
+ *      iconClass:  Optional additional CSS classes for icon styling.
+ *      fields:     ItemFieldConfig controlling behavior.
+ *
+ * ITEM_CONFIGS:
+ * - A record keyed by item type string, defining the rendering behavior for all supported
+ *   profile fields (social links, contact methods, bio sections, etc.).
+ * - Used throughout the dashboard to ensure consistent formatting.
+ *
+ * getItemConfig(type: string):
+ * - Returns the registered config if available.
+ * - Falls back to a generic link-style config using `FaLink` when the type is unknown.
+ *   This ensures forwards compatibility when new item types are introduced.
+ *
+ * Example usage:
+ * ```ts
+ * const config = getItemConfig(item.type);
+ * const Icon = config.icon;
+ * const isLink = config.fields.link;
+ * ```
+ *
+ * @module itemConfig
+ * @since 0.0.2
+ */
 export const ITEM_CONFIGS: Record<string, ItemTypeConfig> = {
     name: {
         icon: FaUser,

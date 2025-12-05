@@ -12,6 +12,8 @@ Middleware in **Cardikit** is used to inspect and filter incoming HTTP requests 
 
 If a middleware returns `false`, the request is halted and a response is sent immediately.
 
+> All middleware should implement `App\Middleware\MiddlewareInterface` and accept the current `Request` instance: `handle(Request $request): bool`.
+
 ---
 
 ## 🔧 How Middleware Works
@@ -38,11 +40,12 @@ See more about [🧭 routing](./router.html).
 
 namespace App\Middleware;
 
+use App\Core\Request;
 use App\Core\Response;
 
-class AuthMiddleware
+class AuthMiddleware implements MiddlewareInterface
 {
-    public function handle(): bool
+    public function handle(Request $request): bool
     {
         if (! isset($_SESSION['user_id'])) {
             Response::json(['error' => 'Unauthorized'], 401);

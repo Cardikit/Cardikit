@@ -22,6 +22,63 @@ interface CardProps {
     setItemErrors?: React.Dispatch<React.SetStateAction<Record<string, string>>>;
 }
 
+/**
+ * Card (Editor)
+ * -------------
+ * Interactive editor view for a single Card within the Cardikit editor.
+ * This is the *editable* version of the card, distinct from the read-only
+ * dashboard preview component.
+ *
+ * Responsibilities:
+ * - Display and edit card visuals:
+ *   - Banner placeholder / image with click handler (`onOpenBanner`).
+ *   - Avatar placeholder / image with click handler (`onOpenAvatar`).
+ *   - Uses the card’s accent color as a fallback for banner/avatar backgrounds.
+ *
+ * - Manage card items (fields):
+ *   - Render each item with its configured icon from `getItemConfig`.
+ *   - Support label/value formatting via `config.fields` definition.
+ *   - Inline editing of item fields:
+ *     - Enter edit mode per item.
+ *     - Show labeled inputs for each configured field.
+ *     - Save or cancel edits.
+ *     - Delete items from the card.
+ *   - Show item-level validation errors via `itemErrors` with a red ring
+ *     and optional error message below the row.
+ *
+ * - Drag-and-drop reordering:
+ *   - Each row is draggable via the grip icon.
+ *   - Drop indicators show where the item will be inserted.
+ *   - Items can be reordered between other items or moved to the end
+ *     (by dropping onto the “Add item” area).
+ *   - After any reorder/delete, reindexes `position` to be 1-based and sequential.
+ *
+ * - Add item:
+ *   - Clicking the “+” tile calls `setOpen(true)` to open the item picker/modal.
+ *
+ * Loading behavior:
+ * - When `loading` is true and a route `id` exists, shows a skeleton UI
+ *   approximating the final layout (banner, avatar, several placeholders).
+ *
+ * State owned inside this component:
+ * - `editingId`       → which item (if any) is currently being edited.
+ * - `editingFields`   → temporary form values for the item being edited.
+ * - `draggingId`      → key of the item currently being dragged.
+ * - `dropTargetId`    → key or `"end"` indicating the current drop target.
+ *
+ * Props:
+ * - `card`           → The current card being edited.
+ * - `setCard`        → Setter to update the card (items, positions, images).
+ * - `setOpen`        → Opens the “add item” UI.
+ * - `loading`        → Controls skeleton vs. live editor rendering.
+ * - `onOpenBanner`   → Handler for opening banner picker/upload.
+ * - `onOpenAvatar`   → Handler for opening avatar picker/upload.
+ * - `itemErrors`     → Optional map of per-item error messages keyed by item key.
+ * - `setItemErrors`  → Optional setter used to clear errors when an item is edited.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const Card: React.FC<CardProps> = ({ card, setOpen, setCard, loading, onOpenBanner, onOpenAvatar, itemErrors = {}, setItemErrors }) => {
     const [editingId, setEditingId] = useState<string | number | null>(null);
     const [editingFields, setEditingFields] = useState<Record<string, string>>({});

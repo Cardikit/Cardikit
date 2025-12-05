@@ -14,6 +14,36 @@ interface TitleEditorProps {
     setCard: (card: CardType) => void;
 }
 
+/**
+ * TitleEditor
+ * -----------
+ * Drawer-based editor for updating the card’s display name.
+ *
+ * Purpose:
+ * - Provide a simple, focused UI for renaming a card.
+ * - Uses a bottom drawer for mobile-friendly editing.
+ *
+ * Behavior:
+ * - Mirrors the current card name in a controlled `<Input />`.
+ * - Updates the card state via `setCard` on each keystroke.
+ * - Closes the drawer when:
+ *   - The user taps “Done”
+ *   - The user presses Enter inside the input
+ *
+ * UI:
+ * - Sticky grab-handle at the top for consistent drawer styling.
+ * - Styled input with a card icon (`FaIdCard`) as an adornment.
+ * - Uses the shared `Input` component from the auth feature.
+ *
+ * Props:
+ * - `open`    → Whether the drawer is visible.
+ * - `setOpen` → Toggles drawer visibility.
+ * - `card`    → The card being edited.
+ * - `setCard` → Setter to apply the updated name.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const TitleEditor: React.FC<TitleEditorProps> = ({ open, setOpen, card, setCard }) => {
     return (
         <Drawer open={open} onOpenChange={setOpen}>

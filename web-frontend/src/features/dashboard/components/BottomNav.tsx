@@ -1,6 +1,28 @@
 import { FaAddressCard, FaUserFriends } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
+/**
+ * BottomNav
+ * ---------
+ * Mobile-only navigation bar for the Cardikit dashboard.
+ *
+ * Responsibilities:
+ * - Provides quick access to the primary app sections:
+ *   - "My Cards" → `/`
+ *   - "Contacts" → `/coming-soon` (placeholder for future features)
+ * - Highlights the active route using `useLocation` to match the current path.
+ * - Renders a fixed bottom bar with icons and labels, optimized for touch.
+ * - Automatically hidden on large screens (`lg:hidden`) since desktop
+ *   layouts use a sidebar or top navigation instead.
+ *
+ * Visual notes:
+ * - Uses bold icons (`FaAddressCard`, `FaUserFriends`) sized for mobile.
+ * - Active items are tinted with the primary color and disable pointer cursor.
+ * - Includes a top border and shadow for separation from page content.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const BottomNav: React.FC = () => {
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;

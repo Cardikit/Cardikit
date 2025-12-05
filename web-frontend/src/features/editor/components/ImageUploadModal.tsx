@@ -12,6 +12,43 @@ interface ImageUploadModalProps {
     allowClear?: boolean;
 }
 
+/**
+ * ImageUploadModal
+ * ----------------
+ * A bottom drawer used for uploading, validating, and optionally removing
+ * images (banner, avatar, QR logo, etc.) within the Cardikit editor.
+ *
+ * Responsibilities:
+ * - Provide an accessible file picker UI inside a Drawer component.
+ * - Validate selected files before processing:
+ *   - Accepts only PNG, JPEG, and WEBP formats.
+ *   - Enforces a 5MB maximum file size.
+ * - Convert valid files into base64 data URLs via FileReader, then:
+ *   - Pass the result to `onSave`.
+ *   - Close the modal afterward.
+ * - Allow clearing/removing the image when `allowClear` is true.
+ * - Display error messages for invalid file type or size violations.
+ *
+ * Drawer behavior:
+ * - Controlled by the `open` prop.
+ * - When the Drawer closes (via swipe or clicking outside), `onClose` fires.
+ * - Includes a “Done” button (`DrawerClose`) as an additional closing mechanism.
+ *
+ * UI details:
+ * - File input is hidden; user triggers uploads via an `Upload image` button.
+ * - Uses a visually centered drag bar, padding, and responsive spacing.
+ * - Supports large-screen layouts with wider padding (`lg:px-72`).
+ *
+ * Props:
+ * - `open`       → Whether the drawer is visible.
+ * - `onClose`    → Fired when the modal should close.
+ * - `onSave`     → Called with the selected image's data URL, or `null` if removed.
+ * - `title`      → Title displayed at the top (“Edit banner”, “Edit avatar”, etc.).
+ * - `allowClear` → Whether to show the “Remove image” action (default: true).
+ *
+ * @component
+ * @since 0.0.2
+ */
 const ImageUploadModal: React.FC<ImageUploadModalProps> = ({ open, onClose, onSave, title, allowClear = true }) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [error, setError] = useState<string | null>(null);

@@ -6,30 +6,56 @@ use App\Models\User;
 use App\Core\Response;
 use App\Core\Request;
 use App\Core\Validator;
+use App\Services\AuthService;
 
+/**
+* Contains methods for user profile management.
+*
+* @package App\Controllers
+*
+* @since 0.0.2
+*/
 class UserController
 {
-    public function me()
+    /**
+    * Get the authenticated user's profile.
+    *
+    * @return void
+    *
+    * @since 0.0.2
+    */
+    public function me(): void
     {
+        // Get the currently logged in user
         $user = User::findLoggedInUser();
 
+        // Return the user
         Response::json($user);
     }
 
     /**
      * Update the authenticated user's profile (name/email/password).
      * Requires the current password for any change. New passwords must be confirmed.
+     *
+     * @param Request $request user data to change
+     *
+     * @return void
+     *
+     * @since 0.0.2
      */
     public function update(Request $request): void
     {
-        $userId = $_SESSION['user_id'] ?? null;
+        // Get the currently logged in user
+        $userId = (new AuthService())->currentUserId();
         $user = $userId ? User::findById((int) $userId) : null;
 
+        // Fail user not found
         if (!$user) {
             Response::json(['message' => 'Unauthorized'], 401);
             return;
         }
 
+        // Get request data
         $data = $request->body();
 
         $rules = [
@@ -38,6 +64,7 @@ class UserController
 
         $payload = [];
 
+        // Set rules and payload
         if (array_key_exists('name', $data)) {
             $rules['name'] = 'required|min:2|max:50|type:string';
             $payload['name'] = trim((string) $data['name']);
@@ -60,15 +87,9 @@ class UserController
             return;
         }
 
+        // validate user input
         $validator = new Validator([User::class => new User()]);
-        $valid = $validator->validate($data, $rules);
-
-        if (!$valid) {
-            Response::json([
-                'errors' => $validator->errors()
-            ], 422);
-            return;
-        }
+        if (!$validator->validateOrRespond($data, $rules)) return;
 
         if (!password_verify((string) $data['current_password'], $user['password'])) {
             Response::json([
@@ -106,6 +127,7 @@ class UserController
             return;
         }
 
+        // Update the user
         $updated = (new User())->updateById($user['id'], $finalPayload);
 
         if (!$updated) {
@@ -115,6 +137,7 @@ class UserController
             return;
         }
 
+        // Return the updated user
         Response::json([
             'message' => 'Account updated successfully',
             'user' => User::findLoggedInUser()
@@ -123,10 +146,17 @@ class UserController
 
     /**
      * Delete the authenticated user's account after confirming password.
+     *
+     * @param Request $request password confirmation
+     *
+     * @return void
+     *
+     * @since 0.0.2
      */
     public function delete(Request $request): void
     {
-        $userId = $_SESSION['user_id'] ?? null;
+        // Get the currently logged in user
+        $userId = (new AuthService())->currentUserId();
         $user = $userId ? User::findById((int) $userId) : null;
 
         if (!$user) {
@@ -134,16 +164,16 @@ class UserController
             return;
         }
 
+        // Get request data
         $data = $request->body();
+
+        // validate user password
         $validator = new Validator();
-        $valid = $validator->validate($data, [
+        $valid = $validator->validateOrRespond($data, [
             'password' => 'required|type:string',
         ]);
 
-        if (!$valid) {
-            Response::json(['errors' => $validator->errors()], 422);
-            return;
-        }
+        if (!$valid) return;
 
         if (!password_verify((string) $data['password'], $user['password'])) {
             Response::json(['message' => 'Invalid password'], 401);
@@ -159,6 +189,7 @@ class UserController
             return;
         }
 
+        // logout the user
         session_unset();
         session_destroy();
 

@@ -2,6 +2,8 @@
 
 namespace App\Core;
 
+use App\Core\Response;
+
 /**
 * Validator class contains methods to validate user input.
 *
@@ -110,6 +112,39 @@ class Validator
     }
 
     /**
+    * Validates and automatically emits a JSON error response on failure.
+    *
+    * @param array $data
+    * @param array $rules
+    * @param int $status
+    *
+    * @return bool
+    */
+    public function validateOrRespond(array $data, array $rules, int $status = 422): bool
+    {
+        $valid = $this->validate($data, $rules);
+        if ($valid) {
+            return true;
+        }
+
+        Response::json(['errors' => $this->errors()], $status);
+        return false;
+    }
+
+    /**
+    * Validates and returns errors array on failure (does not emit a response).
+    *
+    * @param array $data
+    * @param array $rules
+    *
+    * @return array|null Null when valid, or array of errors on failure.
+    */
+    public function validateOrErrors(array $data, array $rules): ?array
+    {
+        return $this->validate($data, $rules) ? null : $this->errors();
+    }
+
+    /**
     * Adds error message if value is empty.
     *
     * @param string $field
@@ -190,6 +225,8 @@ class Validator
     * @param string $pattern
     *
     * @return void
+    *
+    * @since 0.0.2
     */
     protected function regex(string $field, mixed $value, string $pattern): void
     {
@@ -215,6 +252,8 @@ class Validator
     * @param mixed $value
     *
     * @return void
+    *
+    * @since 0.0.2
     */
     protected function hexColor(string $field, mixed $value): void
     {

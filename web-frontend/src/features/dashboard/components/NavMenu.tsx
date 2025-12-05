@@ -3,10 +3,19 @@ import { ImEmbed2 } from 'react-icons/im';
 import { FaNfcSymbol } from 'react-icons/fa6';
 import { IoPersonSharp, IoLogOut, IoClose } from "react-icons/io5";
 import { useLogout } from '@/features/auth/hooks/useLogout';
-import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
 
+/**
+ * NavMenu
+ * -------
+ * Mobile/overlay navigation:
+ * - Mirrors DesktopNav links for small screens.
+ * - Provides logout with auth refresh.
+ * - Handles open/close backdrop interactions.
+ *
+ * @since 0.0.2
+ */
 interface NavMenuProps {
     open: boolean;
     closeMenu: () => void;
@@ -18,7 +27,6 @@ const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
 
     const onLogout = async () => {
         try {
-            await fetchCsrfToken();
             await logout();
             await refresh();
         } catch (err) {

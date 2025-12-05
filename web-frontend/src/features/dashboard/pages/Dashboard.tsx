@@ -12,6 +12,59 @@ import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
 import type { CardType } from '@/types/card';
 import { Link } from 'react-router-dom';
 
+/**
+ * Dashboard
+ * ---------
+ * The main authenticated dashboard screen of the Cardikit application.
+ * Acts as the layout and state coordinator for:
+ *  - Viewing cards
+ *  - Browsing and selecting cards (carousel)
+ *  - Displaying and sharing QR codes
+ *  - Editing and creating cards
+ *  - Opening the sidebar navigation menu (mobile/tablet)
+ *  - Desktop actions sidebar
+ *
+ * High-level responsibilities:
+ * ----------------------------
+ * - Fetch all cards using `useFetchCards` and manage loading state.
+ * - Track `currentCard` and update it when the user scrolls through the carousel.
+ * - Manage visibility of UI overlays:
+ *   - `NavMenu` (mobile navigation)
+ *   - `EditQrDrawer` (QR sharing actions)
+ *   - `LogoModal` (add logos to QR codes)
+ *
+ * Layout summary:
+ * ---------------
+ * - **Top navigation bar:** Shows the current card name, menu toggle, and edit button.
+ * - **Desktop sidebar (`DesktopNav`):** Replaces the bottom nav on large screens.
+ * - **Center content:**
+ *     - QR code preview (`QrCode`)
+ *     - Card carousel (`CardCarousel`)
+ * - **Desktop actions sidebar:**
+ *     - Share button
+ *     - Edit / create card links
+ *     - Current card metadata summary
+ * - **Mobile-only floating Share button** for quick access to QR drawer.
+ * - **Bottom navigation (`BottomNav`)** for mobile users.
+ *
+ * Behavior details:
+ * -----------------
+ * - On carousel index change, `currentCard` updates automatically.
+ * - When selecting the “Add Card” tile, a placeholder card is used.
+ * - The share drawer (`EditQrDrawer`) receives the active card and allows
+ *   link copying, QR downloading, Web Share API usage, and logo insertion.
+ * - The logo modal triggers a card refresh on save to update the QR preview.
+ *
+ * State managed here:
+ * -------------------
+ * - `open`           → mobile nav drawer
+ * - `logoModalOpen`  → QR logo editing modal
+ * - `editQrOpen`     → QR share drawer
+ * - `currentCard`    → selected card from carousel
+ *
+ * @component
+ * @since 0.0.2
+ */
 const Dashboard: React.FC = () => {
     const [open, setOpen] = useState(false);
     const [logoModalOpen, setLogoModalOpen] = useState(false);
@@ -26,7 +79,6 @@ const Dashboard: React.FC = () => {
     const toggleMenu = () => {
         setOpen(prev => !prev);
     }
-
 
     const { cards, loading, refresh } = useFetchCards();
 
