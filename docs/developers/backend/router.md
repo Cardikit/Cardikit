@@ -10,6 +10,8 @@ grandparent: Developers
 
 Cardikit's routing system maps incoming HTTP requests to their approprate controllers, methods, and middleware. Routes are grouped by HTTP method and support both static and dynamic URI segments.
 
+> 📍 Route definitions live in `routes/web.php`, which is required from `public/index.php` after bootstrapping.
+
 ---
 
 ## 🏗️ Defining Routes
@@ -22,6 +24,15 @@ Router::post('/login', [AuthController::class, 'login'], [new RateLimitMiddlewar
 ```
 
 Each route can optionally include a **middleware array**.
+
+You can also compose middleware sets from `App\Routing\MiddlewareGroups` to avoid duplication:
+
+```php
+use App\Routing\MiddlewareGroups;
+
+$auth = MiddlewareGroups::auth();
+Router::get('/api/v1/@me', [UserController::class, 'me'], $auth);
+```
 
 ---
 

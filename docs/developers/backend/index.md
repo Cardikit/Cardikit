@@ -42,6 +42,7 @@ App/
 ├── Core/            # Core classes (Router, Request, Response, Validator, etc.)
 ├── Middleware/      # Middleware logic (e.g., AuthMiddleware)
 ├── Models/          # Database abstraction and queries
+├── Services/        # Domain services (AuthService, CardService, etc.)
 ├── Views/           # (If applicable) for server-rendered pages
 ├── Config/          # Environment and configuration settings
 database/
