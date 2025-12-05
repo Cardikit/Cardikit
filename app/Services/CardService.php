@@ -106,7 +106,7 @@ class CardService
         // Validate name, color, theme
         $validator = new Validator([Card::class => new Card()]);
         $errors = $validator->validateOrErrors($payload, [
-            'name' => 'required|min:2|max:50|type:string|unique:App\Models\Card:name',
+            'name' => 'required|min:2|max:50|type:string',
             'color' => 'required|type:string|hexcolor|max:20',
             'theme' => 'type:string|max:50',
         ]);
@@ -240,9 +240,6 @@ class CardService
         // validate name
         $validator = new Validator([Card::class => new Card()]);
         $nameRule = 'required|min:2|max:50|type:string';
-        if ($payload['name'] !== $card['name']) {
-            $nameRule .= '|unique:App\Models\Card:name';
-        }
 
         // validate payload
         $errors = $validator->validateOrErrors($payload, [
