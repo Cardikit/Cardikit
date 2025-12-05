@@ -42,7 +42,7 @@ Registers a new user.
 
 | Field     | Rules                                                                 |
 |-----------|-----------------------------------------------------------------------|
-| `name`    | **Required.** Must be a **string** between **2 and 10 characters** long. |
+| `name`    | **Required.** Must be a **string** between **2 and 50 characters** long. |
 | `email`   | **Required.** Must be a **valid email** and **unique** in the `users` table. |
 | `password`| **Required.** Must be a **string** with **minimum 8 characters**. Must match the `password_confirmation` field. |
 

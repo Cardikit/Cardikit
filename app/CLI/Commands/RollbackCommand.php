@@ -2,6 +2,8 @@
 
 namespace Cardikit\CLI\Commands;
 
+use App\Core\Migrate;
+
 /**
 * Handles rolling back all migration files.
 *
@@ -20,16 +22,6 @@ class RollbackCommand
     */
     public function handle(): void
     {
-        $migrations = glob(__DIR__ . '/../../../database/migrations/*.php');
-
-        foreach ($migrations as $file) {
-            echo "Rolling back: " . basename($file) . "\n";
-
-            $migration = require $file;
-            $migration->down();
-
-            echo "↩ Rolled back\n";
-        }
+        Migrate::rollback();
     }
 }
-

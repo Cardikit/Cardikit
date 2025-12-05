@@ -1,9 +1,19 @@
 import { useState } from 'react';
 import type { CardType } from '@/types/card';
-import api from '@/lib/axios';
 import { FaTimes } from 'react-icons/fa';
-import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
+import { cardService } from '@/services/cardService';
+import { extractErrorMessage } from '@/services/errorHandling';
 
+/**
+ * LogoModal
+ * ---------
+ * Modal UI for uploading a logo and regenerating a card's QR code.
+ * - Validates file type/size and previews selection.
+ * - Sends base64 payload to cardService.regenerateQr, then refreshes cards.
+ * - Manages upload/generate state and surfaces error messaging.
+ *
+ * @since 0.0.2
+ */
 interface LogoModalProps {
     currentCard: CardType
     refreshCards: () => Promise<void>;
@@ -68,20 +78,12 @@ const LogoModal: React.FC<LogoModalProps> = ({ refreshCards, currentCard, setLog
         setUploadError(null);
 
         try {
-            // Extract only the base64 part
             const base64 = logoPreview.replace(/^data:image\/[a-zA-Z]+;base64,/, '');
-
-            await fetchCsrfToken();
-
-            await api.post(`/@me/cards/${currentCard.id}/qr`, {
-                logo: base64,
-            });
-
+            await cardService.regenerateQr(currentCard.id, base64);
             await refreshCards();
             closeLogoModal();
         } catch (err: any) {
-            const message = err?.response?.data?.message || 'Failed to generate QR code';
-            setUploadError(message);
+            setUploadError(extractErrorMessage(err, 'Failed to generate QR code'));
         } finally {
             setGenerating(false);
         }

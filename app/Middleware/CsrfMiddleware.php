@@ -13,7 +13,7 @@ use App\Core\Response;
 *
 * @since 0.0.1
 */
-class CsrfMiddleware
+class CsrfMiddleware implements MiddlewareInterface
 {
     public function handle(Request $request): bool
     {

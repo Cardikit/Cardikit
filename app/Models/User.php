@@ -11,6 +11,13 @@ namespace App\Models;
 */
 class User extends Model
 {
+    /**
+    * The SQL table associated with the User model
+    *
+    * @var string
+    *
+    * @since 0.0.2
+    */
     protected string $table = 'users';
 
     /**

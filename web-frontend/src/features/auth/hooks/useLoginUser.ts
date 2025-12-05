@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import api from '@/lib/axios';
-import axios from 'axios';
+import { authService } from '@/services/authService';
+import { extractErrorMessage } from '@/services/errorHandling';
+import { ApiError } from '@/services/httpClient';
 
 interface LoginPayload {
     email: string;
@@ -39,21 +40,16 @@ export const useLoginUser = () => {
         setError(null);
 
         try {
-            const response = await api.post('/login', {
+            const response = await authService.login({
                 email: data.email,
                 password: data.password
             });
-            return response.data;
+            return response;
         } catch (error: any) {
-            if (axios.isAxiosError(error)) {
-                // Check for specific backend error
-                if (error.response?.data?.error) {
-                    setError(error.response?.data?.error);
-                } else {
-                    setError('An unknown API error occurred. Please try again.')
-                }
+            if (error instanceof ApiError && error.data && typeof error.data === 'object' && 'error' in error.data) {
+                setError(String((error.data as any).error));
             } else {
-                setError('Unexpected error occurred');
+                setError(extractErrorMessage(error, 'Unexpected error occurred'));
             }
             throw error;
         } finally {

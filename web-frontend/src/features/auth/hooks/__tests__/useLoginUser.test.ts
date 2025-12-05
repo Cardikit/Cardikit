@@ -1,25 +1,26 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useLoginUser } from '@/features/auth/hooks/useLoginUser';
-import api from '@/lib/axios';
+import { authService } from '@/services/authService';
+import { ApiError } from '@/services/httpClient';
 
-vi.mock('@/lib/axios', () => ({
-    default: {
-        post: vi.fn()
+vi.mock('@/services/authService', () => ({
+    authService: {
+        login: vi.fn(),
     }
 }));
 
-const mockedApiPost = vi.mocked(api.post);
+const mockedLogin = vi.mocked(authService.login);
 
 describe('useLoginUser', () => {
     beforeEach(() => {
-        mockedApiPost.mockReset();
+        mockedLogin.mockReset();
     });
 
     // Test Case 1: Successful Login
     it('should successfully log in a user and update states', async () => {
         const mockResponseData = { message: 'Login successful', token: 'fake-token' };
-        mockedApiPost.mockResolvedValueOnce({ data: mockResponseData, status: 200, statusText: 'OK', headers: {}, config: {} } as any);
+        mockedLogin.mockResolvedValueOnce(mockResponseData as any);
 
         const { result } = renderHook(() => useLoginUser());
 
@@ -32,8 +33,8 @@ describe('useLoginUser', () => {
             returnedData = await result.current.login({ email: 'test@example.com', password: 'password123' });
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
-        expect(mockedApiPost).toHaveBeenCalledWith('/login', {
+        expect(mockedLogin).toHaveBeenCalledTimes(1);
+        expect(mockedLogin).toHaveBeenCalledWith({
             email: 'test@example.com',
             password: 'password123',
         });
@@ -45,16 +46,8 @@ describe('useLoginUser', () => {
     // Test Case 2: Failed Login (Axios Error with specific backend message)
     it('should handle Axios errors with a specific backend message', async () => {
         const mockErrorMessage = 'Invalid credentials provided.';
-        const mockAxiosError = {
-            response: { data: { error: mockErrorMessage }, status: 401, statusText: 'Unauthorized', headers: {}, config: {} },
-            isAxiosError: true,
-            name: 'AxiosError',
-            message: 'Request failed with status code 401',
-            config: {},
-            toJSON: () => ({}),
-        };
-
-        mockedApiPost.mockRejectedValueOnce(mockAxiosError as any);
+        const mockError = new ApiError('Invalid credentials provided.', 401, { error: mockErrorMessage });
+        mockedLogin.mockRejectedValueOnce(mockError);
 
         const { result } = renderHook(() => useLoginUser());
 
@@ -66,23 +59,14 @@ describe('useLoginUser', () => {
                 .rejects.toThrow();
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
+        expect(mockedLogin).toHaveBeenCalledTimes(1);
         expect(result.current.loading).toBe(false);
         expect(result.current.error).toBe(mockErrorMessage);
     });
 
     // Test Case 3: Failed Login (Axios Error without specific backend error message)
     it('should handle Axios errors without a specific backend message', async () => {
-        const mockAxiosError = {
-            response: { status: 500, statusText: 'Internal Server Error', headers: {}, config: {} },
-            isAxiosError: true,
-            name: 'AxiosError',
-            message: 'Network Error',
-            config: {},
-            toJSON: () => ({}),
-        };
-
-        mockedApiPost.mockRejectedValueOnce(mockAxiosError as any);
+        mockedLogin.mockRejectedValueOnce(new ApiError('Network Error', 500));
 
         const { result } = renderHook(() => useLoginUser());
 
@@ -94,15 +78,15 @@ describe('useLoginUser', () => {
                 .rejects.toThrow();
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
+        expect(mockedLogin).toHaveBeenCalledTimes(1);
         expect(result.current.loading).toBe(false);
-        expect(result.current.error).toBe('An unknown API error occurred. Please try again.');
+        expect(result.current.error).toBe('Network Error');
     });
 
     // Test Case 4: Failed Login (Non-Axios Error)
     it('should handle non-Axios errors', async () => {
         const mockGenericError = new Error('Something truly unexpected happened!');
-        mockedApiPost.mockRejectedValueOnce(mockGenericError);
+        mockedLogin.mockRejectedValueOnce(mockGenericError);
 
         const { result } = renderHook(() => useLoginUser());
 
@@ -114,24 +98,15 @@ describe('useLoginUser', () => {
                 .rejects.toThrow(mockGenericError);
         });
 
-        expect(mockedApiPost).toHaveBeenCalledTimes(1);
+        expect(mockedLogin).toHaveBeenCalledTimes(1);
         expect(result.current.loading).toBe(false);
-        expect(result.current.error).toBe('Unexpected error occurred');
+        expect(result.current.error).toBe('Something truly unexpected happened!');
     });
 
     // Test Case 5: Error state is cleared on subsequent calls
     it('should clear previous errors on new login attempt', async () => {
         const mockErrorMessage = 'Initial error';
-        const mockAxiosError = {
-            response: { data: { error: mockErrorMessage }, status: 401, statusText: 'Unauthorized', headers: {}, config: {} },
-            isAxiosError: true,
-            name: 'AxiosError',
-            message: 'Request failed with status code 401',
-            config: {},
-            toJSON: () => ({})
-        };
-
-        mockedApiPost.mockRejectedValueOnce(mockAxiosError as any); // First call fails
+        mockedLogin.mockRejectedValueOnce(new ApiError(mockErrorMessage, 401, { error: mockErrorMessage })); // First call fails
 
         const { result } = renderHook(() => useLoginUser());
 
@@ -144,7 +119,7 @@ describe('useLoginUser', () => {
 
         // Mock the second call to succeed
         const mockSuccessResponse = { message: 'Login successful' };
-        mockedApiPost.mockResolvedValueOnce({ data: mockSuccessResponse, status: 200, statusText: 'OK', headers: {}, config: {} } as any);
+        mockedLogin.mockResolvedValueOnce(mockSuccessResponse as any);
 
         // Second call (success this time)
         await act(async () => {
@@ -153,6 +128,6 @@ describe('useLoginUser', () => {
 
         expect(result.current.error).toBeNull(); // Error should be cleared
         expect(result.current.loading).toBe(false);
-        expect(mockedApiPost).toHaveBeenCalledTimes(2); // Called twice
+        expect(mockedLogin).toHaveBeenCalledTimes(2); // Called twice
     });
 });

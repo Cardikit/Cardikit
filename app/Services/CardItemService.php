@@ -5,9 +5,31 @@ namespace App\Services;
 use App\Models\CardItem;
 use App\Core\Validator;
 
+/**
+* Contains methods for creating and syncing card items.
+*
+* @package App\Services
+*
+* @since 0.0.2
+*/
 class CardItemService
 {
+    /**
+    * Card ID to edit card items for.
+    *
+    * @var int
+    *
+    * @since 0.0.2
+    */
     protected int $card_id;
+
+    /**
+    * Supported card item types.
+    *
+    * @var array
+    *
+    * @since 0.0.2
+    */
     protected array $textTypes = [
         'name',
         'job_title',
@@ -49,6 +71,15 @@ class CardItemService
         $this->card_id = $card_id;
     }
 
+    /**
+    * Creates card items
+    *
+    * @param array $items
+    *
+    * @return array{array,array} [$createdItems, $errors]
+    *
+    * @since 0.0.2
+    */
     public function createCardItems(array $items): array
     {
         $created = [];
@@ -80,6 +111,8 @@ class CardItemService
     * @param array $items
     *
     * @return array{array,array} [$updatedItems, $errors]
+    *
+    * @since 0.0.2
     */
     public function syncCardItems(array $items): array
     {
@@ -157,6 +190,16 @@ class CardItemService
         return [$persisted, []];
     }
 
+    /**
+    * Creates a text card item.
+    *
+    * @param array $data
+    * @param string $type
+    *
+    * @return array{array|null,array|null} [$item, $errors]
+    *
+    * @since 0.0.2
+    */
     protected function createTextItem(array $data, string $type): ?array
     {
         $validationError = $this->validateText($data, $type);
@@ -172,6 +215,16 @@ class CardItemService
         return [$item, null];
     }
 
+    /**
+    * Validates a text card item.
+    *
+    * @param array $data
+    * @param string $type
+    *
+    * @return array|null
+    *
+    * @since 0.0.2
+    */
     protected function validateText(array $data, string $type): ?array
     {
         $validator = new Validator([CardItem::class => new CardItem()]);
@@ -187,6 +240,15 @@ class CardItemService
         return null;
     }
 
+    /**
+    * Checks if a card item type is supported.
+    *
+    * @param string|null $type
+    *
+    * @return bool
+    *
+    * @since 0.0.2
+    */
     protected function isSupportedType(?string $type): bool
     {
         return $type !== null && in_array($type, $this->textTypes, true);
@@ -194,6 +256,13 @@ class CardItemService
 
     /**
     * Normalizes payload for storage and enforces defaults.
+    *
+    * @param array $data
+    * @param string $type
+    *
+    * @return array
+    *
+    * @since 0.0.2
     */
     protected function mapPayload(array $data, string $type): array
     {

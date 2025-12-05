@@ -10,9 +10,20 @@ namespace App\Services;
 *   - $qrImageUrl: ?string
 *
 * If a template is missing or fails, we fall back to a minimal built-in view.
+*
+* @package App\Services
+*
+* @since 0.0.2
 */
 class ThemeRenderer
 {
+    /**
+    * The path to the themes directory.
+    *
+    * @var string
+    *
+    * @since 0.0.2
+    */
     protected string $themesPath;
 
     public function __construct(?string $themesPath = null)
@@ -22,6 +33,14 @@ class ThemeRenderer
 
     /**
     * Render a theme by name. Falls back to the bundled template if the theme cannot be loaded.
+    *
+    * @param string $theme
+    * @param array $card
+    * @param ?string $qrImageUrl
+    *
+    * @return string
+    *
+    * @since 0.0.2
     */
     public function render(string $theme, array $card, ?string $qrImageUrl): string
     {
@@ -48,6 +67,12 @@ class ThemeRenderer
 
     /**
     * Ensure expected keys exist so templates can trust the structure.
+    *
+    * @param array $card
+    *
+    * @return array
+    *
+    * @since 0.0.2
     */
     protected function normalizeCard(array $card): array
     {
@@ -65,6 +90,13 @@ class ThemeRenderer
 
     /**
     * Lightweight built-in theme used as a safety net.
+    *
+    * @param array $card
+    * @param ?string $qrImageUrl
+    *
+    * @return string
+    *
+    * @since 0.0.2
     */
     protected function renderFallback(array $card, ?string $qrImageUrl): string
     {

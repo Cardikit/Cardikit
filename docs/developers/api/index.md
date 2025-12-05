@@ -41,6 +41,8 @@ Explore the following parts of the API:
 
 - [🔐 Authentication](./authentication.html) - Register, login, and logout users.
 - [👤 User Info](./user.html) - Get and update user information.
+- [📇 Cards & QR](./cards.html) - Manage cards, items, images, and QR codes.
+- [🎨 Themes](./cards.html#-themes) - List available card themes.
 
 ---
 

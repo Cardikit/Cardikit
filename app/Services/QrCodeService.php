@@ -12,6 +12,10 @@ use GdImage;
 
 /**
  * Generates QR codes that point to public card URLs.
+ *
+ * @package App\Services
+ *
+ * @since 0.0.2
  */
 class QrCodeService
 {
@@ -24,6 +28,8 @@ class QrCodeService
      * @param string|null $existingImageUrl Existing QR image URL to delete/replace (for cache busting).
      *
      * @return array{card_url: string, image_url: string, image_path: string}
+     *
+     * @since 0.0.2
      */
     public function generateForCard(int $cardId, string $slug, ?string $logoData = null, ?string $existingImageUrl = null): array
     {
@@ -70,6 +76,12 @@ class QrCodeService
 
     /**
      * Delete an existing QR image given its public URL.
+     *
+     * @param string|null $existingImageUrl
+     *
+     * @return void
+     *
+     * @since 0.0.2
      */
     public function deleteImage(?string $existingImageUrl): void
     {
@@ -97,6 +109,16 @@ class QrCodeService
         }
     }
 
+    /**
+    * Build a public card URL.
+    *
+    * @param int $cardId
+    * @param string $slug
+    *
+    * @return string
+    *
+    * @since 0.0.2
+    */
     protected function cardUrl(int $cardId, string $slug): string
     {
         $baseUrl = rtrim(Config::get('APP_URL', 'http://localhost:8080'), '/');
@@ -106,6 +128,14 @@ class QrCodeService
 
     /**
      * Persist the generated QR to disk and return path + public URL.
+     *
+     * @param GdImage $image
+     * @param int $cardId
+     * @param string|null $existingImageUrl
+     *
+     * @return array{image_path: string, image_url: string}
+     *
+     * @since 0.0.2
      */
     protected function saveImage(GdImage $image, int $cardId, ?string $existingImageUrl = null): array
     {
@@ -154,6 +184,15 @@ class QrCodeService
         return [$filePath, $baseUrl . $publicPath];
     }
 
+    /**
+    * Create a GD image resource from a base64-encoded logo image.
+    *
+    * @param string $logoData
+    *
+    * @return GdImage
+    *
+    * @since 0.0.2
+    */
     protected function createLogoImage(string $logoData): GdImage
     {
         $binary = $this->decodeBase64Payload($logoData);
@@ -171,6 +210,15 @@ class QrCodeService
         return $image;
     }
 
+    /**
+    * Decode a base64 payload.
+    *
+    * @param string $payload
+    *
+    * @return string
+    *
+    * @since 0.0.2
+    */
     protected function decodeBase64Payload(string $payload): string
     {
         if (str_starts_with($payload, 'data:')) {
@@ -187,6 +235,16 @@ class QrCodeService
         return $binary;
     }
 
+    /**
+    * Overlay a logo image in the center of a QR image.
+    *
+    * @param GdImage $qr
+    * @param GdImage $logo
+    *
+    * @return void
+    *
+    * @since 0.0.2
+    */
     protected function overlayLogo(GdImage $qr, GdImage $logo): void
     {
         $qrWidth = imagesx($qr);

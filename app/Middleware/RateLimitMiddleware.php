@@ -13,10 +13,33 @@ use App\Core\Response;
 *
 * @since 0.0.1
 */
-class RateLimitMiddleware
+class RateLimitMiddleware implements MiddlewareInterface
 {
+    /**
+    * Maximum number of attempts.
+    *
+    * @var int
+    *
+    * @since 0.0.2
+    */
     protected int $maxAttempts;
+
+    /**
+    * Number of seconds to wait between attempts.
+    *
+    * @var int
+    *
+    * @since 0.0.2
+    */
     protected int $decaySeconds;
+
+    /**
+    * Path to store rate limit data.
+    *
+    * @var string
+    *
+    * @since 0.0.2
+    */
     protected string $storePath;
 
     public function __construct(int $maxAttempts = 5, int $decaySeconds = 60, ?string $storePath = null)
@@ -58,6 +81,15 @@ class RateLimitMiddleware
         return true;
     }
 
+    /**
+    * Resolve the key for the rate limit.
+    *
+    * @param Request $request
+    *
+    * @return string
+    *
+    * @since 0.0.2
+    */
     protected function resolveKey(Request $request): string
     {
         $method = $request->method();
@@ -67,6 +99,13 @@ class RateLimitMiddleware
         return $prefix . ':' . $method . ':' . $uri;
     }
 
+    /**
+    * Read the rate limit data from the store.
+    *
+    * @return array
+    *
+    * @since 0.0.2
+    */
     protected function readStore(): array
     {
         if (!file_exists($this->storePath)) {
@@ -89,6 +128,15 @@ class RateLimitMiddleware
         return $data;
     }
 
+    /**
+    * Write the rate limit data to the store.
+    *
+    * @param array $data
+    *
+    * @return void
+    *
+    * @since 0.0.2
+    */
     protected function writeStore(array $data): void
     {
         $handle = fopen($this->storePath, 'c+');

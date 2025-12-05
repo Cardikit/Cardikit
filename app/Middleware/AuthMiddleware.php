@@ -2,6 +2,7 @@
 
 namespace App\Middleware;
 
+use App\Core\Request;
 use App\Core\Response;
 
 /**
@@ -12,9 +13,9 @@ use App\Core\Response;
 *
 * @since 0.0.1
 */
-class AuthMiddleware
+class AuthMiddleware implements MiddlewareInterface
 {
-    public function handle(): bool
+    public function handle(Request $request): bool
     {
         if (!isset($_SESSION['user_id'])) {
             Response::json(['error' => 'Unauthorized'], 401);

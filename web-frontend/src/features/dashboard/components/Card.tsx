@@ -5,6 +5,38 @@ interface CardProps {
     card: CardType
 }
 
+/**
+ * Card
+ * ----
+ * Renders a full preview of a user's digital business card in the dashboard.
+ *
+ * Responsibilities:
+ * - Displays the card's visual identity:
+ *   - Accent color (fallback if no banner/avatar is provided)
+ *   - Optional banner image
+ *   - Optional avatar image with fallback placeholder
+ * - Renders all card items (fields) defined in `card.items` using
+ *   the dynamic config from `getItemConfig`:
+ *   - Determines icon, label/value behavior, and linkability.
+ *   - Supports items with or without labels (e.g., phone vs. URL vs. custom).
+ *   - Auto-selects appropriate icon classes and layout from config.
+ * - Handles link-type items by rendering them as clickable anchors
+ *   that open in a new tab; non-link items render as plain text rows.
+ *
+ * UI notes:
+ * - Tall card layout (`h-[600px]`) to match the tile grid style of the dashboard.
+ * - Avatar overlaps the banner via negative margin for a polished profile-card feel.
+ * - Each item displays:
+ *   - A colored circular icon using the card's accent color.
+ *   - Primary text (label or value)
+ *   - Optional secondary text for fields with labels.
+ *
+ * Key generation:
+ * - Uses `item.id`, `item.client_id`, or index as fallback to avoid React warnings.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const Card: React.FC<CardProps> = ({ card }) => {
     const accentColor = card.color ?? '#1D4ED8';
     const banner = card.banner_image ?? null;

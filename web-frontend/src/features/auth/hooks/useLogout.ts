@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import api from '@/lib/axios';
+import { authService } from '@/services/authService';
+import { extractErrorMessage } from '@/services/errorHandling';
 
 /**
 * useLogout Hook
@@ -33,12 +34,11 @@ export const useLogout = () => {
         setError(null);
 
         try {
-            const response = await api.post('/logout');
-            return response.data;
+            const response = await authService.logout();
+            return response;
         } catch (error: any) {
-            setError('Unexpected error occurred');
-            console.error(error);
-            return null;
+            setError(extractErrorMessage(error, 'Unexpected error occurred'));
+            return null as any;
         } finally {
             setLoading(false);
         }

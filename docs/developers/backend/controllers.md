@@ -12,6 +12,8 @@ Controllers in **Cardikit** are responsible for handling incoming HTTP requests 
 
 Each controller method corresponds to a specific action and is usually tied to a route in the [router](./router.html).
 
+> Controllers are intentionally thin: heavy lifting (card CRUD, auth, media handling) is delegated to services (e.g., `App\Services\CardService`, `App\Services\AuthService`) and helpers (`Response`, `Validator`).
+
 ---
 
 ## 🛠️ How Controllers Work

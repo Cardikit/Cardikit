@@ -18,6 +18,39 @@ interface CardCarouselProps {
     loading: boolean;
 }
 
+/**
+ * CardCarousel
+ * ------------
+ * A horizontally swipeable carousel for browsing the user's cards within
+ * the Cardikit dashboard.
+ *
+ * Responsibilities:
+ * - Displays each card using `CardComponent`, preserving full visual layout.
+ * - Appends an additional slide containing the `AddCard` component, allowing
+ *   users to quickly create a new card directly from the carousel.
+ * - Shows loading placeholders (`CardSkeleton`) while data is being fetched.
+ *
+ * Carousel integration:
+ * - Receives and stores the `CarouselApi` via `setApi`.
+ * - Syncs the currently selected carousel slide with the parent component by:
+ *   - Listening to the `"select"` event on the carousel API.
+ *   - Determining the active index via `api.selectedScrollSnap()`.
+ *   - Passing the active card to `setCurrentCard`.
+ *   - Falling back to a placeholder "Add Card" object if the index points to
+ *     the creation slide instead of an actual card.
+ *
+ * UX notes:
+ * - Fully responsive layout with arrow controls positioned differently across breakpoints.
+ * - Allows seamless swiping through real cards, skeletons (during load), and the add-card tile.
+ *
+ * Props:
+ * - `cardData`: Array of `CardType` objects representing all user cards.
+ * - `setCurrentCard`: Callback to update the externally managed selected card.
+ * - `loading`: When true, shows skeleton cards instead of real card data.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, loading }) => {
     const [api, setApi] = useState<CarouselApi | undefined>();
 

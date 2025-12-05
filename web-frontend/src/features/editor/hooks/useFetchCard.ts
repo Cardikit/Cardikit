@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import api from '@/lib/axios';
 import type { CardType } from '@/types/card';
+import { cardService, normalizeCard } from '@/services/cardService';
+import { extractErrorMessage } from '@/services/errorHandling';
 
 const defaultCard: CardType = {
     id: 0,
@@ -57,18 +58,10 @@ export const useFetchCard = (id?: number) => {
     */
     const fetchCard = async () => {
         try {
-            const response = await api.get<CardType>(`/@me/cards/${id}`);
-            const color = response.data.color ?? defaultCard.color;
-            const theme = response.data.theme ?? defaultCard.theme;
-            setCard({
-                ...response.data,
-                color,
-                theme,
-                banner_image: response.data.banner_image ?? null,
-                avatar_image: response.data.avatar_image ?? null,
-            });
+            const response = await cardService.get(id!);
+            setCard(normalizeCard(response));
         } catch (err: any) {
-            setError(err?.response?.data?.message || 'Failed to fetch cards');
+            setError(extractErrorMessage(err, 'Failed to fetch cards'));
             setCard(defaultCard);
         } finally {
             setLoading(false);

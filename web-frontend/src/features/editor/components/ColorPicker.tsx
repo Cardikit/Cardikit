@@ -20,6 +20,34 @@ const COLOR_OPTIONS = [
     '#EF4444', // red
 ];
 
+/**
+ * ColorPicker
+ * -----------
+ * Accent color selector for a Card within the editor.
+ *
+ * Responsibilities:
+ * - Displays a fixed palette of brand-safe accent colors (`COLOR_OPTIONS`).
+ * - Highlights the currently selected color based on `card.color`, or
+ *   falls back to the first palette color if none is set.
+ * - Updates the card's `color` field via `setCard` when a color is chosen.
+ *
+ * UI details:
+ * - Two layout variants:
+ *   - `default`  → padded, centered layout for full editor sections.
+ *   - `compact`  → minimal top padding for inline/stacked usage.
+ * - Active color is indicated with a thicker dark border and a small
+ *   white dot in the center.
+ * - Buttons are round, accessible, and include an `aria-label` for screen readers.
+ *
+ * Props:
+ * - `card`       → Current card whose accent color is being edited.
+ * - `setCard`    → Setter to update the card state with the new color.
+ * - `className`  → Optional additional classes for outer container styling.
+ * - `variant`    → `"default"` | `"compact"` layout mode (default: `"default"`).
+ *
+ * @component
+ * @since 0.0.2
+ */
 const ColorPicker: React.FC<ColorPickerProps> = ({ card, setCard, className = '', variant = 'default' }) => {
     const selected = card.color ?? COLOR_OPTIONS[0];
     const containerClasses = variant === 'compact'

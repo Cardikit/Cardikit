@@ -11,8 +11,70 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 import { useDeleteCard } from '@/features/editor/hooks/useDeleteCard';
 import { useThemes } from '@/features/editor/hooks/useThemes';
-import { fetchCsrfToken } from '@/lib/fetchCsrfToken';
 
+/**
+ * Editor
+ * ------
+ * Full-screen card editor for creating and updating Cardikit cards.
+ * Orchestrates data fetching, layout, side panels, and all editing flows.
+ *
+ * High-level responsibilities:
+ * - Determine editor mode:
+ *   - Existing card: uses `id` route param + `useFetchCard(cardId)`.
+ *   - New card: initializes via `useFetchCard(undefined)` (client-side defaults).
+ * - Manage global editor UI state:
+ *   - Title editor drawer visibility.
+ *   - Field options drawer visibility.
+   *   - Banner & avatar image modals.
+ *   - Per-form and per-item validation errors.
+ *   - Delete confirmation modal.
+ *
+ * Data & side effects:
+ * - `useFetchCard(cardId)`:
+ *   - Provides `card`, `setCard`, and `loading` for the main editor state.
+ * - `useThemes()`:
+ *   - Loads available themes and ensures the card always has a valid theme.
+ *   - If the current theme is missing/unknown, applies the first available theme.
+ * - `useDeleteCard()`:
+ *   - Deletes the current card and navigates back to `/` on success.
+ * - Resets `formError` and `itemErrors` whenever `card.id` changes (e.g., switching
+ *   from “new” to “saved” state or loading a different card).
+ *
+ * Layout & components:
+ * - Fixed top bar (`TopNav`):
+ *   - Handles saving (create/update), validation, and top-level error display.
+ *   - Opens the `TitleEditor` for renaming the card.
+ *
+ * - Main content:
+ *   - Desktop sidebar (`DesktopNav`) mirrored from the dashboard.
+ *   - Skeleton placeholder when loading an existing card (`isLoadingExisting`).
+ *   - Responsive 2-column editor layout on desktop:
+ *     - Right/aside (`Card settings` panel):
+ *       - Accent color selection (`ColorPicker`).
+ *       - Theme selection (`ThemePicker`).
+ *       - Compact summary: card name, field count, current color.
+ *       - “Danger zone” card delete controls (desktop + mobile variants).
+ *     - Left/main:
+ *       - Editable card preview (`Card` component) with:
+ *         - Drag-and-drop field reordering.
+ *         - Inline editing.
+ *         - Banner & avatar triggers.
+ *
+ * - Modals & drawers:
+ *   - `TitleEditor` → Edits the card title.
+ *   - `Options`     → Field picker to add new items to the card.
+ *   - `ImageUploadModal` (banner) → Upload/clear banner image.
+ *   - `ImageUploadModal` (avatar) → Upload/clear avatar image.
+ *   - Custom bottom delete confirmation sheet for existing cards.
+ *
+ * UX details:
+ * - “Danger zone” appears only for existing cards (`isExistingCard`).
+ * - Delete confirmation clearly communicates irreversibility.
+ * - All destructive actions require explicit confirmation.
+ *
+ * @component
+ * @since 0.0.2
+ */
 const Editor: React.FC = () => {
     const [titleEditorOpen, setTitleEditorOpen] = useState(false);
     const [optionsOpen, setOptionsOpen] = useState(false);
@@ -45,7 +107,6 @@ const Editor: React.FC = () => {
 
     const onDelete = async () => {
         try {
-            await fetchCsrfToken();
             await deleteCard(card.id);
             navigate('/');
         } catch (error) {

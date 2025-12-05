@@ -47,6 +47,57 @@ export interface ItemTypeConfig {
 
 const baseAccent = 'bg-primary-500';
 
+/**
+ * Item Configuration System (Editor)
+ * ----------------------------------
+ * Centralized metadata for every field type that can be added to a Card.
+ * This file controls:
+ *   - Icon choice
+ *   - Accent background color
+ *   - Input fields (label + value)
+ *   - Placeholder text
+ *   - Field ordering in the “Add Item” drawer
+ *
+ * Each item type returns a strongly-typed `ItemTypeConfig`, which tells the
+ * editor how to render:
+ *   - The item preview (icon + accent + text)
+ *   - The edit form (which inputs should appear)
+ *
+ * STRUCTURE
+ * ---------
+ * ItemTypeConfig:
+ *   displayName → Human-readable label (“Email”, “LinkedIn”, “Bio”, etc.)
+ *   icon        → React-icon component for the left icon
+ *   accentClass → Tailwind class for the rounded icon background
+ *   iconClass   → Optional override for the icon color (e.g., black on yellow)
+ *   fields[]    → Ordered list of editable inputs:
+ *       key        → "label" or "value"
+ *       label      → Field label text shown above the input
+ *       placeholder→ Input placeholder hint
+ *
+ * ITEM_CONFIGS
+ * ------------
+ * A large dictionary defining UI/UX for every supported field type.
+ *
+ * ITEM_ORDER
+ * ----------
+ * Defines the visible order in the “Add Item” picker drawer.
+ * The editor uses this to show a consistent, curated order.
+ *
+ * getItemConfig(type)
+ * -------------------
+ * Returns the config for a given field type.
+ * Falls back to a generic link-type field when no explicit config exists.
+ *
+ * WHY THIS MATTERS
+ * ----------------
+ * - Keeps all UI definitions in a single source of truth.
+ * - Makes adding new field types trivial: add an entry here, and the editor
+ *   automatically supports it (display, editing, ordering).
+ * - Ensures consistent UX across card rendering, editor preview, and form inputs.
+ *
+ * @since 0.0.2
+ */
 export const ITEM_CONFIGS: Record<string, ItemTypeConfig> = {
     name: {
         displayName: 'Name',

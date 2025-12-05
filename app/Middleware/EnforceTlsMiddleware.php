@@ -7,9 +7,13 @@ use App\Core\Request;
 use App\Core\Response;
 
 /**
- * Ensures requests arrive over HTTPS before they reach application code.
- */
-class EnforceTlsMiddleware
+* Ensures requests arrive over HTTPS before they reach application code.
+*
+* @package App\Middleware
+*
+* @since 0.0.2
+*/
+class EnforceTlsMiddleware implements MiddlewareInterface
 {
     public function handle(Request $request): bool
     {
