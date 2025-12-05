@@ -12,9 +12,20 @@ namespace App\Services;
 * Version: 1.0.0
 * Author: Cardikit
 * *\/
+*
+* @package App\Services
+*
+* @since 0.0.2
 */
 class ThemeCatalog
 {
+    /**
+    * Path to the themes directory.
+    *
+    * @var string
+    *
+    * @since 0.0.2
+    */
     protected string $themesPath;
 
     public function __construct(?string $themesPath = null)
@@ -23,7 +34,11 @@ class ThemeCatalog
     }
 
     /**
+    * Get a list of themes.
+    *
     * @return array<int,array{slug:string,name:string,description?:string,version?:string,author?:string,uri?:string}>
+    *
+    * @since 0.0.2
     */
     public function getThemes(): array
     {
@@ -56,6 +71,13 @@ class ThemeCatalog
         return $themes;
     }
 
+    /**
+    * Get a list of theme slugs.
+    *
+    * @return array<string>
+    *
+    * @since 0.0.2
+    */
     public function getSlugs(): array
     {
         return array_map(
@@ -64,6 +86,15 @@ class ThemeCatalog
         );
     }
 
+    /**
+    * Parse metadata from a style.css file.
+    *
+    * @param string $stylePath
+    *
+    * @return array
+    *
+    * @since 0.0.2
+    */
     protected function parseMeta(string $stylePath): array
     {
         $contents = file_get_contents($stylePath);

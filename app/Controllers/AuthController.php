@@ -6,6 +6,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\Validator;
 use App\Models\User;
+use App\Services\AuthService;
 
 /**
 * Contains methods to handle user authentication.
@@ -17,22 +18,6 @@ use App\Models\User;
 */
 class AuthController
 {
-    protected function signIn(array $user): void
-    {
-        session_regenerate_id(true);
-        $_SESSION['user_id'] = $user['id'];
-        $this->issueCsrfToken();
-    }
-
-    protected function issueCsrfToken(): string
-    {
-        if (empty($_SESSION['csrf_token']) || strlen((string) $_SESSION['csrf_token']) !== 64) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-        }
-
-        return $_SESSION['csrf_token'];
-    }
-
     /**
     * Takes a request, validates user input.
     * If input is valid, creates a new user.
@@ -41,7 +26,7 @@ class AuthController
     *
     * @return void
     *
-    * @since 0.0.1
+    * @since 0.0.2
     */
     public function register(Request $request): void
     {
@@ -51,26 +36,21 @@ class AuthController
 
         // validate user input
         $validator = new Validator([User::class => $userModel]);
-        $valid = $validator->validate($data, [
+        $valid = $validator->validateOrRespond($data, [
             'name' => 'required|min:2|max:50|type:string',
             'email' => 'required|email|unique:App\Models\User:email',
             'password' => 'required|min:8|type:string'
         ]);
 
         // return error if input is invalid
-        if (!$valid) {
-            Response::json([
-                'errors' => $validator->errors()
-            ], 422);
-            return;
-        }
+        if (!$valid) return;
 
         // create user
         $userModel->create($data);
 
         // set session variable
         $user = $userModel->findByEmail($data['email']);
-        $this->signIn($user);
+        (new AuthService())->signIn($user);
 
         // return success message
         Response::json([
@@ -86,7 +66,7 @@ class AuthController
     *
     * @return void
     *
-    * @since 0.0.1
+    * @since 0.0.2
     */
     public function login(Request $request): void
     {
@@ -94,18 +74,13 @@ class AuthController
 
         // validate user input
         $validator = new Validator();
-        $valid = $validator->validate($data, [
+        $valid = $validator->validateOrRespond($data, [
             'email' => 'required|email',
             'password' => 'required|type:string'
         ]);
 
         // return error if input is invalid
-        if (!$valid) {
-            Response::json([
-                'errors' => $validator->errors()
-            ], 422);
-            return;
-        }
+        if (!$valid) return;
 
         // check if user exists
         $user = User::findByEmail($data['email']);
@@ -119,7 +94,7 @@ class AuthController
         }
 
         // set session variable
-        $this->signIn($user);
+        (new AuthService())->signIn($user);
 
         // return success message
         Response::json(['message' => 'Logged in successfully']);
@@ -131,24 +106,11 @@ class AuthController
     *
     * @return void
     *
-    * @since 0.0.1
+    * @since 0.0.2
     */
     public function logout(): void
     {
-        // destroy session
-        session_unset();
-        session_destroy();
-
-        // destroy cookie using current parameters
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', [
-            'expires' => time() - 3600,
-            'path' => $params['path'] ?? '/',
-            'domain' => $params['domain'] ?? '',
-            'secure' => $params['secure'] ?? true,
-            'httponly' => $params['httponly'] ?? true,
-            'samesite' => $params['samesite'] ?? 'Lax',
-        ]);
+        (new AuthService())->signOut();
 
         // return success message
         Response::json(['message' => 'Logged out successfully']);
@@ -161,17 +123,14 @@ class AuthController
     *
     * @return void
     *
-    * @since 0.0.1
+    * @since 0.0.2
     */
     public function csrfToken(): void
     {
-        if (!isset($_SESSION['user_id'])) {
-            Response::json(['error' => 'Unauthorized'], 401);
-            return;
-        }
+        // generate token
+        $token = (new AuthService())->issueCsrfToken();
 
-        $token = $this->issueCsrfToken();
-
+        // return token
         Response::json(['csrf_token' => $token]);
     }
 }

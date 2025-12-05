@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Core\Response;
+use App\Middleware\MiddlewareInterface;
 
 /**
 * Handles incoming requests and dispatches them to the appropriate handlers based on the HTTP method and URI.
@@ -110,6 +111,7 @@ class Router
         // Get the routes for the current method
         $routes = self::$routes[$method] ?? [];
         $middlewareMap = self::$middleware[$method] ?? [];
+        $request = new Request();
 
         // Iterate over registered routes to find a match
         foreach ($routes as $route => $action) {
@@ -126,9 +128,15 @@ class Router
                 array_shift($matches); // Remove full match
 
                 $middlewareList = $middlewareMap[$route] ?? [];
-                $request = new Request();
-
                 foreach ($middlewareList as $middleware) {
+                    if ($middleware instanceof MiddlewareInterface) {
+                        if (!$middleware->handle($request)) {
+                            return;
+                        }
+                        continue;
+                    }
+
+                    // Ignore unrecognized middleware types to avoid fatals
                     if (is_object($middleware) && method_exists($middleware, 'handle')) {
                         if (!$middleware->handle($request)) {
                             return;

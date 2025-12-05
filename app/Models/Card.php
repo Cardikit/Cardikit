@@ -11,6 +11,13 @@ namespace App\Models;
 */
 class Card extends Model
 {
+    /**
+    * SQL table for Card model
+    *
+    * @var string $table
+    *
+    * @since 0.0.2
+    */
     protected string $table = 'cards';
 
     /**
@@ -139,16 +146,28 @@ class Card extends Model
     }
 
     /**
-     * Returns a single card with its items by slug.
-     */
+    * Returns a single card with its items by slug.
+    *
+    * @param string $slug
+    *
+    * @return array|null
+    *
+    * @since 0.0.2
+    */
     public static function findWithItemsBySlug(string $slug): ?array
     {
         return self::findWithItemsBy('slug', $slug);
     }
 
     /**
-     * Generate a unique slug for a card.
-     */
+    * Generate a unique slug for a card.
+    *
+    * @param int $length defaults to 12
+    *
+    * @return string
+    *
+    * @since 0.0.2
+    */
     public static function generateUniqueSlug(int $length = 12): string
     {
         $instance = new static();
@@ -165,6 +184,13 @@ class Card extends Model
 
     /**
      * Internal helper to load a card + items by column.
+     *
+     * @param string $column
+     * @param mixed $value
+     *
+     * @return array|null
+     *
+     * @since 0.0.2
      */
     protected static function findWithItemsBy(string $column, mixed $value): ?array
     {

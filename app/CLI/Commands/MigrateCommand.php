@@ -2,12 +2,14 @@
 
 namespace Cardikit\CLI\Commands;
 
+use App\Core\Migrate;
+
 /**
 * Handles running all migration files.
 *
 * @package Cardikit\CLI\Commands
 *
-* @since 1.0.0
+* @since 0.0.2
 */
 class MigrateCommand
 {
@@ -16,28 +18,10 @@ class MigrateCommand
     *
     * @return void
     *
-    * @since 1.0.0
+    * @since 0.0.2
     */
     public function handle(array $argv): void
     {
-        $migrations = glob(__DIR__ . '/../../../database/migrations/*.php');
-        $migrations = array_reverse($migrations);
-
-        foreach ($migrations as $file) {
-            echo "Running: " . basename($file) . "\n";
-
-            $migration = require $file;
-
-            // Validate the migration object
-            if (!is_object($migration) || !method_exists($migration, 'up')) {
-                echo "⚠️  Skipping: invalid migration format in " . basename($file) . "\n";
-                continue;
-            }
-
-            $migration->up();
-
-            echo "✔ Done\n";
-        }
+        Migrate::run();
     }
 }
-

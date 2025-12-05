@@ -2,8 +2,24 @@
 
 namespace Cardikit\CLI\Commands;
 
+/**
+* Runs PHP tests
+*
+* @package Cardikit\CLI\Commands
+*
+* @since 0.0.1
+*/
 class TestCommand
 {
+    /**
+    * Executes PHP tests by calling the `pest` command.
+    *
+    * @param array $args Command line arguments
+    *
+    * @return void
+    *
+    * @since 0.0.1
+    */
     public function handle(array $args): void
     {
         echo "🧪 Running PHP tests...\n";

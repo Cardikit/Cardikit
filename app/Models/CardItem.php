@@ -11,6 +11,13 @@ namespace App\Models;
 */
 class CardItem extends Model
 {
+    /**
+    * The SQL table associated with the CardItem model
+    *
+    * @var string $table
+    *
+    * @since 0.0.2
+    */
     protected string $table = 'card_items';
 
     /**
