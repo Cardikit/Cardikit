@@ -38,7 +38,7 @@ class CategoryController
 
         $posts = (new BlogService())->listPublished($slug);
 
-        View::render('categories', [
+        View::render('category', [
             'title' => $category['name'],
             'category' => $category,
             'posts' => $posts,

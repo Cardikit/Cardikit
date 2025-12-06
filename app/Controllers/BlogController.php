@@ -46,7 +46,7 @@ class BlogController
         $recentPosts = $service->listPublished(null, 4);
         $categories = Category::latest(5) ?? [];
 
-        View::render('blog', [
+        View::render('post', [
             'title' => $post['title'],
             'post' => $post,
             'recentPosts' => $recentPosts,
