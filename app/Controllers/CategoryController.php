@@ -1,0 +1,172 @@
+<?php
+
+namespace App\Controllers;
+
+use App\Core\Request;
+use App\Core\Response;
+use App\Core\View;
+use App\Models\Category;
+use App\Services\BlogService;
+
+class CategoryController
+{
+    /**
+    * List categories and their published posts.
+    */
+    public function index(Request $request): void
+    {
+        $categories = Category::allOrdered() ?? [];
+        $posts = (new BlogService())->listPublished();
+
+        View::render('categories', [
+            'title' => 'Categories',
+            'categories' => $categories,
+            'posts' => $posts,
+        ]);
+    }
+
+    /**
+    * Show a category and its published posts.
+    */
+    public function show(Request $request, string $slug): void
+    {
+        $category = Category::findBySlug($slug);
+        if (!$category) {
+            Response::html('Category not found', 404);
+            return;
+        }
+
+        $posts = (new BlogService())->listPublished($slug);
+
+        View::render('categories', [
+            'title' => $category['name'],
+            'category' => $category,
+            'posts' => $posts,
+        ]);
+    }
+
+    /**
+    * Render category creation form.
+    */
+    public function create(): void
+    {
+        View::render('category-create', [
+            'title' => 'Create Category',
+        ]);
+    }
+
+    /**
+    * Create a category (admin).
+    */
+    public function store(Request $request): void
+    {
+        $payload = $request->body();
+
+        $name = isset($payload['name']) ? trim((string) $payload['name']) : '';
+        $slug = isset($payload['slug']) ? trim((string) $payload['slug']) : '';
+        $description = isset($payload['description']) ? trim((string) $payload['description']) : null;
+
+        if ($name === '') {
+            Response::json(['errors' => ['name' => ['Name is required']]], 422);
+            return;
+        }
+
+        $slug = $slug !== '' ? $slug : $name;
+        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $slug) ?? '');
+        $slug = trim($slug, '-');
+
+        if ($slug === '') {
+            Response::json(['errors' => ['slug' => ['Invalid slug']]], 422);
+            return;
+        }
+
+        if (Category::findBySlug($slug)) {
+            Response::json(['errors' => ['slug' => ['Slug already exists']]], 422);
+            return;
+        }
+
+        $created = (new Category())->create([
+            'name' => $name,
+            'slug' => $slug,
+            'description' => $description,
+        ]);
+
+        if (!$created) {
+            Response::json(['message' => 'Failed to create category'], 500);
+            return;
+        }
+
+        Response::json(['message' => 'Category created', 'category' => $created], 201);
+    }
+
+    /**
+    * Update a category (admin).
+    */
+    public function update(Request $request, int $id): void
+    {
+        $payload = $request->body();
+        $category = Category::findById($id);
+
+        if (!$category) {
+            Response::json(['message' => 'Category not found'], 404);
+            return;
+        }
+
+        $name = array_key_exists('name', $payload) ? trim((string) $payload['name']) : $category['name'];
+        $slug = array_key_exists('slug', $payload) ? trim((string) $payload['slug']) : $category['slug'];
+        $description = array_key_exists('description', $payload) ? trim((string) $payload['description']) : $category['description'];
+
+        if ($name === '') {
+            Response::json(['errors' => ['name' => ['Name is required']]], 422);
+            return;
+        }
+
+        $slug = $slug !== '' ? $slug : $name;
+        $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', $slug) ?? '');
+        $slug = trim($slug, '-');
+
+        if ($slug === '') {
+            Response::json(['errors' => ['slug' => ['Invalid slug']]], 422);
+            return;
+        }
+
+        $existing = Category::findBySlug($slug);
+        if ($existing && (int) $existing['id'] !== (int) $id) {
+            Response::json(['errors' => ['slug' => ['Slug already exists']]], 422);
+            return;
+        }
+
+        $updated = (new Category())->updateById($id, [
+            'name' => $name,
+            'slug' => $slug,
+            'description' => $description,
+        ]);
+
+        if (!$updated) {
+            Response::json(['message' => 'Failed to update category'], 500);
+            return;
+        }
+
+        Response::json(['message' => 'Category updated', 'category' => Category::findById($id)], 200);
+    }
+
+    /**
+    * Delete a category (admin).
+    */
+    public function delete(Request $request, int $id): void
+    {
+        $category = Category::findById($id);
+        if (!$category) {
+            Response::json(['message' => 'Category not found'], 404);
+            return;
+        }
+
+        $deleted = (new Category())->deleteById($id);
+        if (!$deleted) {
+            Response::json(['message' => 'Failed to delete category'], 500);
+            return;
+        }
+
+        Response::json(['message' => 'Category deleted'], 200);
+    }
+}

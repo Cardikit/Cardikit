@@ -15,6 +15,7 @@ return new class extends Migration {
             CREATE TABLE IF NOT EXISTS blogs (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
+                category_id INT DEFAULT NULL,
                 title VARCHAR(255) NOT NULL,
                 slug VARCHAR(255) NOT NULL UNIQUE,
                 excerpt TEXT DEFAULT NULL,
@@ -25,10 +26,14 @@ return new class extends Migration {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 INDEX idx_blogs_user_id (user_id),
+                INDEX idx_blogs_category_id (category_id),
                 INDEX idx_blogs_status_published (status, published_at),
                 CONSTRAINT fk_blogs_user
                     FOREIGN KEY (user_id) REFERENCES users(id)
-                    ON DELETE CASCADE
+                    ON DELETE CASCADE,
+                CONSTRAINT fk_blogs_category
+                    FOREIGN KEY (category_id) REFERENCES categories(id)
+                    ON DELETE SET NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
         "
         );

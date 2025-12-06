@@ -19,10 +19,12 @@ use App\Core\Router;
 use App\Routing\MiddlewareGroups;
 use App\Middleware\RateLimitMiddleware;
 use App\Controllers\BlogController;
+use App\Controllers\CategoryController;
 
 // Middleware groups
 $tls = MiddlewareGroups::tls();
 $auth = MiddlewareGroups::auth();
+$admin = MiddlewareGroups::admin();
 $mutating = MiddlewareGroups::mutating(60, 60);
 
 // Public
@@ -59,3 +61,17 @@ Router::get('/api/v1/themes', [CardController::class, 'themes'], array_merge($au
 
 // Blog
 Router::get('/blog', [BlogController::class, 'index'], $tls);
+Router::get('/blog/create', [BlogController::class, 'create'], $admin);
+Router::post('/blog', [BlogController::class, 'store'], $admin);
+Router::put('/blog/:id', [BlogController::class, 'update'], $admin);
+Router::delete('/blog/:id', [BlogController::class, 'delete'], $admin);
+
+// Category
+Router::get('/blog/categories', [CategoryController::class, 'index'], $tls);
+Router::get('/blog/:slug', [CategoryController::class, 'show'], $tls);
+Router::get('/blog/categories/create', [CategoryController::class, 'create'], $admin);
+Router::post('/blog/categories', [CategoryController::class, 'store'], $admin);
+Router::put('/blog/categories/:id', [CategoryController::class, 'update'], $admin);
+Router::delete('/blog/categories/:id', [CategoryController::class, 'delete'], $admin);
+
+Router::get('/blog/:category/:slug', [BlogController::class, 'show'], $tls);
