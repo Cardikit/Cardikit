@@ -19,8 +19,8 @@ class BlogController
         $categoryFilter = $request->query()['category'] ?? null;
         $service = new BlogService();
 
-        $posts = $service->listPublished($categoryFilter);
-        $categories = Category::allOrdered() ?? [];
+        $posts = $service->listPublished($categoryFilter, 5);
+        $categories = Category::latest(5) ?? [];
 
         View::render('blog', [
             'title' => 'Blog',
@@ -43,9 +43,14 @@ class BlogController
             return;
         }
 
+        $recentPosts = $service->listPublished(null, 4);
+        $categories = Category::latest(5) ?? [];
+
         View::render('blog', [
             'title' => $post['title'],
             'post' => $post,
+            'recentPosts' => $recentPosts,
+            'categories' => $categories,
         ]);
     }
 

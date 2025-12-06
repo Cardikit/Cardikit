@@ -52,6 +52,24 @@ class Category extends Model
     }
 
     /**
+    * List the newest categories by creation date.
+    *
+    * @param int $limit
+    *
+    * @return array<int, array>|null
+    */
+    public static function latest(int $limit = 5): ?array
+    {
+        $instance = new static();
+        $stmt = $instance->db->prepare("SELECT * FROM categories ORDER BY created_at DESC LIMIT :limit");
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $rows ?: null;
+    }
+
+    /**
     * Find a category by id.
     *
     * @param int $id
