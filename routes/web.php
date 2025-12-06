@@ -18,6 +18,7 @@ use App\Controllers\UserController;
 use App\Core\Router;
 use App\Routing\MiddlewareGroups;
 use App\Middleware\RateLimitMiddleware;
+use App\Controllers\BlogController;
 
 // Middleware groups
 $tls = MiddlewareGroups::tls();
@@ -55,3 +56,6 @@ Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], 
 
 // Themes
 Router::get('/api/v1/themes', [CardController::class, 'themes'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
+
+// Blog
+Router::get('/blog', [BlogController::class, 'index'], $tls);
