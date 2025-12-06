@@ -27,7 +27,7 @@ class User extends Model
     *
     * @since 0.0.1
     */
-    protected array $fillable = ['name', 'email', 'password'];
+    protected array $fillable = ['name', 'email', 'password', 'role'];
 
     /**
     * Finds a user by email.
