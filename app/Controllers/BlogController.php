@@ -6,6 +6,7 @@ use App\Core\View;
 use App\Core\Response;
 use App\Core\Request;
 use App\Models\Category;
+use App\Models\Blog;
 use App\Services\AuthService;
 use App\Services\BlogService;
 
@@ -16,17 +17,13 @@ class BlogController
     */
     public function index(Request $request): void
     {
-        $categoryFilter = $request->query()['category'] ?? null;
-        $service = new BlogService();
-
-        $posts = $service->listPublished($categoryFilter, 5);
+        $posts = (new Blog())->listPublished(null, 5) ?? [];
         $categories = Category::latest(5) ?? [];
 
         View::render('blog', [
             'title' => 'Blog',
             'posts' => $posts,
             'categories' => $categories,
-            'activeCategory' => $categoryFilter,
         ]);
     }
 

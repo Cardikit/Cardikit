@@ -65,96 +65,27 @@
                 <!-- Main Posts Column -->
                 <div class="blog-main">
                     <h2 class="section-title">Latest Posts</h2>
-                    
-                    <!-- Post 1 -->
-                    <article class="post-card">
-                        <div class="post-image">
-                            <span class="post-category-badge">Networking</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">December 5, 2024</span>
-                                <span class="post-read-time">5 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="#">10 Tips for Making Lasting Connections at Networking Events</a>
-                            </h3>
-                            <p class="post-excerpt">Networking doesn't have to feel awkward. Learn how to make genuine connections that turn into valuable professional relationships.</p>
-                            <a href="#" class="post-link">Read more →</a>
-                        </div>
-                    </article>
 
-                    <!-- Post 2 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-2">
-                            <span class="post-category-badge">Digital Cards</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">December 2, 2024</span>
-                                <span class="post-read-time">4 min read</span>
+                    <!-- Posts -->
+                    <?php foreach ($posts as $post) : ?>
+                        <article class="post-card">
+                            <div class="post-image">
+                                <span class="post-category-badge"><?= $post['category_name']; ?></span>
                             </div>
-                            <h3 class="post-title">
-                                <a href="#">Why Digital Business Cards Are the Future of Professional Networking</a>
-                            </h3>
-                            <p class="post-excerpt">Paper cards are becoming a thing of the past. Discover why professionals are switching to digital alternatives.</p>
-                            <a href="#" class="post-link">Read more →</a>
-                        </div>
-                    </article>
-
-                    <!-- Post 3 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-3">
-                            <span class="post-category-badge">Personal Branding</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">November 28, 2024</span>
-                                <span class="post-read-time">6 min read</span>
+                            <div class="post-body">
+                                <div class="post-meta">
+                                    <span class="post-date"><?php echo (new DateTime($post['created_at']))->format('F j, Y'); ?></span>
+                                    <span class="post-read-time">5 min read</span>
+                                </div>
+                                <h3 class="post-title">
+                                    <a href="/blog/<?= $post['category_slug'] . '/' . $post['slug']; ?>"><?= $post['title']; ?></a>
+                                </h3>
+                                <p class="post-excerpt"><?= $post['excerpt']; ?></p>
+                                <a href="/blog/<?= $post['category_slug'] . '/' . $post['slug']; ?>" class="post-link">Read more →</a>
                             </div>
-                            <h3 class="post-title">
-                                <a href="#">Building Your Personal Brand: A Complete Guide for Freelancers</a>
-                            </h3>
-                            <p class="post-excerpt">Your personal brand is your most valuable asset. Here's how to build one that attracts the right clients and opportunities.</p>
-                            <a href="#" class="post-link">Read more →</a>
-                        </div>
-                    </article>
-
-                    <!-- Post 4 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-4">
-                            <span class="post-category-badge">Tips & Tricks</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">November 22, 2024</span>
-                                <span class="post-read-time">3 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="#">How to Design a Digital Business Card That Stands Out</a>
-                            </h3>
-                            <p class="post-excerpt">First impressions matter. Learn the design principles that make your digital card memorable and effective.</p>
-                            <a href="#" class="post-link">Read more →</a>
-                        </div>
-                    </article>
-
-                    <!-- Post 5 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-5">
-                            <span class="post-category-badge">Industry News</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">November 18, 2024</span>
-                                <span class="post-read-time">4 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="#">The Rise of NFC Technology in Business Networking</a>
-                            </h3>
-                            <p class="post-excerpt">NFC-enabled cards are changing the game. Here's what you need to know about this growing trend.</p>
-                            <a href="#" class="post-link">Read more →</a>
-                        </div>
-                    </article>
+                        </article>
+                    <?php endforeach; ?>
+                    <!-- /Posts -->
                 </div>
 
                 <!-- Sidebar -->
@@ -163,36 +94,16 @@
                     <div class="sidebar-widget">
                         <h3 class="widget-title">Categories</h3>
                         <ul class="category-list">
+                            <!-- Category items -->
+                            <?php foreach ($categories as $category) : ?>
                             <li class="category-item">
-                                <a href="#">
-                                    <span class="category-name">Networking</span>
+                                <a href="/blog/<?= $category['slug'] ?>">
+                                    <span class="category-name"><?= $category['name']; ?></span>
                                     <span class="category-count">12</span>
                                 </a>
                             </li>
-                            <li class="category-item">
-                                <a href="#">
-                                    <span class="category-name">Digital Cards</span>
-                                    <span class="category-count">8</span>
-                                </a>
-                            </li>
-                            <li class="category-item">
-                                <a href="#">
-                                    <span class="category-name">Personal Branding</span>
-                                    <span class="category-count">15</span>
-                                </a>
-                            </li>
-                            <li class="category-item">
-                                <a href="#">
-                                    <span class="category-name">Tips & Tricks</span>
-                                    <span class="category-count">21</span>
-                                </a>
-                            </li>
-                            <li class="category-item">
-                                <a href="#">
-                                    <span class="category-name">Industry News</span>
-                                    <span class="category-count">6</span>
-                                </a>
-                            </li>
+                            <?php endforeach; ?>
+                            <!-- !Category items -->
                         </ul>
                     </div>
 

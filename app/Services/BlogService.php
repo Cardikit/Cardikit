@@ -16,29 +16,6 @@ use App\Models\Category;
 class BlogService
 {
     /**
-    * List published posts, optionally filtered by category slug.
-    *
-    * @param string|null $categorySlug
-    * @param int $limit
-    * @param int $offset
-    *
-    * @return array<int, array>
-    */
-    public function listPublished(?string $categorySlug = null, int $limit = 20, int $offset = 0): array
-    {
-        $categoryId = null;
-        if ($categorySlug !== null) {
-            $category = Category::findBySlug($categorySlug);
-            if (!$category) {
-                return [];
-            }
-            $categoryId = (int) $category['id'];
-        }
-
-        return (new Blog())->listPublished($categoryId, $limit, $offset) ?? [];
-    }
-
-    /**
     * Fetch a single published post by category and slug.
     *
     * @param string $categorySlug
