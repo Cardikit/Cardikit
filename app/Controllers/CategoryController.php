@@ -6,7 +6,7 @@ use App\Core\Request;
 use App\Core\Response;
 use App\Core\View;
 use App\Models\Category;
-use App\Services\BlogService;
+use App\Models\Blog;
 
 class CategoryController
 {
@@ -15,13 +15,11 @@ class CategoryController
     */
     public function index(Request $request): void
     {
-        $categories = Category::allOrdered() ?? [];
-        $posts = (new BlogService())->listPublished();
+        $categories = Category::allOrderedWithPostCounts() ?? [];
 
         View::render('categories', [
             'title' => 'Categories',
             'categories' => $categories,
-            'posts' => $posts,
         ]);
     }
 
@@ -36,12 +34,25 @@ class CategoryController
             return;
         }
 
-        $posts = (new BlogService())->listPublished($slug);
+        $page = (int) ($request->query()['page'] ?? 1);
+        $currentPage = $page > 0 ? $page : 1;
+        $perPage = 20;
+
+        $blogModel = new Blog();
+        $totalPosts = $blogModel->countPublishedByCategory((int) $category['id']);
+        $totalPages = max(1, (int) ceil($totalPosts / $perPage));
+        $currentPage = min($currentPage, $totalPages);
+
+        $offset = ($currentPage - 1) * $perPage;
+        $posts = $blogModel->listPublished((int) $category['id'], $perPage, $offset) ?? [];
 
         View::render('category', [
             'title' => $category['name'],
             'category' => $category,
             'posts' => $posts,
+            'totalPosts' => $totalPosts,
+            'currentPage' => $currentPage,
+            'totalPages' => $totalPages,
         ]);
     }
 

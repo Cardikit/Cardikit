@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core;
+namespace App\Core {
 
 /**
 * Handles sending HTTP responses in JSON format.
@@ -71,5 +71,22 @@ class Response
         $output = (string) ob_get_clean();
 
         self::html($output, $status);
+    }
+}
+}
+
+namespace {
+    if (!function_exists('esc')) {
+        /**
+        * Escape output for safe HTML rendering.
+        *
+        * @param mixed $value
+        *
+        * @return string
+        */
+        function esc(mixed $value): string
+        {
+            return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+        }
     }
 }

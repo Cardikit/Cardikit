@@ -52,6 +52,42 @@ class Category extends Model
     }
 
     /**
+    * List all categories with a count of published posts.
+    *
+    * @return array<int, array>|null
+    */
+    public static function allOrderedWithPostCounts(): ?array
+    {
+        $instance = new static();
+
+        $sql = "
+            SELECT
+                c.*,
+                (
+                    SELECT COUNT(*)
+                    FROM blogs b
+                    WHERE b.category_id = c.id
+                      AND b.status = 'published'
+                ) AS post_count
+            FROM categories c
+            ORDER BY c.name ASC
+        ";
+
+        $stmt = $instance->db->query($sql);
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        if (!$rows) {
+            return null;
+        }
+
+        return array_map(function (array $row): array {
+            $row['post_count'] = (int) $row['post_count'];
+
+            return $row;
+        }, $rows);
+    }
+
+    /**
     * List the newest categories by creation date.
     *
     * @param int $limit

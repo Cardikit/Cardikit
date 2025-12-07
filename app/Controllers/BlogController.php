@@ -40,7 +40,7 @@ class BlogController
             return;
         }
 
-        $recentPosts = $service->listPublished(null, 4);
+        $recentPosts = (new Blog())->listPublished(null, 3) ?? [];
         $categories = Category::latest(5) ?? [];
 
         View::render('post', [

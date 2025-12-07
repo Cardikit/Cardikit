@@ -79,6 +79,27 @@ class Blog extends Model
     }
 
     /**
+    * Count published posts for a given category.
+    *
+    * @param int $categoryId
+    *
+    * @return int
+    */
+    public function countPublishedByCategory(int $categoryId): int
+    {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) AS total
+            FROM blogs
+            WHERE category_id = :category_id
+              AND status = 'published'
+        ");
+
+        $stmt->execute(['category_id' => $categoryId]);
+
+        return (int) ($stmt->fetchColumn() ?: 0);
+    }
+
+    /**
     * Find a published post by category slug and blog slug.
     *
     * @param string $categorySlug

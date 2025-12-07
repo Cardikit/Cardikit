@@ -1,12 +1,18 @@
+<?php
+    $rawCategoryName = $category['name'] ?? 'Category';
+    $categoryName = esc($rawCategoryName);
+    $description = esc($category['description'] ?? "Explore {$rawCategoryName} articles.");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Networking articles - Tips for building professional connections and growing your network.">
+    <meta name="description" content="<?= $description; ?>">
     <meta name="theme-color" content="#fa3c25">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
-    <title>Networking - Cardikit Blog</title>
+    <title><?= $categoryName; ?> - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>
 <body>
@@ -24,7 +30,7 @@
                 <ul class="nav-menu">
                     <li><a href="/#how-it-works" class="nav-link">How It Works</a></li>
                     <li><a href="/#features" class="nav-link">Features</a></li>
-                    <li><a href="/blog.html" class="nav-link nav-link-active">Blog</a></li>
+                    <li><a href="/blog" class="nav-link nav-link-active">Blog</a></li>
                     <li><a href="/#faq" class="nav-link">FAQ</a></li>
                     <li><a href="/app/register" class="btn btn-primary nav-cta">Get Started</a></li>
                 </ul>
@@ -37,11 +43,11 @@
         <section class="category-hero">
             <div class="container">
                 <div class="breadcrumb">
-                    <a href="/blog.html">Blog</a>
+                    <a href="/blog">Blog</a>
                     <span class="breadcrumb-sep">→</span>
-                    <a href="/categories.html">Categories</a>
+                    <a href="/blog/categories">Categories</a>
                     <span class="breadcrumb-sep">→</span>
-                    <span>Networking</span>
+                    <span><?= $categoryName; ?></span>
                 </div>
                 <div class="category-hero-content">
                     <div class="category-hero-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -53,9 +59,11 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="category-hero-title">Networking</h1>
-                        <p class="category-hero-desc">Tips for building professional connections and growing your network effectively.</p>
-                        <span class="category-hero-count">12 articles</span>
+                        <h1 class="category-hero-title"><?= $categoryName; ?></h1>
+                        <p class="category-hero-desc"><?= $description; ?></p>
+                        <span class="category-hero-count">
+                            <?= (int) ($totalPosts ?? 0); ?> <?= ($totalPosts ?? 0) === 1 ? 'article' : 'articles'; ?>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -65,104 +73,59 @@
         <section class="blog-content">
             <div class="container">
                 <div class="posts-list">
-                    <!-- Post 1 -->
-                    <article class="post-card">
-                        <div class="post-image">
-                            <span class="post-category-badge">Networking</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">December 5, 2024</span>
-                                <span class="post-read-time">5 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="/post.html">10 Tips for Making Lasting Connections at Networking Events</a>
-                            </h3>
-                            <p class="post-excerpt">Networking doesn't have to feel awkward. Learn how to make genuine connections that turn into valuable professional relationships.</p>
-                            <a href="/post.html" class="post-link">Read more →</a>
-                        </div>
-                    </article>
-
-                    <!-- Post 2 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-2">
-                            <span class="post-category-badge">Networking</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">November 30, 2024</span>
-                                <span class="post-read-time">4 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="/post.html">How to Follow Up After a Networking Event</a>
-                            </h3>
-                            <p class="post-excerpt">The real magic happens after the event. Master the art of following up to turn new contacts into lasting relationships.</p>
-                            <a href="/post.html" class="post-link">Read more →</a>
-                        </div>
-                    </article>
-
-                    <!-- Post 3 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-3">
-                            <span class="post-category-badge">Networking</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">November 25, 2024</span>
-                                <span class="post-read-time">6 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="/post.html">Virtual Networking: Building Connections in a Remote World</a>
-                            </h3>
-                            <p class="post-excerpt">Remote work has changed how we network. Learn strategies for building meaningful professional relationships online.</p>
-                            <a href="/post.html" class="post-link">Read more →</a>
-                        </div>
-                    </article>
-
-                    <!-- Post 4 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-4">
-                            <span class="post-category-badge">Networking</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">November 18, 2024</span>
-                                <span class="post-read-time">5 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="/post.html">The Introvert's Guide to Networking Success</a>
-                            </h3>
-                            <p class="post-excerpt">You don't have to be an extrovert to network effectively. Discover strategies that play to your strengths.</p>
-                            <a href="/post.html" class="post-link">Read more →</a>
-                        </div>
-                    </article>
-
-                    <!-- Post 5 -->
-                    <article class="post-card">
-                        <div class="post-image post-image-5">
-                            <span class="post-category-badge">Networking</span>
-                        </div>
-                        <div class="post-body">
-                            <div class="post-meta">
-                                <span class="post-date">November 10, 2024</span>
-                                <span class="post-read-time">4 min read</span>
-                            </div>
-                            <h3 class="post-title">
-                                <a href="/post.html">LinkedIn Networking: Beyond Connection Requests</a>
-                            </h3>
-                            <p class="post-excerpt">Make the most of LinkedIn with these advanced networking strategies that go beyond just adding connections.</p>
-                            <a href="/post.html" class="post-link">Read more →</a>
-                        </div>
-                    </article>
+                    <?php if (!empty($posts)) : ?>
+                        <?php foreach ($posts as $post) : ?>
+                            <?php
+                                $postTitle = esc($post['title'] ?? '');
+                                $postExcerpt = esc($post['excerpt'] ?? '');
+                                $postUrl = '/blog/' . esc($post['category_slug'] ?? $category['slug']) . '/' . esc($post['slug'] ?? '');
+                                $dateValue = $post['published_at'] ?? $post['created_at'] ?? null;
+                                $postDate = $dateValue ? date('F j, Y', strtotime($dateValue)) : null;
+                                $coverImage = $post['cover_image_url'] ?? null;
+                            ?>
+                            <article class="post-card">
+                                <div class="post-image" <?= $coverImage ? 'style="background-image: url(' . esc($coverImage) . ');"' : ''; ?>>
+                                    <span class="post-category-badge"><?= $categoryName; ?></span>
+                                </div>
+                                <div class="post-body">
+                                    <div class="post-meta">
+                                        <?php if ($postDate) : ?>
+                                            <span class="post-date"><?= esc($postDate); ?></span>
+                                        <?php endif; ?>
+                                    </div>
+                                    <h3 class="post-title">
+                                        <a href="<?= $postUrl; ?>"><?= $postTitle; ?></a>
+                                    </h3>
+                                    <p class="post-excerpt"><?= $postExcerpt; ?></p>
+                                    <a href="<?= $postUrl; ?>" class="post-link">Read more →</a>
+                                </div>
+                            </article>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <p class="empty-state">No posts found in this category yet.</p>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Pagination -->
-                <div class="pagination">
-                    <span class="pagination-item pagination-item-active">1</span>
-                    <a href="#" class="pagination-item">2</a>
-                    <a href="#" class="pagination-item">3</a>
-                    <a href="#" class="pagination-item pagination-next">Next →</a>
-                </div>
+                <?php if (($totalPages ?? 1) > 1) : ?>
+                    <div class="pagination">
+                        <?php if (($currentPage ?? 1) > 1) : ?>
+                            <a href="/blog/<?= esc($category['slug']); ?>?page=<?= (int) ($currentPage - 1); ?>" class="pagination-item pagination-prev">← Previous</a>
+                        <?php endif; ?>
+
+                        <?php for ($page = 1; $page <= ($totalPages ?? 1); $page++) : ?>
+                            <?php if ($page === ($currentPage ?? 1)) : ?>
+                                <span class="pagination-item pagination-item-active"><?= $page; ?></span>
+                            <?php else : ?>
+                                <a href="/blog/<?= esc($category['slug']); ?>?page=<?= $page; ?>" class="pagination-item"><?= $page; ?></a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+
+                        <?php if (($currentPage ?? 1) < ($totalPages ?? 1)) : ?>
+                            <a href="/blog/<?= esc($category['slug']); ?>?page=<?= (int) ($currentPage + 1); ?>" class="pagination-item pagination-next">Next →</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
     </main>
@@ -178,7 +141,7 @@
                 <div class="footer-links">
                     <a href="/#how-it-works">How It Works</a>
                     <a href="/#features">Features</a>
-                    <a href="/blog.html">Blog</a>
+                    <a href="/blog">Blog</a>
                     <a href="/#faq">FAQ</a>
                 </div>
             </div>
@@ -191,7 +154,7 @@
     <script>
         const navToggle = document.querySelector('.nav-toggle');
         const navMenu = document.querySelector('.nav-menu');
-        navToggle.addEventListener('click', () => {
+        navToggle?.addEventListener('click', () => {
             navToggle.classList.toggle('active');
             navMenu.classList.toggle('active');
         });

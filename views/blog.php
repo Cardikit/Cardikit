@@ -70,18 +70,24 @@
                     <?php foreach ($posts as $post) : ?>
                         <article class="post-card">
                             <div class="post-image">
-                                <span class="post-category-badge"><?= $post['category_name']; ?></span>
+                                <span class="post-category-badge"><?= esc($post['category_name'] ?? ''); ?></span>
                             </div>
                             <div class="post-body">
                                 <div class="post-meta">
-                                    <span class="post-date"><?php echo (new DateTime($post['created_at']))->format('F j, Y'); ?></span>
+                                    <?php
+                                        $dateValue = $post['published_at'] ?? $post['created_at'] ?? null;
+                                        $formattedDate = $dateValue ? (new DateTime($dateValue))->format('F j, Y') : null;
+                                    ?>
+                                    <?php if ($formattedDate) : ?>
+                                        <span class="post-date"><?= esc($formattedDate); ?></span>
+                                    <?php endif; ?>
                                     <span class="post-read-time">5 min read</span>
                                 </div>
                                 <h3 class="post-title">
-                                    <a href="/blog/<?= $post['category_slug'] . '/' . $post['slug']; ?>"><?= $post['title']; ?></a>
+                                    <a href="/blog/<?= esc($post['category_slug'] ?? '') . '/' . esc($post['slug'] ?? ''); ?>"><?= esc($post['title'] ?? ''); ?></a>
                                 </h3>
-                                <p class="post-excerpt"><?= $post['excerpt']; ?></p>
-                                <a href="/blog/<?= $post['category_slug'] . '/' . $post['slug']; ?>" class="post-link">Read more →</a>
+                                <p class="post-excerpt"><?= esc($post['excerpt'] ?? ''); ?></p>
+                                <a href="/blog/<?= esc($post['category_slug'] ?? '') . '/' . esc($post['slug'] ?? ''); ?>" class="post-link">Read more →</a>
                             </div>
                         </article>
                     <?php endforeach; ?>
@@ -97,13 +103,18 @@
                             <!-- Category items -->
                             <?php foreach ($categories as $category) : ?>
                             <li class="category-item">
-                                <a href="/blog/<?= $category['slug'] ?>">
-                                    <span class="category-name"><?= $category['name']; ?></span>
+                                <a href="/blog/<?= esc($category['slug'] ?? ''); ?>">
+                                    <span class="category-name"><?= esc($category['name'] ?? ''); ?></span>
                                     <span class="category-count">12</span>
                                 </a>
                             </li>
                             <?php endforeach; ?>
                             <!-- !Category items -->
+                            <li class="category-item">
+                                <a href="/blog/categories">
+                                    <span style="text-decoration: underline;" class="category-name">See more...</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
