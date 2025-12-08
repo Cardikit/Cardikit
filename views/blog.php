@@ -47,6 +47,7 @@
     }
     </script>
 
+    <?php include __DIR__ . '/partials/analytics.php'; ?>
     <title>Blog - Cardikit | Digital Business Card Tips & News</title>
     <link rel="stylesheet" href="/blog.css">
 </head>

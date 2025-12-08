@@ -79,6 +79,28 @@ class Blog extends Model
     }
 
     /**
+    * List all published posts with categories (no limit).
+    *
+    * @return array<int, array>|null
+    */
+    public function listAllPublished(): ?array
+    {
+        $sql = "
+            SELECT b.*, c.name AS category_name, c.slug AS category_slug
+            FROM blogs b
+            LEFT JOIN categories c ON c.id = b.category_id
+            WHERE b.status = 'published'
+            ORDER BY COALESCE(b.published_at, b.created_at) DESC
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $rows ?: null;
+    }
+
+    /**
     * Count published posts for a given category.
     *
     * @param int $categoryId

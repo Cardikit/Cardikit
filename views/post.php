@@ -60,6 +60,7 @@
       "dateModified": <?= json_encode($post['updated_at'] ?? $post['published_at'] ?? $post['created_at'] ?? ''); ?>
     }
     </script>
+    <?php include __DIR__ . '/partials/analytics.php'; ?>
     <title><?= esc($title ?? ''); ?> - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>

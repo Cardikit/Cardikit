@@ -25,6 +25,11 @@ export default defineConfig(({ mode }) => {
     return {
         base: basePath.endsWith('/') ? basePath : `${basePath}/`,
         plugins: [react(), tailwindcss()],
+        define: {
+            'process.env': {
+                GA_MEASUREMENT_ID: env.GA_MEASUREMENT_ID,
+            },
+        },
         test: {
             environment: 'jsdom',
             globals: true,

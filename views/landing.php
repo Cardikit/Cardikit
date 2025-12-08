@@ -42,6 +42,7 @@
       ]
     }
     </script>
+    <?php include __DIR__ . '/partials/analytics.php'; ?>
 
     <title>Cardikit - Open Source Digital Business Card Maker</title>
     <link rel="stylesheet" href="landing.css">

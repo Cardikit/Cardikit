@@ -44,6 +44,18 @@
     }
     </script>
 
+    <!-- Google Analytics -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=%GA_MEASUREMENT_ID%"></script>
+    <script defer>
+      const gaId = (typeof process !== 'undefined' && process.env?.GA_MEASUREMENT_ID) || '%GA_MEASUREMENT_ID%';
+      if (gaId && gaId !== '%GA_MEASUREMENT_ID%') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaId);
+      }
+    </script>
+
     <!-- Inline fallback styles for initial loading spinner -->
     <style>
       :root { color-scheme: light; }

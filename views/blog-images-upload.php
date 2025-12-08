@@ -6,6 +6,7 @@
     <meta name="description" content="Upload images for Cardikit blog posts.">
     <meta name="theme-color" content="#fa3c25">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
+    <?php include __DIR__ . '/partials/analytics.php'; ?>
     <title>Upload Blog Image - Cardikit</title>
     <link rel="stylesheet" href="/blog.css">
 </head>
