@@ -62,6 +62,40 @@ class BlogController
     }
 
     /**
+    * Admin: list all blog posts for management.
+    */
+    public function adminIndex(Request $request): void
+    {
+        $blogs = (new Blog())->listAllWithCategory(100) ?? [];
+
+        View::render('blog-admin', [
+            'title' => 'Manage Blog Posts',
+            'blogs' => $blogs,
+        ]);
+    }
+
+    /**
+    * Admin: edit a blog post.
+    */
+    public function edit(Request $request, int $id): void
+    {
+        $blog = (new Blog())->findWithCategoryById($id);
+
+        if (!$blog) {
+            Response::html('Blog not found', 404);
+            return;
+        }
+
+        $categories = Category::allOrdered() ?? [];
+
+        View::render('blog-edit', [
+            'title' => 'Edit Blog Post',
+            'blog' => $blog,
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
     * Create a new blog post (admin only).
     */
     public function store(Request $request): void

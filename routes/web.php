@@ -62,12 +62,16 @@ Router::get('/api/v1/themes', [CardController::class, 'themes'], array_merge($au
 // Blog
 Router::get('/blog', [BlogController::class, 'index'], $tls);
 Router::get('/blog/create', [BlogController::class, 'create'], $admin);
+Router::get('/blog/admin', [BlogController::class, 'adminIndex'], $admin);
+Router::get('/blog/:id/edit', [BlogController::class, 'edit'], $admin);
 Router::post('/blog', [BlogController::class, 'store'], $admin);
 Router::put('/blog/:id', [BlogController::class, 'update'], $admin);
 Router::delete('/blog/:id', [BlogController::class, 'delete'], $admin);
 
 // Category
 Router::get('/blog/categories', [CategoryController::class, 'index'], $tls);
+Router::get('/blog/categories/admin', [CategoryController::class, 'adminIndex'], $admin);
+Router::get('/blog/categories/:id/edit', [CategoryController::class, 'edit'], $admin);
 Router::get('/blog/:slug', [CategoryController::class, 'show'], $tls);
 Router::get('/blog/categories/create', [CategoryController::class, 'create'], $admin);
 Router::post('/blog/categories', [CategoryController::class, 'store'], $admin);

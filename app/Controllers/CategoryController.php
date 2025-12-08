@@ -24,6 +24,19 @@ class CategoryController
     }
 
     /**
+    * Admin: list categories for management.
+    */
+    public function adminIndex(): void
+    {
+        $categories = Category::allOrderedWithPostCounts() ?? [];
+
+        View::render('categories-admin', [
+            'title' => 'Manage Categories',
+            'categories' => $categories,
+        ]);
+    }
+
+    /**
     * Show a category and its published posts.
     */
     public function show(Request $request, string $slug): void
@@ -53,6 +66,24 @@ class CategoryController
             'totalPosts' => $totalPosts,
             'currentPage' => $currentPage,
             'totalPages' => $totalPages,
+        ]);
+    }
+
+    /**
+    * Admin: edit category form.
+    */
+    public function edit(int $id): void
+    {
+        $category = Category::findById($id);
+
+        if (!$category) {
+            Response::html('Category not found', 404);
+            return;
+        }
+
+        View::render('category-edit', [
+            'title' => 'Edit Category',
+            'category' => $category,
         ]);
     }
 

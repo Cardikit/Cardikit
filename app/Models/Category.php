@@ -88,7 +88,7 @@ class Category extends Model
     }
 
     /**
-    * List the newest categories by creation date.
+    * List the newest categories by creation date with published post counts.
     *
     * @param int $limit
     *
@@ -97,12 +97,34 @@ class Category extends Model
     public static function latest(int $limit = 5): ?array
     {
         $instance = new static();
-        $stmt = $instance->db->prepare("SELECT * FROM categories ORDER BY created_at DESC LIMIT :limit");
+        $sql = "
+            SELECT
+                c.*,
+                (
+                    SELECT COUNT(*)
+                    FROM blogs b
+                    WHERE b.category_id = c.id
+                      AND b.status = 'published'
+                ) AS post_count
+            FROM categories c
+            ORDER BY c.created_at DESC
+            LIMIT :limit
+        ";
+
+        $stmt = $instance->db->prepare($sql);
         $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
         $stmt->execute();
         $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        return $rows ?: null;
+        if (!$rows) {
+            return null;
+        }
+
+        return array_map(function (array $row): array {
+            $row['post_count'] = (int) $row['post_count'];
+
+            return $row;
+        }, $rows);
     }
 
     /**

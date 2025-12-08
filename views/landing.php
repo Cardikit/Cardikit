@@ -66,7 +66,6 @@
                 <li><a href="/#how-it-works" class="nav-link">How it works</a></li>
                 <li><a href="/#faq" class="nav-link">FAQ</a></li>
                 <li><a href="/blog" class="nav-link">Blog</a></li>
-                <li><a href="/blog/categories" class="nav-link">Categories</a></li>
                 <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
                 <li><a href="/app/login" class="btn btn-outline nav-cta">Log in</a></li>
             </ul>

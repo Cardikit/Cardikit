@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create a new blog post on Cardikit.">
+    <meta name="description" content="Edit a blog post.">
     <meta name="theme-color" content="#fa3c25">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
-    <title>Create Post - Cardikit Blog</title>
+    <title>Edit Post - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>
 <body>
-    <!-- Navigation -->
     <header class="header">
         <div class="container">
             <nav class="nav">
@@ -26,102 +25,110 @@
                     <li><a href="/#features" class="nav-link">Features</a></li>
                     <li><a href="/blog" class="nav-link nav-link-active">Blog</a></li>
                     <li><a href="/#faq" class="nav-link">FAQ</a></li>
-                    <li><a href="/app/register" class="btn btn-primary nav-cta">Get Started</a></li>
+                    <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main>
-        <!-- Page Header -->
         <section class="form-hero">
             <div class="container">
                 <div class="breadcrumb">
                     <a href="/blog">Blog</a>
                     <span class="breadcrumb-sep">→</span>
-                    <span>Create Post</span>
+                    <a href="/blog/admin">Admin</a>
+                    <span class="breadcrumb-sep">→</span>
+                    <span>Edit</span>
                 </div>
-                <h1 class="form-hero-title">Create New <span class="highlight">Post</span></h1>
-                <p class="form-hero-subtitle">Share your knowledge with the Cardikit community.</p>
+                <h1 class="form-hero-title">Edit <span class="highlight">Post</span></h1>
+                <p class="form-hero-subtitle">Update the content, category, or status.</p>
             </div>
         </section>
 
-        <!-- Create Post Form -->
         <section class="form-section">
             <div class="container container-narrow">
-                <form class="create-form" id="createPostForm" novalidate>
-                    <!-- Title -->
+                <form class="create-form" id="editBlogForm">
                     <div class="form-group">
-                        <label for="title" class="form-label">Post Title *</label>
-                        <input 
-                            type="text" 
-                            id="title" 
-                            name="title" 
-                            class="form-input" 
-                            placeholder="Enter a compelling title..."
+                        <label for="title" class="form-label">Title *</label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            class="form-input"
+                            value="<?= esc($blog['title'] ?? ''); ?>"
                             required
                         >
                     </div>
 
-                    <!-- Category -->
+                    <div class="form-group">
+                        <label for="slug" class="form-label">Slug</label>
+                        <input
+                            type="text"
+                            id="slug"
+                            name="slug"
+                            class="form-input"
+                            placeholder="optional-custom-slug"
+                            value="<?= esc($blog['slug'] ?? ''); ?>"
+                        >
+                        <span class="form-hint">Leave blank to keep the current slug.</span>
+                    </div>
+
                     <div class="form-group">
                         <label for="category" class="form-label">Category *</label>
                         <select id="category" name="category" class="form-select" required>
                             <option value="">Select a category</option>
                             <?php foreach ($categories as $category) : ?>
-                                <option value="<?= (int) ($category['id'] ?? 0); ?>"><?= esc($category['name'] ?? ''); ?></option>
+                                <option value="<?= (int) ($category['id'] ?? 0); ?>" <?= isset($blog['category_id']) && (int) $blog['category_id'] === (int) ($category['id'] ?? 0) ? 'selected' : ''; ?>>
+                                    <?= esc($category['name'] ?? ''); ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
-                    </div>
-
-                    <!-- Excerpt -->
-                    <div class="form-group">
-                        <label for="excerpt" class="form-label">Excerpt *</label>
-                        <textarea 
-                            id="excerpt" 
-                            name="excerpt" 
-                            class="form-textarea form-textarea-sm" 
-                            placeholder="Write a brief summary of your post (max 160 characters)..."
-                            maxlength="160"
-                            required
-                        ></textarea>
-                        <span class="form-hint">This will appear in search results and post previews.</span>
-                    </div>
-
-                    <!-- Content -->
-                    <div class="form-group">
-                        <label for="content" class="form-label">Content *</label>
-                        <textarea 
-                            id="content" 
-                            name="content" 
-                            class="form-textarea form-textarea-lg" 
-                            placeholder="Write your post content here. You can use Markdown formatting..."
-                            required
-                        ></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="status" class="form-label">Status *</label>
                         <select id="status" name="status" class="form-select" required>
-                            <option value="draft">Save as draft</option>
-                            <option value="published">Publish now</option>
+                            <?php $statusValue = $blog['status'] ?? 'draft'; ?>
+                            <option value="draft" <?= $statusValue === 'draft' ? 'selected' : ''; ?>>Draft</option>
+                            <option value="published" <?= $statusValue === 'published' ? 'selected' : ''; ?>>Published</option>
                         </select>
-                        <span class="form-hint">Choose whether to keep this as a draft or publish immediately.</span>
+                        <span class="form-hint">Published posts will appear live immediately.</span>
                     </div>
 
-                    <div id="formErrors" class="form-hint" style="color: #b00020;"></div>
+                    <div class="form-group">
+                        <label for="excerpt" class="form-label">Excerpt</label>
+                        <textarea
+                            id="excerpt"
+                            name="excerpt"
+                            class="form-textarea form-textarea-sm"
+                            rows="3"
+                            placeholder="Short summary for previews"
+                        ><?= esc($blog['excerpt'] ?? ''); ?></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content" class="form-label">Content *</label>
+                        <textarea
+                            id="content"
+                            name="content"
+                            class="form-textarea form-textarea-lg"
+                            rows="8"
+                            required
+                        ><?= esc($blog['content'] ?? ''); ?></textarea>
+                    </div>
+
                     <div id="formStatus" class="form-hint"></div>
 
-                    <!-- Submit Buttons -->
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Save Post</button>
+                        <a href="/blog/admin" class="btn btn-secondary">Back to admin</a>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
                 </form>
             </div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -150,22 +157,21 @@
             navMenu.classList.toggle('active');
         });
 
-        const form = document.getElementById('createPostForm');
-        const errorsEl = document.getElementById('formErrors');
+        const form = document.getElementById('editBlogForm');
         const statusEl = document.getElementById('formStatus');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            errorsEl.textContent = '';
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
             statusEl.textContent = 'Saving...';
             statusEl.style.color = '#555';
 
             const payload = {
                 title: form.title.value.trim(),
+                slug: form.slug.value.trim(),
                 category_id: form.category.value ? parseInt(form.category.value, 10) : null,
+                status: form.status.value,
                 excerpt: form.excerpt.value,
-                content: form.content.value,
-                status: form.status.value
+                content: form.content.value
             };
 
             Object.keys(payload).forEach((key) => {
@@ -175,8 +181,8 @@
             });
 
             try {
-                const response = await fetch('/blog', {
-                    method: 'POST',
+                const response = await fetch('/blog/<?= (int) ($blog['id'] ?? 0); ?>', {
+                    method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
@@ -184,23 +190,15 @@
                 const body = await response.json().catch(() => ({}));
 
                 if (response.ok) {
-                    window.location.href = '/blog/admin';
-                    return;
-                }
-
-                const fieldErrors = body?.errors;
-                if (fieldErrors && typeof fieldErrors === 'object') {
-                    const messages = Object.entries(fieldErrors).flatMap(([field, errs]) => errs.map((err) => `${field}: ${err}`));
-                    errorsEl.textContent = messages.join(' | ');
+                    statusEl.textContent = 'Saved!';
+                    statusEl.style.color = 'green';
                 } else {
-                    errorsEl.textContent = body?.message || 'Failed to create post.';
+                    statusEl.textContent = body?.message || 'Failed to save changes.';
+                    statusEl.style.color = '#b00020';
                 }
-                errorsEl.style.color = '#b00020';
-                statusEl.textContent = '';
             } catch (error) {
-                errorsEl.textContent = 'Network error while saving.';
-                errorsEl.style.color = '#b00020';
-                statusEl.textContent = '';
+                statusEl.textContent = 'Network error while saving.';
+                statusEl.style.color = '#b00020';
             }
         });
     </script>

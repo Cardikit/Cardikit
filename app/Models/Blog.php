@@ -156,6 +156,34 @@ class Blog extends Model
     }
 
     /**
+    * List all blog posts with their categories (any status).
+    *
+    * @param int $limit
+    * @param int $offset
+    *
+    * @return array<int, array>|null
+    */
+    public function listAllWithCategory(int $limit = 50, int $offset = 0): ?array
+    {
+        $sql = "
+            SELECT b.*, c.name AS category_name, c.slug AS category_slug
+            FROM blogs b
+            LEFT JOIN categories c ON c.id = b.category_id
+            ORDER BY COALESCE(b.published_at, b.created_at) DESC
+            LIMIT :limit OFFSET :offset
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':limit', $limit, \PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $rows ?: null;
+    }
+
+    /**
     * Generate a URL friendly slug.
     *
     * @param string $value

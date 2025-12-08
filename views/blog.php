@@ -105,7 +105,7 @@
                             <li class="category-item">
                                 <a href="/blog/<?= esc($category['slug'] ?? ''); ?>">
                                     <span class="category-name"><?= esc($category['name'] ?? ''); ?></span>
-                                    <span class="category-count">12</span>
+                                    <span class="category-count"><?= esc((int) ($category['post_count'] ?? 0)); ?></span>
                                 </a>
                             </li>
                             <?php endforeach; ?>
