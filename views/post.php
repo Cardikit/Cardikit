@@ -63,7 +63,7 @@
                             <?php if ($formattedDate) : ?>
                                 <span class="article-date"><?= esc($formattedDate); ?></span>
                             <?php endif; ?>
-                            <span class="article-read-time">5 min read</span>
+                            <span class="article-read-time"><?= esc((int) ($post['read_time_minutes'] ?? 5)); ?> min read</span>
                         </div>
                     </div>
                 </div>

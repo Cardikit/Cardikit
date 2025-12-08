@@ -10,6 +10,7 @@ use App\Models\Blog;
 use App\Services\AuthService;
 use App\Services\BlogService;
 use App\Services\Markdown;
+use App\Services\ReadingTime;
 
 class BlogController
 {
@@ -19,6 +20,11 @@ class BlogController
     public function index(Request $request): void
     {
         $posts = (new Blog())->listPublished(null, 5) ?? [];
+        $posts = array_map(function (array $post): array {
+            $content = (string) ($post['content'] ?? '');
+            $post['read_time_minutes'] = ReadingTime::estimate($content);
+            return $post;
+        }, $posts);
         $categories = Category::latest(5) ?? [];
 
         View::render('blog', [
@@ -42,8 +48,13 @@ class BlogController
         }
 
         $recentPosts = (new Blog())->listPublished(null, 3) ?? [];
+        $recentPosts = array_map(function (array $item): array {
+            $item['read_time_minutes'] = ReadingTime::estimate((string) ($item['content'] ?? ''));
+            return $item;
+        }, $recentPosts);
         $categories = Category::latest(5) ?? [];
         $renderedContent = Markdown::convert((string) ($post['content'] ?? ''));
+        $post['read_time_minutes'] = ReadingTime::estimate((string) ($post['content'] ?? ''));
 
         View::render('post', [
             'title' => $post['title'],

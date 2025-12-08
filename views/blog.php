@@ -85,7 +85,7 @@
                                     <?php if ($formattedDate) : ?>
                                         <span class="post-date"><?= esc($formattedDate); ?></span>
                                     <?php endif; ?>
-                                    <span class="post-read-time">5 min read</span>
+                                    <span class="post-read-time"><?= esc((int) ($post['read_time_minutes'] ?? 5)); ?> min read</span>
                                 </div>
                                 <h3 class="post-title">
                                     <a href="/blog/<?= esc($post['category_slug'] ?? '') . '/' . esc($post['slug'] ?? ''); ?>"><?= esc($post['title'] ?? ''); ?></a>
