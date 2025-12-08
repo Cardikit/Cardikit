@@ -6,6 +6,7 @@
     <meta name="description" content="Cardikit Terms and Conditions">
     <meta name="keywords" content="Cardikit terms, terms of service, conditions, acceptable use">
     <meta name="theme-color" content="#fa3c25">
+    <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://cardikit.com/terms">
 
     <!-- Icons -->

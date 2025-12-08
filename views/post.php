@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php
         $postTitle = $post['title'] ?? '';
         $postExcerpt = $post['excerpt'] ?? '';
@@ -11,9 +9,12 @@
         $coverImage = $post['cover_image_url'] ?? 'https://cardikit.com/assets/header-FA0IEdgE.webp';
         $canonical = "https://cardikit.com/blog/{$postCategorySlug}/{$postSlug}";
     ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= esc($postExcerpt ?: 'Read the latest from the Cardikit blog.'); ?>">
     <meta name="keywords" content="Cardikit blog, digital business card, networking tips, <?= esc($post['category_name'] ?? ''); ?>">
     <meta name="theme-color" content="#fa3c25">
+    <meta name="robots" content="index,follow">
     <link rel="canonical" href="<?= esc($canonical); ?>">
 
     <!-- Icons -->
@@ -58,6 +59,38 @@
       "url": <?= json_encode($canonical); ?>,
       "datePublished": <?= json_encode($post['published_at'] ?? $post['created_at'] ?? ''); ?>,
       "dateModified": <?= json_encode($post['updated_at'] ?? $post['published_at'] ?? $post['created_at'] ?? ''); ?>
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://cardikit.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cardikit.com/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": <?= json_encode($post['category_name'] ?? 'Category'); ?>,
+          "item": <?= json_encode("https://cardikit.com/blog/{$postCategorySlug}"); ?>
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": <?= json_encode($postTitle); ?>,
+          "item": <?= json_encode($canonical); ?>
+        }
+      ]
     }
     </script>
     <?php include __DIR__ . '/partials/analytics.php'; ?>
@@ -128,22 +161,21 @@
             <!-- Featured Image -->
             <div class="article-featured-image">
                 <div class="container">
-                    <?php if ($post['cover_image_url']) : ?>
-                        <div style="background-image: url(<?= esc($post['cover_image_url'] ?? ''); ?>); background-size: cover;" class="featured-image-wrapper">
-                    <?php else : ?>
-                        <div class="featured-image-wrapper" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <?php endif; ?>
+                    <div class="featured-image-wrapper" style="<?= $coverImage ? '' : 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' ?>">
+                        <?php if (!empty($coverImage)) : ?>
+                            <img src="<?= esc($coverImage); ?>" alt="<?= esc($postTitle ?: 'Blog cover image'); ?>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
 
             <!-- Article Content -->
-            <div class="article-content">
-                <div class="container container-narrow">
-                    <div class="article-body">
-                        <?= $contentHtml ?? ''; ?>
+                <div class="article-content">
+                    <div class="container container-narrow">
+                        <div class="article-body">
+                            <?= $contentHtml ?? ''; ?>
+                        </div>
                     </div>
-                </div>
             </div>
 
             <!-- Article Footer -->

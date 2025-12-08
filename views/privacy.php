@@ -6,6 +6,7 @@
     <meta name="description" content="Cardikit Privacy Policy">
     <meta name="keywords" content="Cardikit privacy policy, data protection, GDPR, CCPA">
     <meta name="theme-color" content="#fa3c25">
+    <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://cardikit.com/privacy">
 
     <!-- Icons -->

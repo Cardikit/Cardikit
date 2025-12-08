@@ -76,6 +76,7 @@ Router::delete('/blog/images/:filename', [BlogImageController::class, 'delete'],
 Router::get('/sitemap.xml', [SitemapController::class, 'index'], $tls);
 Router::get('/privacy', fn () => \App\Core\View::render('privacy'), $tls);
 Router::get('/terms', fn () => \App\Core\View::render('terms'), $tls);
+Router::get('/404', fn () => \App\Core\View::render('404', [], 404), $tls);
 
 // Category
 Router::get('/blog/categories', [CategoryController::class, 'index'], $tls);

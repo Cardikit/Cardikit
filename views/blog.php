@@ -6,6 +6,7 @@
     <meta name="description" content="Cardikit Blog - Tips, guides and news about digital business cards, networking, and personal branding.">
     <meta name="keywords" content="digital business card blog, networking tips, personal branding, Cardikit">
     <meta name="theme-color" content="#fa3c25">
+    <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://cardikit.com/blog">
 
     <!-- Icons -->
@@ -44,6 +45,26 @@
           "url": "https://cardikit.com/assets/smaller-logo-no-background.png"
         }
       }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://cardikit.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cardikit.com/blog"
+        }
+      ]
     }
     </script>
 
@@ -94,12 +115,11 @@
                     <!-- Posts -->
                     <?php foreach ($posts as $post) : ?>
                         <article class="post-card">
-                            <?php if ($post['cover_image_url']) : ?>
-                                <div style="background-image: url(<?= esc($post['cover_image_url'] ?? ''); ?>); background-size: cover;" class="post-image">
-                            <?php else : ?>
-                                <div class="post-image">
-                            <?php endif; ?>
+                            <div class="post-image" style="<?= $post['cover_image_url'] ? 'background: #f7f7f7;' : ''; ?>">
                                 <span class="post-category-badge"><?= esc($post['category_name'] ?? ''); ?></span>
+                                <?php if (!empty($post['cover_image_url'])) : ?>
+                                    <img src="<?= esc($post['cover_image_url']); ?>" alt="<?= esc($post['title'] ?? ''); ?>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                                <?php endif; ?>
                             </div>
                             <div class="post-body">
                                 <div class="post-meta">

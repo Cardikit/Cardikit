@@ -43,7 +43,7 @@ class CategoryController
     {
         $category = Category::findBySlug($slug);
         if (!$category) {
-            Response::html('Category not found', 404);
+            View::render('404', [], 404);
             return;
         }
 

@@ -7,6 +7,7 @@
     <meta name="theme-color" content="#fa3c25">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
     <?php include __DIR__ . '/partials/analytics.php'; ?>
+    <meta name="robots" content="noindex,nofollow">
     <title>Edit Post - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>

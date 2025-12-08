@@ -43,7 +43,7 @@ class BlogController
         $post = $service->getPublished($category, $slug);
 
         if (!$post) {
-            Response::html('Post not found', 404);
+            View::render('404', [], 404);
             return;
         }
 

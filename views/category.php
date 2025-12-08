@@ -16,9 +16,18 @@
     <meta name="description" content="<?= $description; ?>">
     <meta name="keywords" content="Cardikit, blog category, <?= $categoryName; ?>">
     <meta name="theme-color" content="#fa3c25">
+    <meta name="robots" content="index,follow">
     <link rel="canonical" href="<?= esc($canonical); ?>">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
     <link rel="apple-touch-icon" href="/assets/smaller-logo-no-background.png">
+    <?php if (($totalPages ?? 1) > 1): ?>
+        <?php if (($currentPage ?? 1) > 1): ?>
+            <link rel="prev" href="/blog/<?= esc($category['slug'] ?? ''); ?>?page=<?= (int) (($currentPage ?? 1) - 1); ?>">
+        <?php endif; ?>
+        <?php if (($currentPage ?? 1) < ($totalPages ?? 1)): ?>
+            <link rel="next" href="/blog/<?= esc($category['slug'] ?? ''); ?>?page=<?= (int) (($currentPage ?? 1) + 1); ?>">
+        <?php endif; ?>
+    <?php endif; ?>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -52,6 +61,32 @@
           "url": "https://cardikit.com/assets/smaller-logo-no-background.png"
         }
       }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://cardikit.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cardikit.com/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": <?= json_encode($categoryName); ?>,
+          "item": <?= json_encode($canonical); ?>
+        }
+      ]
     }
     </script>
     <?php include __DIR__ . '/partials/analytics.php'; ?>
@@ -94,18 +129,18 @@
                     <span><?= $categoryName; ?></span>
                 </div>
                 <div class="category-hero-content">
-                    <?php if ($category['image']) : ?>
-                        <div class="category-hero-icon" style="background-image: url('<?= $category['image']; ?>'); background-size: cover;"></div>
-                    <?php else : ?>
-                        <div class="category-hero-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="category-hero-icon" style="<?= $category['image'] ? 'background: #f7f7f7;' : 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' ?>">
+                        <?php if (!empty($category['image'])) : ?>
+                            <img src="<?= esc($category['image']); ?>" alt="<?= $categoryName; ?>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                        <?php else : ?>
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
                                 <circle cx="9" cy="7" r="4"></circle>
                                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
                                 <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                             </svg>
-                        </div>
-                    <?php endif; ?>
+                        <?php endif; ?>
+                    </div>
                     <div>
                         <h1 class="category-hero-title"><?= $categoryName; ?></h1>
                         <p class="category-hero-desc"><?= $description; ?></p>
@@ -132,8 +167,11 @@
                                 $coverImage = $post['cover_image_url'] ?? null;
                             ?>
                             <article class="post-card">
-                                <div class="post-image" <?= $coverImage ? 'style="background-size: cover; background-image: url(' . esc($coverImage) . ');"' : ''; ?>>
+                                <div class="post-image" style="<?= $coverImage ? 'background: #f7f7f7;' : ''; ?>">
                                     <span class="post-category-badge"><?= $categoryName; ?></span>
+                                    <?php if (!empty($coverImage)) : ?>
+                                        <img src="<?= esc($coverImage); ?>" alt="<?= $postTitle; ?>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <?php endif; ?>
                                 </div>
                                 <div class="post-body">
                                     <div class="post-meta">

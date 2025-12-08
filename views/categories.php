@@ -6,6 +6,7 @@
     <meta name="description" content="Browse all Cardikit blog categories - Networking, Digital Cards, Personal Branding, and more.">
     <meta name="keywords" content="blog categories, digital business card categories, Cardikit">
     <meta name="theme-color" content="#fa3c25">
+    <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://cardikit.com/blog/categories">
 
     <!-- Icons -->
@@ -44,6 +45,32 @@
           "url": "https://cardikit.com/assets/smaller-logo-no-background.png"
         }
       }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://cardikit.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Blog",
+          "item": "https://cardikit.com/blog"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Categories",
+          "item": "https://cardikit.com/blog/categories"
+        }
+      ]
     }
     </script>
     <?php include __DIR__ . '/partials/analytics.php'; ?>
@@ -97,18 +124,18 @@
                     <?php if (!empty($categories)) : ?>
                         <?php foreach ($categories as $category): ?>
                         <a href="/blog/<?= esc($category['slug'] ?? ''); ?>" class="category-card">
-                            <?php if ($category['image']) : ?>
-                            <div style="background-image: url(<?= esc($category['image'] ?? ''); ?>); background-size: cover;" class="category-card-icon"></div>
-                            <?php else : ?>
-                            <div class="category-card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                    <circle cx="9" cy="7" r="4"></circle>
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                </svg>
+                            <div class="category-card-icon" style="<?= $category['image'] ? 'background: #f7f7f7;' : 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' ?>">
+                                <?php if (!empty($category['image'])) : ?>
+                                    <img src="<?= esc($category['image']); ?>" alt="<?= esc($category['name'] ?? 'Category image'); ?>" loading="lazy" style="width: 100%; height: 100%; object-fit: cover;">
+                                <?php else : ?>
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="9" cy="7" r="4"></circle>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                    </svg>
+                                <?php endif; ?>
                             </div>
-                            <?php endif; ?>
                             <h3 class="category-card-title"><?= esc($category['name'] ?? ''); ?></h3>
                             <p class="category-card-desc"><?= esc($category['description'] ?? ''); ?></p>
                             <?php $count = (int) ($category['post_count'] ?? 0); ?>
