@@ -380,9 +380,9 @@
         <div class="container footer-content">
             <p class="footer-copyright">&copy; <span id="current-year"></span> Cardikit</p>
             <nav class="footer-nav">
-                <a href="#" class="footer-link">Privacy</a>
-                <a href="#" class="footer-link">Terms</a>
-                <a href="#" class="footer-link">Contact</a>
+                <a href="/privacy" class="footer-link">Privacy</a>
+                <a href="/terms" class="footer-link">Terms</a>
+                <a href="mailto:contact@cardikit.com" class="footer-link">Contact</a>
             </nav>
         </div>
     </footer>

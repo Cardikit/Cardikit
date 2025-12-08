@@ -118,14 +118,13 @@
                     <p class="footer-tagline">Your digital business card, reimagined.</p>
                 </div>
                 <div class="footer-links">
-                    <a href="/#how-it-works">How It Works</a>
-                    <a href="/#features">Features</a>
                     <a href="/blog">Blog</a>
-                    <a href="/#faq">FAQ</a>
+                    <a href="/privacy">Privacy</a>
+                    <a href="/terms">Terms</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>© 2024 Cardikit. Open source & free forever.</p>
+                <p>© 2025 Cardikit. Open source & free forever.</p>
             </div>
         </div>
     </footer>
