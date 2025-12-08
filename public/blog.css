@@ -956,6 +956,31 @@ ul {
     color: var(--color-text);
 }
 
+.article-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.article-content ul {
+    margin: var(--spacing-md) 0;
+    padding-left: var(--spacing-md);
+    list-style-type: disc;
+    color: var(--color-text);
+}
+
+.article-content ol {
+    margin: var(--spacing-md) 0;
+    padding-left: var(--spacing-md);
+    list-style-type: decimal;
+    color: var(--color-text);
+}
+
+.article-content img {
+    margin: var(--spacing-md) 0;
+    border-radius: var(--border-radius-lg);
+    object-fit: cover;
+}
+
 .article-callout {
     margin: var(--spacing-xl) 0;
     padding: var(--spacing-lg);

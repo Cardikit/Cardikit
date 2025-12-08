@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Blog;
 use App\Services\AuthService;
 use App\Services\BlogService;
+use App\Services\Markdown;
 
 class BlogController
 {
@@ -42,12 +43,14 @@ class BlogController
 
         $recentPosts = (new Blog())->listPublished(null, 3) ?? [];
         $categories = Category::latest(5) ?? [];
+        $renderedContent = Markdown::convert((string) ($post['content'] ?? ''));
 
         View::render('post', [
             'title' => $post['title'],
             'post' => $post,
             'recentPosts' => $recentPosts,
             'categories' => $categories,
+            'contentHtml' => $renderedContent,
         ]);
     }
 

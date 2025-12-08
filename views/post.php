@@ -84,7 +84,9 @@
             <!-- Article Content -->
             <div class="article-content">
                 <div class="container container-narrow">
-                    <p><?= esc($post['content'] ?? ''); ?></p>
+                    <div class="article-body">
+                        <?= $contentHtml ?? ''; ?>
+                    </div>
                 </div>
             </div>
 
