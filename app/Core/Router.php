@@ -146,22 +146,27 @@ class Router
                 }
 
                 // If route uses controller syntax [Controller::class, 'method']
-                if (is_array($action)) {
-                    [$controller, $method] = $action;
-                    $controllerInstance = new $controller;
-                    $response =  call_user_func_array([$controllerInstance, $method], array_merge([$request], $matches));
-                } else {
-                    $response = call_user_func_array($action, array_merge([$request], $matches));
-                }
+                try {
+                    if (is_array($action)) {
+                        [$controller, $method] = $action;
+                        $controllerInstance = new $controller;
+                        $response =  call_user_func_array([$controllerInstance, $method], array_merge([$request], $matches));
+                    } else {
+                        $response = call_user_func_array($action, array_merge([$request], $matches));
+                    }
 
-                // If handler returns array, return as JSON
-                if (is_array($response)) {
-                    Response::json($response);
-                } elseif ($response !== null) {
-                    echo $response;
-                }
+                    // If handler returns array, return as JSON
+                    if (is_array($response)) {
+                        Response::json($response);
+                    } elseif ($response !== null) {
+                        echo $response;
+                    }
 
-                return;
+                    return;
+                } catch (\Throwable $e) {
+                    Response::serverError();
+                    return;
+                }
             }
         }
 

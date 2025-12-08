@@ -72,6 +72,19 @@ class Response
 
         self::html($output, $status);
     }
+
+    /**
+    * Render a 500 error page if available, otherwise generic text.
+    */
+    public static function serverError(): void
+    {
+        $view500 = dirname(__DIR__, 2) . '/views/500.php';
+        if (is_file($view500)) {
+            self::view($view500, [], 500);
+            return;
+        }
+        self::html('Internal Server Error', 500);
+    }
 }
 }
 

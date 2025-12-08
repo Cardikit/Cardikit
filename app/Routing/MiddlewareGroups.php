@@ -7,6 +7,7 @@ use App\Middleware\CsrfMiddleware;
 use App\Middleware\EnforceTlsMiddleware;
 use App\Middleware\RateLimitMiddleware;
 use App\Middleware\AdminMiddleware;
+use App\Middleware\SecurityHeadersMiddleware;
 
 /**
 * Groupings of middleware for
@@ -27,7 +28,7 @@ class MiddlewareGroups
     */
     public static function tls(): array
     {
-        return [new EnforceTlsMiddleware()];
+        return [new EnforceTlsMiddleware(), new SecurityHeadersMiddleware()];
     }
 
     /**

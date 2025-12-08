@@ -13,6 +13,13 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 Config::load(__DIR__ . '/.env');
 
+$appEnv = strtolower((string) Config::get('APP_ENV', 'production'));
+$isProd = $appEnv === 'production';
+ini_set('display_errors', $isProd ? '0' : '1');
+ini_set('display_startup_errors', $isProd ? '0' : '1');
+error_reporting(E_ALL);
+ini_set('log_errors', '1');
+
 // Configure and start session globally so all entrypoints share the same policy.
 $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
     || (($_SERVER['SERVER_PORT'] ?? null) == 443)
