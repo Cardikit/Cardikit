@@ -69,7 +69,11 @@
                     <!-- Posts -->
                     <?php foreach ($posts as $post) : ?>
                         <article class="post-card">
-                            <div class="post-image">
+                            <?php if ($post['cover_image_url']) : ?>
+                                <div style="background-image: url(<?= esc($post['cover_image_url'] ?? ''); ?>); background-size: cover;" class="post-image">
+                            <?php else : ?>
+                                <div class="post-image">
+                            <?php endif; ?>
                                 <span class="post-category-badge"><?= esc($post['category_name'] ?? ''); ?></span>
                             </div>
                             <div class="post-body">

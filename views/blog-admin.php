@@ -43,7 +43,8 @@
                 <p class="blog-hero-subtitle">Quickly review and jump into editing.</p>
                 <div style="margin-top: 1rem;">
                     <a href="/blog/create" class="btn btn-primary" style="margin-right: 0.5rem;">Create new post</a>
-                    <a href="/blog/categories/admin" class="btn btn-secondary">Manage categories</a>
+                    <a href="/blog/categories/admin" class="btn btn-secondary" style="margin-right: 0.5rem;">Manage categories</a>
+                    <a href="/blog/images" class="btn btn-secondary">Manage images</a>
                 </div>
             </div>
         </section>
@@ -55,7 +56,11 @@
                     <div class="blog-grid">
                         <?php foreach ($blogs as $blog) : ?>
                             <article class="post-card">
+                            <?php if ($blog['cover_image_url']) : ?>
+                                <div style="background-image: url(<?= esc($blog['cover_image_url'] ?? ''); ?>); background-size: cover;" class="post-image">
+                            <?php else : ?>
                                 <div class="post-image">
+                            <?php endif; ?>
                                     <span class="post-category-badge"><?= esc(($blog['status'] ?? 'draft') === 'published' ? 'Published' : 'Draft'); ?></span>
                                 </div>
                                 <div class="post-body">

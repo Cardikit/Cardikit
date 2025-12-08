@@ -23,7 +23,7 @@ class Category extends Model
     *
     * @var array<int, string>
     */
-    protected array $fillable = ['name', 'slug', 'description', 'parent_id'];
+    protected array $fillable = ['name', 'slug', 'description', 'parent_id', 'image'];
 
     /**
     * Find a category by slug.

@@ -55,6 +55,9 @@
                     <?php if (!empty($categories)) : ?>
                         <?php foreach ($categories as $category): ?>
                         <a href="/blog/<?= esc($category['slug'] ?? ''); ?>" class="category-card">
+                            <?php if ($category['image']) : ?>
+                            <div style="background-image: url(<?= esc($category['image'] ?? ''); ?>); background-size: cover;" class="category-card-icon"></div>
+                            <?php else : ?>
                             <div class="category-card-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -63,6 +66,7 @@
                                     <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                 </svg>
                             </div>
+                            <?php endif; ?>
                             <h3 class="category-card-title"><?= esc($category['name'] ?? ''); ?></h3>
                             <p class="category-card-desc"><?= esc($category['description'] ?? ''); ?></p>
                             <?php $count = (int) ($category['post_count'] ?? 0); ?>

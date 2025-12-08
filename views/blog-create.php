@@ -109,6 +109,18 @@
                         <span class="form-hint">Choose whether to keep this as a draft or publish immediately.</span>
                     </div>
 
+                    <div class="form-group">
+                        <label for="cover_image_url" class="form-label">Header Image URL</label>
+                        <input
+                            type="text"
+                            id="cover_image_url"
+                            name="cover_image_url"
+                            class="form-input"
+                            placeholder="https://example.com/image.jpg"
+                        >
+                        <span class="form-hint">Upload first at <a href="/blog/images">Blog Images</a>, then paste the URL here.</span>
+                    </div>
+
                     <div id="formErrors" class="form-hint" style="color: #b00020;"></div>
                     <div id="formStatus" class="form-hint"></div>
 
@@ -165,7 +177,8 @@
                 category_id: form.category.value ? parseInt(form.category.value, 10) : null,
                 excerpt: form.excerpt.value,
                 content: form.content.value,
-                status: form.status.value
+                status: form.status.value,
+                cover_image_url: form.cover_image_url.value.trim()
             };
 
             Object.keys(payload).forEach((key) => {

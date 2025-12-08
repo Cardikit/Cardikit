@@ -20,6 +20,7 @@ use App\Routing\MiddlewareGroups;
 use App\Middleware\RateLimitMiddleware;
 use App\Controllers\BlogController;
 use App\Controllers\CategoryController;
+use App\Controllers\BlogImageController;
 
 // Middleware groups
 $tls = MiddlewareGroups::tls();
@@ -67,6 +68,10 @@ Router::get('/blog/:id/edit', [BlogController::class, 'edit'], $admin);
 Router::post('/blog', [BlogController::class, 'store'], $admin);
 Router::put('/blog/:id', [BlogController::class, 'update'], $admin);
 Router::delete('/blog/:id', [BlogController::class, 'delete'], $admin);
+Router::get('/blog/images', [BlogImageController::class, 'index'], $admin);
+Router::get('/blog/images/upload', [BlogImageController::class, 'create'], $admin);
+Router::post('/blog/images', [BlogImageController::class, 'store'], $admin);
+Router::delete('/blog/images/:filename', [BlogImageController::class, 'delete'], $admin);
 
 // Category
 Router::get('/blog/categories', [CategoryController::class, 'index'], $tls);

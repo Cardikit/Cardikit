@@ -72,7 +72,11 @@
             <!-- Featured Image -->
             <div class="article-featured-image">
                 <div class="container">
-                    <div class="featured-image-wrapper" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <?php if ($post['cover_image_url']) : ?>
+                        <div style="background-image: url(<?= esc($post['cover_image_url'] ?? ''); ?>); background-size: cover;" class="featured-image-wrapper">
+                    <?php else : ?>
+                        <div class="featured-image-wrapper" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -113,7 +117,11 @@
                 <div class="related-grid">
                     <?php foreach ($recentPosts as $recentPost) : ?>
                     <article class="related-card">
-                        <div class="related-image" style="background: linear-gradient(135deg, #FA3C25 0%, #ff6b5b 100%);"></div>
+                        <?php if ($recentPost['cover_image_url']) : ?>
+                            <div style="background-image: url(<?= esc($recentPost['cover_image_url'] ?? ''); ?>); background-size: cover;" class="related-image"></div>
+                        <?php else : ?>
+                            <div class="related-image" style="background: linear-gradient(135deg, #FA3C25 0%, #ff6b5b 100%);"></div>
+                        <?php endif; ?>
                         <div class="related-body">
                             <span class="related-category"><?= esc($recentPost['category_name'] ?? ''); ?></span>
                             <h3 class="related-title">

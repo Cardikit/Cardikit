@@ -50,14 +50,18 @@
                     <span><?= $categoryName; ?></span>
                 </div>
                 <div class="category-hero-content">
-                    <div class="category-hero-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                    </div>
+                    <?php if ($category['image']) : ?>
+                        <div class="category-hero-icon" style="background-image: url('<?= $category['image']; ?>'); background-size: cover;"></div>
+                    <?php else : ?>
+                        <div class="category-hero-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                    <?php endif; ?>
                     <div>
                         <h1 class="category-hero-title"><?= $categoryName; ?></h1>
                         <p class="category-hero-desc"><?= $description; ?></p>
@@ -84,7 +88,7 @@
                                 $coverImage = $post['cover_image_url'] ?? null;
                             ?>
                             <article class="post-card">
-                                <div class="post-image" <?= $coverImage ? 'style="background-image: url(' . esc($coverImage) . ');"' : ''; ?>>
+                                <div class="post-image" <?= $coverImage ? 'style="background-size: cover; background-image: url(' . esc($coverImage) . ');"' : ''; ?>>
                                     <span class="post-category-badge"><?= $categoryName; ?></span>
                                 </div>
                                 <div class="post-body">

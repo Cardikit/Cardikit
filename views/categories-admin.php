@@ -55,7 +55,11 @@
                     <div class="blog-grid">
                         <?php foreach ($categories as $category) : ?>
                             <article class="post-card">
-                                <div class="post-image">
+                                <?php if ($category['image']) : ?>
+                                    <div style="background-image: url(<?= esc($category['image'] ?? ''); ?>); background-size: cover;" class="post-image">
+                                <?php else : ?>
+                                    <div class="post-image">
+                                <?php endif; ?>
                                     <span class="post-category-badge">Posts: <?= esc((int) ($category['post_count'] ?? 0)); ?></span>
                                 </div>
                                 <div class="post-body">

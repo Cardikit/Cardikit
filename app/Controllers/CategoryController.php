@@ -72,7 +72,7 @@ class CategoryController
     /**
     * Admin: edit category form.
     */
-    public function edit(int $id): void
+    public function edit(Request $request, int $id): void
     {
         $category = Category::findById($id);
 
@@ -107,6 +107,7 @@ class CategoryController
         $name = isset($payload['name']) ? trim((string) $payload['name']) : '';
         $slug = isset($payload['slug']) ? trim((string) $payload['slug']) : '';
         $description = isset($payload['description']) ? trim((string) $payload['description']) : null;
+        $image = isset($payload['image']) ? trim((string) $payload['image']) : null;
 
         if ($name === '') {
             Response::json(['errors' => ['name' => ['Name is required']]], 422);
@@ -131,6 +132,7 @@ class CategoryController
             'name' => $name,
             'slug' => $slug,
             'description' => $description,
+            'image' => $image ?: null,
         ]);
 
         if (!$created) {
@@ -157,6 +159,7 @@ class CategoryController
         $name = array_key_exists('name', $payload) ? trim((string) $payload['name']) : $category['name'];
         $slug = array_key_exists('slug', $payload) ? trim((string) $payload['slug']) : $category['slug'];
         $description = array_key_exists('description', $payload) ? trim((string) $payload['description']) : $category['description'];
+        $image = array_key_exists('image', $payload) ? trim((string) $payload['image']) : $category['image'] ?? null;
 
         if ($name === '') {
             Response::json(['errors' => ['name' => ['Name is required']]], 422);
@@ -182,6 +185,7 @@ class CategoryController
             'name' => $name,
             'slug' => $slug,
             'description' => $description,
+            'image' => $image ?: null,
         ]);
 
         if (!$updated) {

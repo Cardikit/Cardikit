@@ -97,6 +97,19 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="cover_image_url" class="form-label">Header Image URL</label>
+                        <input
+                            type="text"
+                            id="cover_image_url"
+                            name="cover_image_url"
+                            class="form-input"
+                            placeholder="https://example.com/image.jpg"
+                            value="<?= esc($blog['cover_image_url'] ?? ''); ?>"
+                        >
+                        <span class="form-hint">Upload first at <a href="/blog/images">Blog Images</a>, then paste the URL here.</span>
+                    </div>
+
+                    <div class="form-group">
                         <label for="excerpt" class="form-label">Excerpt</label>
                         <textarea
                             id="excerpt"
@@ -122,6 +135,7 @@
 
                     <div class="form-actions">
                         <a href="/blog/admin" class="btn btn-secondary">Back to admin</a>
+                        <button type="button" id="deleteButton" class="btn btn-secondary" style="background: #f7d7d7; color: #b00020;">Delete</button>
                         <button type="submit" class="btn btn-primary">Save changes</button>
                     </div>
                 </form>
@@ -159,6 +173,7 @@
 
         const form = document.getElementById('editBlogForm');
         const statusEl = document.getElementById('formStatus');
+        const deleteButton = document.getElementById('deleteButton');
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -171,7 +186,8 @@
                 category_id: form.category.value ? parseInt(form.category.value, 10) : null,
                 status: form.status.value,
                 excerpt: form.excerpt.value,
-                content: form.content.value
+                content: form.content.value,
+                cover_image_url: form.cover_image_url.value.trim()
             };
 
             Object.keys(payload).forEach((key) => {
@@ -198,6 +214,34 @@
                 }
             } catch (error) {
                 statusEl.textContent = 'Network error while saving.';
+                statusEl.style.color = '#b00020';
+            }
+        });
+
+        deleteButton?.addEventListener('click', async () => {
+            const confirmed = window.confirm('Are you sure you want to delete this post?');
+            if (!confirmed) {
+                return;
+            }
+
+            statusEl.textContent = 'Deleting...';
+            statusEl.style.color = '#555';
+
+            try {
+                const response = await fetch('/blog/<?= (int) ($blog['id'] ?? 0); ?>', {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    window.location.href = '/blog/admin';
+                    return;
+                }
+
+                const body = await response.json().catch(() => ({}));
+                statusEl.textContent = body?.message || 'Failed to delete post.';
+                statusEl.style.color = '#b00020';
+            } catch (error) {
+                statusEl.textContent = 'Network error while deleting.';
                 statusEl.style.color = '#b00020';
             }
         });
