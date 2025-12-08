@@ -46,6 +46,8 @@
 
     <title>Cardikit - Open Source Digital Business Card Maker</title>
     <link rel="stylesheet" href="landing.css">
+    <?php include __DIR__ . '/partials/analytics.php'; ?>
+    <?php include __DIR__ . '/partials/cookie-consent.php'; ?>
 </head>
 <body>
     <!-- Navigation -->

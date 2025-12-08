@@ -55,6 +55,7 @@
     }
     </script>
     <?php include __DIR__ . '/partials/analytics.php'; ?>
+    <?php include __DIR__ . '/partials/cookie-consent.php'; ?>
     <title><?= $categoryName; ?> - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>
