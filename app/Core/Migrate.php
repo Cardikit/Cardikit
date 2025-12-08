@@ -21,6 +21,7 @@ class Migrate
     public static function run(): void
     {
         $migrations = glob(__DIR__ . '/../../database/migrations/*.php');
+        sort($migrations);
 
         foreach ($migrations as $file) {
             echo "Running: " . basename($file) . "\n";
@@ -42,6 +43,7 @@ class Migrate
     public static function rollback(): void
     {
         $migrations = glob(__DIR__ . '/../../database/migrations/*.php');
+        sort($migrations);
         $migrations = array_reverse($migrations);
 
         foreach ($migrations as $file) {

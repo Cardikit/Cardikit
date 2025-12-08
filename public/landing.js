@@ -27,17 +27,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    document.querySelectorAll('a[href^="#"], a[href^="/#"]').forEach(function(anchor) {
         anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
+            let targetId = this.getAttribute('href') || '';
+            const isRoot = window.location.pathname === '/';
+
+            if (targetId.startsWith('/#')) {
+                targetId = targetId.slice(1);
+            }
+
             if (targetId === '#') return;
-            
+
             const targetElement = document.querySelector(targetId);
-            if (targetElement) {
+            if (targetElement && isRoot) {
                 e.preventDefault();
                 const headerHeight = document.querySelector('.header').offsetHeight;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'

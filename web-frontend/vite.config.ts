@@ -21,10 +21,20 @@ export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
     const basePath = normalizeBasePath(env.VITE_APP_BASE_PATH || '/app');
     const devProxyTarget = env.VITE_DEV_PROXY_TARGET || 'http://cardikit_server';
+    const rootUrl = env.ROOT_URL || env.VITE_ROOT_URL || 'https://cardikit.com';
+    const gaId = env.GA_MEASUREMENT_ID || env.VITE_GA_MEASUREMENT_ID || '';
 
     return {
         base: basePath.endsWith('/') ? basePath : `${basePath}/`,
         plugins: [react(), tailwindcss()],
+        define: {
+            'process.env': {
+                GA_MEASUREMENT_ID: gaId,
+            },
+            'import.meta.env.ROOT_URL': JSON.stringify(rootUrl),
+            'import.meta.env.VITE_ROOT_URL': JSON.stringify(rootUrl),
+            'import.meta.env.VITE_GA_MEASUREMENT_ID': JSON.stringify(gaId),
+        },
         test: {
             environment: 'jsdom',
             globals: true,

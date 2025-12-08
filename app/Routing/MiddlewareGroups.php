@@ -6,6 +6,8 @@ use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
 use App\Middleware\EnforceTlsMiddleware;
 use App\Middleware\RateLimitMiddleware;
+use App\Middleware\AdminMiddleware;
+use App\Middleware\SecurityHeadersMiddleware;
 
 /**
 * Groupings of middleware for
@@ -26,7 +28,7 @@ class MiddlewareGroups
     */
     public static function tls(): array
     {
-        return [new EnforceTlsMiddleware()];
+        return [new EnforceTlsMiddleware(), new SecurityHeadersMiddleware()];
     }
 
     /**
@@ -40,6 +42,19 @@ class MiddlewareGroups
     public static function auth(): array
     {
         return array_merge(self::tls(), [new AuthMiddleware()]);
+    }
+
+    /**
+    * Admin middleware group.
+    * Includes TLS, Auth and Admin middlewares.
+    *
+    * @return array
+    *
+    * @since 0.0.3
+    */
+    public static function admin(): array
+    {
+        return array_merge(self::auth(), [new AdminMiddleware()]);
     }
 
     /**

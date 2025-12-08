@@ -18,11 +18,17 @@ use App\Controllers\UserController;
 use App\Core\Router;
 use App\Routing\MiddlewareGroups;
 use App\Middleware\RateLimitMiddleware;
+use App\Controllers\BlogController;
+use App\Controllers\CategoryController;
+use App\Controllers\SitemapController;
+use App\Controllers\BlogImageController;
 
 // Middleware groups
 $tls = MiddlewareGroups::tls();
 $auth = MiddlewareGroups::auth();
+$admin = MiddlewareGroups::admin();
 $mutating = MiddlewareGroups::mutating(60, 60);
+$adminMutating = array_merge($admin, [new \App\Middleware\RateLimitMiddleware(60, 60)]);
 
 // Public
 Router::get('/', [LandingController::class, 'show'], $tls);
@@ -55,3 +61,32 @@ Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], 
 
 // Themes
 Router::get('/api/v1/themes', [CardController::class, 'themes'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
+
+// Blog
+Router::get('/blog', [BlogController::class, 'index'], $tls);
+Router::get('/blog/create', [BlogController::class, 'create'], $admin);
+Router::get('/blog/admin', [BlogController::class, 'adminIndex'], $admin);
+Router::get('/blog/:id/edit', [BlogController::class, 'edit'], $admin);
+Router::post('/blog', [BlogController::class, 'store'], $adminMutating);
+Router::put('/blog/:id', [BlogController::class, 'update'], $adminMutating);
+Router::delete('/blog/:id', [BlogController::class, 'delete'], $adminMutating);
+Router::get('/blog/images', [BlogImageController::class, 'index'], $admin);
+Router::get('/blog/images/upload', [BlogImageController::class, 'create'], $admin);
+Router::post('/blog/images', [BlogImageController::class, 'store'], $adminMutating);
+Router::delete('/blog/images/:filename', [BlogImageController::class, 'delete'], $adminMutating);
+Router::get('/sitemap.xml', [SitemapController::class, 'index'], $tls);
+Router::get('/privacy', fn () => \App\Core\View::render('privacy'), $tls);
+Router::get('/terms', fn () => \App\Core\View::render('terms'), $tls);
+Router::get('/404', fn () => \App\Core\View::render('404', [], 404), $tls);
+
+// Category
+Router::get('/blog/categories', [CategoryController::class, 'index'], $tls);
+Router::get('/blog/categories/admin', [CategoryController::class, 'adminIndex'], $admin);
+Router::get('/blog/categories/:id/edit', [CategoryController::class, 'edit'], $admin);
+Router::get('/blog/:slug', [CategoryController::class, 'show'], $tls);
+Router::get('/blog/categories/create', [CategoryController::class, 'create'], $admin);
+Router::post('/blog/categories', [CategoryController::class, 'store'], $adminMutating);
+Router::put('/blog/categories/:id', [CategoryController::class, 'update'], $adminMutating);
+Router::delete('/blog/categories/:id', [CategoryController::class, 'delete'], $adminMutating);
+
+Router::get('/blog/:category/:slug', [BlogController::class, 'show'], $tls);

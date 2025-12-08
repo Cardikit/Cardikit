@@ -6,7 +6,7 @@ use App\Core\Request;
 use App\Core\Response;
 
 /**
-* Allows acces to the route if the
+* Allows access to the route if the
 * user is authenticated
 *
 * @package App\Middleware

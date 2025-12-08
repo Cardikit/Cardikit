@@ -3,6 +3,7 @@ import Input from '@/features/auth/components/Input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { IoIosMail, IoIosLock, IoMdContact } from 'react-icons/io'
 import { Link } from 'react-router-dom';
+import { rootUrl } from '@/lib/env';
 import Button from '@/components/Button';
 
 import { useForm, Controller, type SubmitHandler } from 'react-hook-form';
@@ -131,7 +132,16 @@ const Register: React.FC = () => {
                             />
                         )}
                     />
-                    <p className="font-inter text-gray-800 text-sm sm:text-base">I agree to the <span className="text-primary-500">Terms & Conditions</span> and <span className="text-primary-500">Privacy Policy</span></p>
+                    <p className="font-inter text-gray-800 text-sm sm:text-base">
+                        I agree to the{' '}
+                        <a className="text-primary-500" href={`${rootUrl}/terms`} target="_blank" rel="noopener noreferrer">
+                            Terms & Conditions
+                        </a>
+                        {' '}and{' '}
+                        <a className="text-primary-500" href={`${rootUrl}/privacy`} target="_blank" rel="noopener noreferrer">
+                            Privacy Policy
+                        </a>
+                    </p>
                 </div>
                 {errors?.acceptTerms?.message && <p className="text-red-500 text-sm">{errors?.acceptTerms?.message}</p>}
                 <Button loading={loading} type="submit">Sign up</Button>

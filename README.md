@@ -6,7 +6,7 @@
 
 ![Backend Tests](https://github.com/Cardikit/Cardikit/actions/workflows/tests.yml/badge.svg)
 ![Frontend Tests](https://github.com/Cardikit/Cardikit/actions/workflows/frontend-tests.yml/badge.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: GPL-3.0](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
 </div>
 
@@ -151,4 +151,4 @@ Please review our [Security Policy](https://github.com/Cardikit/Cardikit/blob/ma
 
 ## ⚖ License
 
-Cardikit is open-sourced software licensed under the [MIT license](https://github.com/Cardikit/Cardikit/blob/main/LICENSE).
+Cardikit is open-sourced software licensed under the [GPL-3.0 license](https://github.com/Cardikit/Cardikit/blob/main/LICENSE).

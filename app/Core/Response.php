@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core;
+namespace App\Core {
 
 /**
 * Handles sending HTTP responses in JSON format.
@@ -71,5 +71,35 @@ class Response
         $output = (string) ob_get_clean();
 
         self::html($output, $status);
+    }
+
+    /**
+    * Render a 500 error page if available, otherwise generic text.
+    */
+    public static function serverError(): void
+    {
+        $view500 = dirname(__DIR__, 2) . '/views/500.php';
+        if (is_file($view500)) {
+            self::view($view500, [], 500);
+            return;
+        }
+        self::html('Internal Server Error', 500);
+    }
+}
+}
+
+namespace {
+    if (!function_exists('esc')) {
+        /**
+        * Escape output for safe HTML rendering.
+        *
+        * @param mixed $value
+        *
+        * @return string
+        */
+        function esc(mixed $value): string
+        {
+            return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+        }
     }
 }

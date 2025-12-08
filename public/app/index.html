@@ -44,6 +44,18 @@
     }
     </script>
 
+    <!-- Google Analytics -->
+    <script defer src="https://www.googletagmanager.com/gtag/js?id=G-FJ5YZXDZ33"></script>
+    <script defer>
+      const gaId = (typeof process !== 'undefined' && process.env?.GA_MEASUREMENT_ID) || 'G-FJ5YZXDZ33';
+      if (gaId && gaId !== 'G-FJ5YZXDZ33') {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', gaId);
+      }
+    </script>
+
     <!-- Inline fallback styles for initial loading spinner -->
     <style>
       :root { color-scheme: light; }
@@ -69,7 +81,7 @@
       @keyframes spin { to { transform: rotate(360deg); } }
       .loading-text { font-weight: 600; letter-spacing: 0.02em; color: #374151; }
     </style>
-    <script type="module" crossorigin src="/app/assets/index-pGwQxjiY.js"></script>
+    <script type="module" crossorigin src="/app/assets/index-Bn1UZNxK.js"></script>
     <link rel="stylesheet" crossorigin href="/app/assets/index-BOR2wa0w.css">
   </head>
   <body>

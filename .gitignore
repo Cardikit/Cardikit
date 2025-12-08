@@ -9,6 +9,7 @@
 
 /public/qrcodes/
 /public/images/
+/public/uploads/
 
 /web-frontend/node_modules/
 /web-frontend/logs
