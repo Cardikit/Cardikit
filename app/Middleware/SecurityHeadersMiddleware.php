@@ -32,14 +32,17 @@ class SecurityHeadersMiddleware implements MiddlewareInterface
         ]);
         $this->setHeaderOnce('Content-Security-Policy', $csp);
 
-        // Caching for static assets (handled in web server ideally). Skip if already set.
-        if (!headers_sent() && empty($_SERVER['HTTP_CACHE_CONTROL'])) {
+        // Caching: long cache for assets, no-store for dynamic/API.
+        if (!headers_sent()) {
             $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
             $isAsset = preg_match('/\\.(css|js|png|jpg|jpeg|webp|svg|gif)$/i', $uri ?? '');
+            $isApi = str_starts_with($uri ?? '', '/api/');
+
             if ($isAsset) {
                 header('Cache-Control: public, max-age=31536000, immutable');
             } else {
-                header('Cache-Control: public, max-age=300');
+                header('Cache-Control: no-store, must-revalidate');
+                header('Pragma: no-cache');
             }
         }
 
