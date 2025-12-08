@@ -4,8 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Browse all Cardikit blog categories - Networking, Digital Cards, Personal Branding, and more.">
+    <meta name="keywords" content="blog categories, digital business card categories, Cardikit">
     <meta name="theme-color" content="#fa3c25">
+    <link rel="canonical" href="https://cardikit.com/blog/categories">
+
+    <!-- Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
+    <link rel="apple-touch-icon" href="/assets/smaller-logo-no-background.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Cardikit Blog Categories">
+    <meta property="og:description" content="Browse all Cardikit blog categories - Networking, Digital Cards, Personal Branding, and more.">
+    <meta property="og:url" content="https://cardikit.com/blog/categories">
+    <meta property="og:image" content="https://cardikit.com/assets/header-FA0IEdgE.webp">
+    <meta property="og:image:alt" content="Cardikit blog categories">
+    <meta property="og:site_name" content="Cardikit">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cardikit Blog Categories">
+    <meta name="twitter:description" content="Browse all Cardikit blog categories - Networking, Digital Cards, Personal Branding, and more.">
+    <meta name="twitter:image" content="https://cardikit.com/assets/hero-image-DloX0uJB.webp">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Cardikit Blog Categories",
+      "description": "Browse all Cardikit blog categories - Networking, Digital Cards, Personal Branding, and more.",
+      "url": "https://cardikit.com/blog/categories",
+      "image": "https://cardikit.com/assets/header-FA0IEdgE.webp",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Cardikit",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cardikit.com/assets/smaller-logo-no-background.png"
+        }
+      }
+    }
+    </script>
     <title>Categories - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>

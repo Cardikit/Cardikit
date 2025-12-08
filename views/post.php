@@ -3,9 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="10 Tips for Making Lasting Connections at Networking Events - Learn how to network effectively.">
+    <?php
+        $postTitle = $post['title'] ?? '';
+        $postExcerpt = $post['excerpt'] ?? '';
+        $postSlug = $post['slug'] ?? '';
+        $postCategorySlug = $post['category_slug'] ?? '';
+        $coverImage = $post['cover_image_url'] ?? 'https://cardikit.com/assets/header-FA0IEdgE.webp';
+        $canonical = "https://cardikit.com/blog/{$postCategorySlug}/{$postSlug}";
+    ?>
+    <meta name="description" content="<?= esc($postExcerpt ?: 'Read the latest from the Cardikit blog.'); ?>">
+    <meta name="keywords" content="Cardikit blog, digital business card, networking tips, <?= esc($post['category_name'] ?? ''); ?>">
     <meta name="theme-color" content="#fa3c25">
+    <link rel="canonical" href="<?= esc($canonical); ?>">
+
+    <!-- Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
+    <link rel="apple-touch-icon" href="/assets/smaller-logo-no-background.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<?= esc($postTitle); ?>">
+    <meta property="og:description" content="<?= esc($postExcerpt ?: 'Read the latest from the Cardikit blog.'); ?>">
+    <meta property="og:url" content="<?= esc($canonical); ?>">
+    <meta property="og:image" content="<?= esc($coverImage); ?>">
+    <meta property="og:image:alt" content="<?= esc($postTitle); ?>">
+    <meta property="og:site_name" content="Cardikit">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= esc($postTitle); ?>">
+    <meta name="twitter:description" content="<?= esc($postExcerpt ?: 'Read the latest from the Cardikit blog.'); ?>">
+    <meta name="twitter:image" content="<?= esc($coverImage); ?>">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": <?= json_encode($postTitle); ?>,
+      "description": <?= json_encode($postExcerpt ?: 'Read the latest from the Cardikit blog.'); ?>,
+      "image": [<?= json_encode($coverImage); ?>],
+      "author": {
+        "@type": "Person",
+        "name": "Damion Voshall"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Cardikit",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cardikit.com/assets/smaller-logo-no-background.png"
+        }
+      },
+      "url": <?= json_encode($canonical); ?>,
+      "datePublished": <?= json_encode($post['published_at'] ?? $post['created_at'] ?? ''); ?>,
+      "dateModified": <?= json_encode($post['updated_at'] ?? $post['published_at'] ?? $post['created_at'] ?? ''); ?>
+    }
+    </script>
     <title><?= esc($title ?? ''); ?> - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>

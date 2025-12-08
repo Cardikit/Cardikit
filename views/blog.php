@@ -17,12 +17,35 @@
     <meta property="og:title" content="Cardikit Blog - Digital Business Card Tips & News">
     <meta property="og:description" content="Tips, guides and news about digital business cards, networking, and personal branding.">
     <meta property="og:url" content="https://cardikit.com/blog">
+    <meta property="og:image" content="https://cardikit.com/assets/header-FA0IEdgE.webp">
+    <meta property="og:image:alt" content="Cardikit blog header graphic">
     <meta property="og:site_name" content="Cardikit">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Cardikit Blog - Digital Business Card Tips & News">
     <meta name="twitter:description" content="Tips, guides and news about digital business cards, networking, and personal branding.">
+    <meta name="twitter:image" content="https://cardikit.com/assets/hero-image-DloX0uJB.webp">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Cardikit Blog",
+      "description": "Tips, guides and news about digital business cards, networking, and personal branding.",
+      "url": "https://cardikit.com/blog",
+      "image": "https://cardikit.com/assets/header-FA0IEdgE.webp",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Cardikit",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cardikit.com/assets/smaller-logo-no-background.png"
+        }
+      }
+    }
+    </script>
 
     <title>Blog - Cardikit | Digital Business Card Tips & News</title>
     <link rel="stylesheet" href="/blog.css">
@@ -42,7 +65,7 @@
                 <ul class="nav-menu">
                     <li><a href="/#how-it-works" class="nav-link">How It Works</a></li>
                     <li><a href="/#features" class="nav-link">Features</a></li>
-                    <li><a href="/blog.html" class="nav-link nav-link-active">Blog</a></li>
+                    <li><a href="/blog" class="nav-link nav-link-active">Blog</a></li>
                     <li><a href="/#faq" class="nav-link">FAQ</a></li>
                     <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
                 </ul>
@@ -154,7 +177,7 @@
                 <div class="footer-links">
                     <a href="/#how-it-works">How It Works</a>
                     <a href="/#features">Features</a>
-                    <a href="/blog.html">Blog</a>
+                    <a href="/blog">Blog</a>
                     <a href="/#faq">FAQ</a>
                 </div>
             </div>

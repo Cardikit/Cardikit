@@ -7,11 +7,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php
+        $coverImage = $category['image'] ?? 'https://cardikit.com/assets/header-FA0IEdgE.webp';
+        $canonical = 'https://cardikit.com/blog/' . ($category['slug'] ?? '');
+    ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= $description; ?>">
+    <meta name="keywords" content="Cardikit, blog category, <?= $categoryName; ?>">
     <meta name="theme-color" content="#fa3c25">
+    <link rel="canonical" href="<?= esc($canonical); ?>">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
+    <link rel="apple-touch-icon" href="/assets/smaller-logo-no-background.png">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?= $categoryName; ?> - Cardikit Blog">
+    <meta property="og:description" content="<?= $description; ?>">
+    <meta property="og:url" content="<?= esc($canonical); ?>">
+    <meta property="og:image" content="<?= esc($coverImage); ?>">
+    <meta property="og:image:alt" content="<?= $categoryName; ?>">
+    <meta property="og:site_name" content="Cardikit">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= $categoryName; ?> - Cardikit Blog">
+    <meta name="twitter:description" content="<?= $description; ?>">
+    <meta name="twitter:image" content="<?= esc($coverImage); ?>">
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": <?= json_encode($categoryName); ?>,
+      "description": <?= json_encode($description); ?>,
+      "url": <?= json_encode($canonical); ?>,
+      "image": <?= json_encode($coverImage); ?>,
+      "publisher": {
+        "@type": "Organization",
+        "name": "Cardikit",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://cardikit.com/assets/smaller-logo-no-background.png"
+        }
+      }
+    }
+    </script>
     <title><?= $categoryName; ?> - Cardikit Blog</title>
     <link rel="stylesheet" href="/blog.css">
 </head>
