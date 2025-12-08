@@ -25,9 +25,9 @@ class User extends Model
     *
     * @var array
     *
-    * @since 0.0.1
+    * @since 0.0.3
     */
-    protected array $fillable = ['name', 'email', 'password'];
+    protected array $fillable = ['name', 'email', 'password', 'role'];
 
     /**
     * Finds a user by email.
@@ -58,6 +58,7 @@ class User extends Model
             'id' => $user['id'],
             'name' => $user['name'],
             'email' => $user['email'],
+            'role' => $user['role'] ?? 0,
             'created_at' => $user['created_at'],
             'updated_at' => $user['updated_at']
         ];

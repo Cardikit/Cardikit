@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /blog/admin
+Disallow: /blog/categories/admin
+Disallow: /blog/images
+Disallow: /blog/images/upload
+Disallow: /blog/create
+Disallow: /blog/*/edit
+Disallow: /app
+Allow: /
+
+Sitemap: https://cardikit.com/sitemap.xml

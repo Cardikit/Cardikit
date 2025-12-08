@@ -42,25 +42,33 @@
       ]
     }
     </script>
+    <?php include __DIR__ . '/partials/analytics.php'; ?>
 
     <title>Cardikit - Open Source Digital Business Card Maker</title>
     <link rel="stylesheet" href="landing.css">
+    <?php include __DIR__ . '/partials/analytics.php'; ?>
+    <?php include __DIR__ . '/partials/cookie-consent.php'; ?>
 </head>
 <body>
     <!-- Navigation -->
     <header class="header">
         <nav class="nav container">
-            <a href="/" class="logo-container">
-                <img src="/assets/smaller-logo-no-background.png" alt="Cardikit Logo" class="logo-image" />
-                <span class="logo">Cardikit</span>
+            <a href="/" class="logo-container" aria-label="Cardikit home">
+                <img src="/assets/smaller-logo-no-background.png" alt="Cardikit logo" class="logo-image">
+                <div class="logo-wordmark">
+                    <span class="logo">Cardikit</span>
+                </div>
             </a>
+
             <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
                 <span class="hamburger"></span>
             </button>
+
             <ul class="nav-menu">
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="#how-it-works" class="nav-link">How it works</a></li>
-                <li><a href="#faq" class="nav-link">FAQ</a></li>
+                <li><a href="/#features" class="nav-link">Product</a></li>
+                <li><a href="/#how-it-works" class="nav-link">How it works</a></li>
+                <li><a href="/#faq" class="nav-link">FAQ</a></li>
+                <li><a href="/blog" class="nav-link">Blog</a></li>
                 <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
                 <li><a href="/app/login" class="btn btn-outline nav-cta">Log in</a></li>
             </ul>
@@ -372,9 +380,9 @@
         <div class="container footer-content">
             <p class="footer-copyright">&copy; <span id="current-year"></span> Cardikit</p>
             <nav class="footer-nav">
-                <a href="#" class="footer-link">Privacy</a>
-                <a href="#" class="footer-link">Terms</a>
-                <a href="#" class="footer-link">Contact</a>
+                <a href="/privacy" class="footer-link">Privacy</a>
+                <a href="/terms" class="footer-link">Terms</a>
+                <a href="mailto:contact@cardikit.com" class="footer-link">Contact</a>
             </nav>
         </div>
     </footer>

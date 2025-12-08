@@ -10,3 +10,5 @@ const normalizeBasePath = (basePath?: string) => {
 export const appBasePath = normalizeBasePath(import.meta.env.VITE_APP_BASE_PATH || '/app');
 
 export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '/api/v1';
+
+export const rootUrl = import.meta.env.ROOT_URL || import.meta.env.VITE_ROOT_URL || 'https://cardikit.com';

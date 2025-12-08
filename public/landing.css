@@ -135,6 +135,7 @@ ul {
 
 .logo-container {
     display: flex;
+    align-items: center;
 }
 
 .logo-image {
@@ -143,10 +144,21 @@ ul {
     object-fit: contain;
 }
 
+.logo-wordmark {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
 .logo {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-primary);
+}
+
+.logo-subtle {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
 }
 
 .nav-menu {

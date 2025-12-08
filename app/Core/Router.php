@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Core\Response;
+use App\Core\View;
 use App\Middleware\MiddlewareInterface;
 
 /**
@@ -145,26 +146,38 @@ class Router
                 }
 
                 // If route uses controller syntax [Controller::class, 'method']
-                if (is_array($action)) {
-                    [$controller, $method] = $action;
-                    $controllerInstance = new $controller;
-                    $response =  call_user_func_array([$controllerInstance, $method], array_merge([$request], $matches));
-                } else {
-                    $response = call_user_func_array($action, array_merge([$request], $matches));
-                }
+                try {
+                    if (is_array($action)) {
+                        [$controller, $method] = $action;
+                        $controllerInstance = new $controller;
+                        $response =  call_user_func_array([$controllerInstance, $method], array_merge([$request], $matches));
+                    } else {
+                        $response = call_user_func_array($action, array_merge([$request], $matches));
+                    }
 
-                // If handler returns array, return as JSON
-                if (is_array($response)) {
-                    Response::json($response);
-                } elseif ($response !== null) {
-                    echo $response;
-                }
+                    // If handler returns array, return as JSON
+                    if (is_array($response)) {
+                        Response::json($response);
+                    } elseif ($response !== null) {
+                        echo $response;
+                    }
 
-                return;
+                    return;
+                } catch (\Throwable $e) {
+                    Response::serverError();
+                    return;
+                }
             }
         }
 
-        // If no route matched, return a 404 with JSON error
+        // If no route matched, return a 404 page if present, otherwise JSON
+        $view404 = dirname(__DIR__, 2) . '/views/404.php';
+        if (is_file($view404)) {
+            http_response_code(404);
+            View::render('404', [], 404);
+            return;
+        }
+
         Response::json(['error' => 'Route not found'], 404);
     }
 }
