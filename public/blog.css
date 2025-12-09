@@ -37,6 +37,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -45,6 +46,7 @@ body {
     line-height: 1.6;
     color: var(--color-text);
     background-color: var(--color-bg);
+    overflow-x: hidden;
 }
 
 img {
@@ -561,14 +563,14 @@ ul {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 280px;
+        width: min(280px, 80vw);
         height: 100vh;
         flex-direction: column;
         justify-content: center;
         gap: var(--spacing-lg);
         background-color: var(--color-bg);
         box-shadow: var(--shadow-lg);
-        transition: var(--transition);
+        transition: right 0.3s ease;
     }
 
     .nav-menu.active {
@@ -979,6 +981,7 @@ ul {
     margin: var(--spacing-md) 0;
     border-radius: var(--border-radius-lg);
     object-fit: cover;
+    max-height: 400px;
 }
 
 .article-callout {
@@ -1454,4 +1457,3 @@ ul {
         justify-content: center;
     }
 }
-
