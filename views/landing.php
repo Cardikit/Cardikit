@@ -45,7 +45,7 @@
     <?php include __DIR__ . '/partials/analytics.php'; ?>
 
     <title>Cardikit - Open Source Digital Business Card Maker</title>
-    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="<?= asset_url('/landing.css'); ?>">
     <?php include __DIR__ . '/partials/analytics.php'; ?>
     <?php include __DIR__ . '/partials/cookie-consent.php'; ?>
 </head>
@@ -536,6 +536,6 @@
         </div>
     </footer>
 
-    <script src="landing.js"></script>
+    <script src="<?= asset_url('/landing.js'); ?>"></script>
 </body>
 </html>
