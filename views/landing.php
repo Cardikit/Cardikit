@@ -45,7 +45,7 @@
     <?php include __DIR__ . '/partials/analytics.php'; ?>
 
     <title>Cardikit - Open Source Digital Business Card Maker</title>
-    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="<?= asset_url('/landing.css'); ?>">
     <?php include __DIR__ . '/partials/analytics.php'; ?>
     <?php include __DIR__ . '/partials/cookie-consent.php'; ?>
 </head>
@@ -66,7 +66,7 @@
 
             <ul class="nav-menu">
                 <li><a href="/#features" class="nav-link">Product</a></li>
-                <li><a href="/#how-it-works" class="nav-link">How it works</a></li>
+                <li><a href="/#pricing" class="nav-link">Pricing</a></li>
                 <li><a href="/#faq" class="nav-link">FAQ</a></li>
                 <li><a href="/blog" class="nav-link">Blog</a></li>
                 <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
@@ -301,6 +301,155 @@
             </div>
         </section>
 
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing">
+            <div class="container">
+                <h2 class="section-heading">Simple, transparent pricing</h2>
+                <p class="section-intro">Start free and upgrade when you need more. All plans include unlimited updates and sharing.</p>
+
+                <div class="pricing-toggle">
+                    <span class="toggle-label active" id="monthly-label">Monthly</span>
+                    <div class="toggle-switch" id="billing-toggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                    <span class="toggle-label" id="annual-label">
+                        Annual
+                        <span class="pricing-badge">Save 20%</span>
+                    </span>
+                </div>
+
+                <div class="pricing-grid">
+                    <!-- Free Plan -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-name">Free</h3>
+                            <p class="pricing-description">Perfect for getting started</p>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="price-currency">$</span>
+                            <span class="price-amount">0</span>
+                        </div>
+                        <p class="pricing-billing">Forever free</p>
+                        <ul class="pricing-features">
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>4 digital business cards</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Unlimited updates</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Standard QR</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Basic themes</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Basic sharing</span>
+                            </li>
+                        </ul>
+                        <div class="pricing-cta">
+                            <a href="/app/register" class="btn btn-outline" style="width: 100%;">Get started free</a>
+                        </div>
+                    </div>
+
+                    <!-- Pro Plan -->
+                    <div class="pricing-card featured">
+                        <span class="pricing-badge-top">Most Popular</span>
+                        <div class="pricing-header">
+                            <h3 class="pricing-name">Pro</h3>
+                            <p class="pricing-description">For professionals who network</p>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="price-currency">$</span>
+                            <span class="price-amount" id="pro-price">9</span>
+                            <span class="price-period">/month</span>
+                        </div>
+                        <p class="pricing-billing" id="pro-billing">Billed monthly</p>
+                        <ul class="pricing-features">
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span><strong>Everything in Free, plus:</strong></span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Unlimited cards</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Premium themes</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Analytics & insights</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Lead capture forms</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Custom QR</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Priority support</span>
+                            </li>
+                        </ul>
+                        <div class="pricing-cta">
+                            <a href="/app/register" class="btn btn-primary" style="width: 100%;">Start Pro trial</a>
+                        </div>
+                    </div>
+
+                    <!-- Business Plan -->
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3 class="pricing-name">Enterprise</h3>
+                            <p class="pricing-description">For teams and organizations</p>
+                        </div>
+                        <div class="pricing-price">
+                            <span class="price-amount">Contact</span>
+                        </div>
+                        <p class="pricing-billing" id="business-billing">For pricing</p>
+                        <ul class="pricing-features">
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span><strong>Everything in Pro, plus:</strong></span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Custom themes</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Custom integrations</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Dedicated onboarding</span>
+                            </li>
+                            <li class="pricing-feature">
+                                <span class="pricing-feature-icon">✓</span>
+                                <span>Dedicated support</span>
+                            </li>
+                        </ul>
+                        <div class="pricing-cta">
+                            <a href="/app/register" class="btn btn-outline" style="width: 100%;">Contact sales</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pricing-footer">
+                    <p>Pro plan includes a 14-day free trial. No credit card required.</p>
+                    <p>Questions? <a href="mailto:contact@cardikit.com">Contact us</a> or check our <a href="#faq">FAQ</a></p>
+                </div>
+            </div>
+        </section>
+
         <!-- FAQ Section -->
         <section id="faq" class="faq">
             <div class="container">
@@ -312,7 +461,7 @@
                             <span class="faq-icon">+</span>
                         </button>
                         <div class="faq-answer">
-                            <p>Yes! It's completely free to create and share your digital business card. We may offer premium features in the future, but your free card will always remain free.</p>
+                            <p>Yes! It's completely free to create and share your digital business card. We do offer premium features such as custom themes, but your free card will always remain free.</p>
                         </div>
                     </div>
                     <div class="faq-item">
@@ -387,6 +536,6 @@
         </div>
     </footer>
 
-    <script src="landing.js"></script>
+    <script src="<?= asset_url('/landing.js'); ?>"></script>
 </body>
 </html>

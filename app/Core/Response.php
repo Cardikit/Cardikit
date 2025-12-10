@@ -85,7 +85,7 @@ class Response
         }
         self::html('Internal Server Error', 500);
     }
-}
+    }
 }
 
 namespace {
@@ -100,6 +100,40 @@ namespace {
         function esc(mixed $value): string
         {
             return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+        }
+    }
+
+    if (!function_exists('asset_url')) {
+        /**
+        * Build a public asset URL with a cache-busting version query.
+        *
+        * Uses ASSET_VERSION from .env when set; otherwise falls back to the
+        * file's modification time under /public. If the file cannot be found,
+        * the bare path is returned.
+        *
+        * @param string $path Relative path under /public.
+        * @param string|null $version Optional explicit version override.
+        */
+        function asset_url(string $path, ?string $version = null): string
+        {
+            $normalizedPath = '/' . ltrim($path, '/');
+            $publicRoot = realpath(dirname(__DIR__, 2) . '/public') ?: dirname(__DIR__, 2) . '/public';
+
+            $versionString = $version ?? \App\Core\Config::get('ASSET_VERSION');
+
+            if ($versionString === null || $versionString === '') {
+                $candidate = realpath($publicRoot . $normalizedPath);
+                if ($candidate && str_starts_with($candidate, $publicRoot) && is_file($candidate)) {
+                    $versionString = (string) filemtime($candidate);
+                }
+            }
+
+            if ($versionString === null || $versionString === '') {
+                return $normalizedPath;
+            }
+
+            $separator = str_contains($normalizedPath, '?') ? '&' : '?';
+            return $normalizedPath . $separator . 'v=' . rawurlencode($versionString);
         }
     }
 }
