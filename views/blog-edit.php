@@ -9,7 +9,7 @@
     <?php include __DIR__ . '/partials/analytics.php'; ?>
     <meta name="robots" content="noindex,nofollow">
     <title>Edit Post - Cardikit Blog</title>
-    <link rel="stylesheet" href="/blog.css">
+    <link rel="stylesheet" href="<?= asset_url('/blog.css') ?>">
 </head>
 <body>
     <header class="header">

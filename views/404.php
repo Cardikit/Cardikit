@@ -8,7 +8,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/smaller-logo-no-background.png">
     <link rel="apple-touch-icon" href="/assets/smaller-logo-no-background.png">
     <title>404 - Page Not Found | Cardikit</title>
-    <link rel="stylesheet" href="/blog.css">
+    <link rel="stylesheet" href="<?= asset_url('/blog.css') ?>">
     <?php include __DIR__ . '/partials/analytics.php'; ?>
     <?php include __DIR__ . '/partials/cookie-consent.php'; ?>
 </head>
@@ -28,7 +28,7 @@
                     <li><a href="/#features" class="nav-link">Features</a></li>
                     <li><a href="/blog" class="nav-link">Blog</a></li>
                     <li><a href="/#faq" class="nav-link">FAQ</a></li>
-                    <li><a href="/app/register" class="btn btn-primary nav-cta">Get Started</a></li>
+                    <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
                 </ul>
             </nav>
         </div>

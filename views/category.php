@@ -92,7 +92,7 @@
     <?php include __DIR__ . '/partials/analytics.php'; ?>
     <?php include __DIR__ . '/partials/cookie-consent.php'; ?>
     <title><?= $categoryName; ?> - Cardikit Blog</title>
-    <link rel="stylesheet" href="/blog.css">
+    <link rel="stylesheet" href="<?= asset_url('/blog.css') ?>">
 </head>
 <body>
     <!-- Navigation -->
@@ -111,7 +111,7 @@
                     <li><a href="/#features" class="nav-link">Features</a></li>
                     <li><a href="/blog" class="nav-link nav-link-active">Blog</a></li>
                     <li><a href="/#faq" class="nav-link">FAQ</a></li>
-                    <li><a href="/app/register" class="btn btn-primary nav-cta">Get Started</a></li>
+                    <li><a href="/app/register" class="btn btn-primary nav-cta">Create my free card</a></li>
                 </ul>
             </nav>
         </div>
