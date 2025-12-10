@@ -2,6 +2,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const navToggle = document.querySelector('.nav-toggle');
     const navMenu = document.querySelector('.nav-menu');
     const navLinks = document.querySelectorAll('.nav-link');
+    const billingToggle = document.getElementById('billing-toggle');
+    const monthlyLabel = document.getElementById('monthly-label');
+    const annualLabel = document.getElementById('annual-label');
+    const proPrice = document.getElementById('pro-price');
+    const proBilling = document.getElementById('pro-billing');
+
+    let isAnnual = false;
 
     navToggle.addEventListener('click', function() {
         navToggle.classList.toggle('active');
@@ -90,5 +97,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         lastScroll = currentScroll;
+    });
+
+    billingToggle.addEventListener('click', () => {
+        isAnnual = !isAnnual;
+        billingToggle.classList.toggle('active');
+        monthlyLabel.classList.toggle('active');
+        annualLabel.classList.toggle('active');
+
+        if (isAnnual) {
+            proPrice.textContent = '7';
+            proBilling.textContent = 'Billed annually ($84/year)';
+        } else {
+            proPrice.textContent = '9';
+            proBilling.textContent = 'Billed monthly';
+        }
     });
 });
