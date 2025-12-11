@@ -172,11 +172,11 @@ $buildHref = function (?string $type, string $value) use ($normalizeUrl): ?strin
                                 $linkTarget = $value !== '' ? $value : $primary;
                                 $href = $buildHref($type, $linkTarget);
                             ?>
-                            <div class="item">
+                            <div class="item" data-analytics-type="<?= $escape($type ?? 'item'); ?>" data-analytics-label="<?= $escape($primary); ?>">
                                 <span class="item-label"><?= $escape($leftLabel); ?></span>
                                 <div class="item-text">
                                     <?php if ($href): ?>
-                                        <a class="item-link item-value" href="<?= $escape($href); ?>" target="_blank" rel="noopener noreferrer">
+                                        <a class="item-link item-value" href="<?= $escape($href); ?>" target="_blank" rel="noopener noreferrer" data-analytics-target="<?= $escape($linkTarget); ?>">
                                             <?= $escape($primary); ?>
                                         </a>
                                     <?php else: ?>
@@ -197,5 +197,117 @@ $buildHref = function (?string $type, string $value) use ($normalizeUrl): ?strin
             <span>Powered by Cardikit</span>
         </div>
     </div>
+    <script>
+        (() => {
+            const endpoint = '/api/v1/analytics/events';
+            const pathSlug = (() => {
+                const parts = window.location.pathname.split('/').filter(Boolean);
+                return parts[parts.length - 1] || null;
+            })();
+            const cardSlug = <?= json_encode($card['slug'] ?? null); ?> || pathSlug;
+            const cardId = <?= json_encode($card['id'] ?? null); ?>;
+            const theme = <?= json_encode(basename(__DIR__)); ?>;
+            const params = new URLSearchParams(window.location.search);
+            const rawReferrer = document.referrer || '';
+            const referrerHost = (() => {
+                try {
+                    return rawReferrer ? new URL(rawReferrer).host : null;
+                } catch (_) {
+                    return null;
+                }
+            })();
+            const entryHint = (params.get('source') || params.get('via') || '').toLowerCase();
+            const entryType = entryHint.includes('qr') ? 'qr' : (entryHint.includes('nfc') ? 'nfc' : null);
+            const storageKey = cardSlug ? `cardikit:viewed:${cardSlug}` : null;
+            let isNewView = false;
+            if (storageKey) {
+                try {
+                    isNewView = !localStorage.getItem(storageKey);
+                    localStorage.setItem(storageKey, '1');
+                } catch (_) {
+                    isNewView = false;
+                }
+            }
+
+            const basePayload = {
+                card_slug: cardSlug,
+                card_id: cardId,
+                referrer: rawReferrer || null,
+                source: referrerHost,
+                card_theme: theme,
+                meta: {
+                    theme,
+                    path: window.location.pathname,
+                    entry: entryType || undefined,
+                    search: window.location.search || undefined,
+                },
+            };
+
+            const sendEvent = (body) => {
+                const payload = JSON.stringify(body);
+
+                const doFetch = () => fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: payload,
+                    keepalive: true,
+                    credentials: 'same-origin',
+                });
+
+                try {
+                    if (navigator.sendBeacon) {
+                        const blob = new Blob([payload], { type: 'application/json' });
+                        const ok = navigator.sendBeacon(endpoint, blob);
+                        if (ok) return;
+                    }
+                    doFetch().catch(() => {});
+                } catch (err) {
+                    console.debug('analytics send failed', err);
+                }
+            };
+
+            sendEvent({
+                ...basePayload,
+                event_type: 'view',
+                event_name: entryType === 'qr' ? 'qr_scan' : (entryType === 'nfc' ? 'nfc_scan' : 'card_view'),
+                is_new_view: isNewView,
+            });
+
+            const mapEventName = (type) => {
+                if (!type) return 'cta';
+                const t = type.toLowerCase();
+                if (t === 'phone') return 'call';
+                if (t === 'email') return 'email';
+                if (t === 'website' || t === 'link' || t === 'portfolio') return 'website';
+                const socials = [
+                    'instagram', 'linkedin', 'facebook', 'x', 'threads', 'snapchat', 'tiktok',
+                    'youtube', 'github', 'discord', 'telegram', 'whatsapp', 'skype', 'twitch',
+                    'yelp', 'venmo', 'paypal', 'cashapp'
+                ];
+                if (socials.includes(t)) return 'social';
+                return t;
+            };
+
+            document.querySelectorAll('.item-link').forEach((link) => {
+                link.addEventListener('click', () => {
+                    const wrapper = link.closest('[data-analytics-type]');
+                    const type = wrapper?.dataset.analyticsType || '';
+                    const label = wrapper?.dataset.analyticsLabel || link.textContent?.trim() || '';
+                    const target = link.dataset.analyticsTarget || link.href;
+                    sendEvent({
+                        ...basePayload,
+                        event_type: 'click',
+                        event_name: mapEventName(type),
+                        target,
+                        meta: {
+                            ...basePayload.meta,
+                            label,
+                            item_type: type || null,
+                        },
+                    });
+                });
+            });
+        })();
+    </script>
 </body>
 </html>

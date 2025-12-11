@@ -80,8 +80,12 @@ class ThemeRenderer
         $items = is_array($items) ? $items : [];
 
         return [
+            'id' => $card['id'] ?? null,
+            'slug' => $card['slug'] ?? null,
+            'user_id' => $card['user_id'] ?? null,
             'name' => $card['name'] ?? 'Card',
             'color' => $card['color'] ?? '#1D4ED8',
+            'theme' => $card['theme'] ?? null,
             'banner_image' => $card['banner_image'] ?? null,
             'avatar_image' => $card['avatar_image'] ?? null,
             'items' => $items,
