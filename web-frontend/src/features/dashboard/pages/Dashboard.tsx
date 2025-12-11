@@ -127,6 +127,12 @@ const Dashboard: React.FC = () => {
                         >
                             Create new card
                         </Link>
+                        <Link
+                            to="/analytics"
+                            className="w-full inline-block text-center bg-gray-100 text-gray-800 py-2 rounded-lg font-semibold cursor-pointer hover:bg-gray-200 transition-colors"
+                        >
+                            View analytics
+                        </Link>
                     </div>
                     <div className="bg-white rounded-xl shadow p-4 space-y-2">
                         <h3 className="text-lg font-bold text-gray-900 font-inter">Current card</h3>

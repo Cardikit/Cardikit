@@ -22,6 +22,7 @@ use App\Controllers\BlogController;
 use App\Controllers\CategoryController;
 use App\Controllers\SitemapController;
 use App\Controllers\BlogImageController;
+use App\Controllers\AnalyticsController;
 
 // Middleware groups
 $tls = MiddlewareGroups::tls();
@@ -39,6 +40,10 @@ Router::get('/app', [SpaController::class, 'show'], $tls);
 Router::get('/app/:path', [SpaController::class, 'show'], $tls);
 Router::get('/app/:path/:subpath', [SpaController::class, 'show'], $tls);
 Router::get('/app/:path/:subpath/:child', [SpaController::class, 'show'], $tls);
+
+// Analytics events
+Router::post('/api/v1/analytics/events', [AnalyticsController::class, 'track'], $tls);
+Router::get('/api/v1/analytics/summary', [AnalyticsController::class, 'summary'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
 
 // Auth
 Router::post('/api/v1/register', [AuthController::class, 'register'], MiddlewareGroups::rateLimited(5, 60));

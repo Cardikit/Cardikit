@@ -1,4 +1,4 @@
-import { FaAddressCard, FaUserFriends } from 'react-icons/fa';
+import { FaAddressCard, FaUserFriends, FaChartBar } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
 /**
@@ -42,6 +42,13 @@ const BottomNav: React.FC = () => {
             >
                 <FaUserFriends className="text-3xl" />
                 <span className="text-xs font-inter">Contacts</span>
+            </Link>
+            <Link
+                to="/analytics"
+                className={`flex flex-col items-center ${isActive('/analytics') ? 'text-primary-500 cursor-default' : 'text-gray-500'}`}
+            >
+                <FaChartBar className="text-3xl" />
+                <span className="text-xs font-inter">Analytics</span>
             </Link>
         </div>
     );

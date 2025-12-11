@@ -2,6 +2,7 @@ import Logo from '@/assets/logo.webp';
 import { ImEmbed2 } from 'react-icons/im';
 import { FaNfcSymbol } from 'react-icons/fa6';
 import { IoPersonSharp, IoLogOut } from "react-icons/io5";
+import { FaChartBar } from 'react-icons/fa';
 import { useLogout } from '@/features/auth/hooks/useLogout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
@@ -44,6 +45,10 @@ const DesktopNav = () => {
                 </Link>
                 <hr className="border-gray-300" />
                 <p className="text-sm text-gray-600 font-inter">Account</p>
+                <Link to="/analytics" className="flex items-center space-x-2 hover:text-primary-700">
+                    <FaChartBar className="text-xl text-gray-800" />
+                    <p className="font-inter text-gray-800">Analytics</p>
+                </Link>
                 <Link to="/account" className="flex items-center space-x-2 hover:text-primary-700">
                     <IoPersonSharp className="text-xl text-gray-800" />
                     <p className="font-inter text-gray-800">Manage account</p>
