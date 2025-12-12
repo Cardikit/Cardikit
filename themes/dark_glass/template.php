@@ -205,10 +205,10 @@ $buildHref = function (?string $type, string $value) use ($normalizeUrl): ?strin
                 <?php endif; ?>
             </div>
         </div>
-        <div class="brand">
+        <a href="https://cardikit.com" class="brand">
             <img src="/assets/smaller-logo-no-background.png" alt="Cardikit logo" />
             <span>Powered by Cardikit</span>
-        </div>
+        </a>
         <button class="floating-save" type="button" data-save-trigger>
             Save contact
         </button>
