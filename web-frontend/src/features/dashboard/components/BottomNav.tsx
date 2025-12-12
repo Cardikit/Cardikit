@@ -37,8 +37,8 @@ const BottomNav: React.FC = () => {
                 <span className="text-xs font-inter">My Cards</span>
             </Link>
             <Link
-                to="/coming-soon"
-                className={`flex flex-col items-center ${isActive('/coming-soon') ? 'text-primary-500 cursor-default' : 'text-gray-500'}`}
+                to="/contacts"
+                className={`flex flex-col items-center ${isActive('/contacts') ? 'text-primary-500 cursor-default' : 'text-gray-500'}`}
             >
                 <FaUserFriends className="text-3xl" />
                 <span className="text-xs font-inter">Contacts</span>

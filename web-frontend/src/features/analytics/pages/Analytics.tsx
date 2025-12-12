@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { fetchAnalyticsSummary } from '@/services/analytics';
 import type { AnalyticsSummaryResponse } from '@/types/analytics';
 import BottomNav from '@/features/dashboard/components/BottomNav';
@@ -68,12 +67,6 @@ const Analytics: React.FC = () => {
                             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 font-inter">Analytics</h1>
                         </div>
                     </div>
-                    <Link
-                        to="/"
-                        className="bg-white border border-gray-300 text-gray-800 px-4 py-2 rounded-lg font-semibold shadow-sm hover:bg-gray-100 transition-colors"
-                    >
-                        Back to dashboard
-                    </Link>
                 </header>
 
                 <div className="bg-white rounded-xl shadow p-4 md:p-6 space-y-4">
