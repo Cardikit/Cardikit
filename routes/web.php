@@ -23,6 +23,7 @@ use App\Controllers\CategoryController;
 use App\Controllers\SitemapController;
 use App\Controllers\BlogImageController;
 use App\Controllers\AnalyticsController;
+use App\Controllers\ContactController;
 
 // Middleware groups
 $tls = MiddlewareGroups::tls();
@@ -44,6 +45,9 @@ Router::get('/app/:path/:subpath/:child', [SpaController::class, 'show'], $tls);
 // Analytics events
 Router::post('/api/v1/analytics/events', [AnalyticsController::class, 'track'], $tls);
 Router::get('/api/v1/analytics/summary', [AnalyticsController::class, 'summary'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
+
+// Contact capture
+Router::post('/api/v1/contacts', [ContactController::class, 'store'], MiddlewareGroups::rateLimited(10, 60));
 
 // Auth
 Router::post('/api/v1/register', [AuthController::class, 'register'], MiddlewareGroups::rateLimited(5, 60));
