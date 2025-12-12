@@ -1,11 +1,11 @@
 import Logo from '@/assets/logo.webp';
 import { ImEmbed2 } from 'react-icons/im';
 import { FaNfcSymbol } from 'react-icons/fa6';
-import { FaChartBar } from 'react-icons/fa';
+import { FaChartBar, FaUserFriends, FaAddressCard } from 'react-icons/fa';
 import { IoPersonSharp, IoLogOut, IoClose } from "react-icons/io5";
 import { useLogout } from '@/features/auth/hooks/useLogout';
 import { useAuth } from '@/contexts/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 /**
  * NavMenu
@@ -25,6 +25,9 @@ interface NavMenuProps {
 const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
     const { logout } = useLogout();
     const { refresh } = useAuth();
+
+    const location = useLocation();
+    const isActive = (path: string) => location.pathname === path;
 
     const onLogout = async () => {
         try {
@@ -57,27 +60,35 @@ const NavMenu: React.FC<NavMenuProps> = ({ open, closeMenu }) => {
                         <IoClose onClick={closeMenu} className="text-2xl text-gray-800 cursor-pointer" />
                     </div>
                     <p className="text-sm text-gray-600 font-inter">Connect Devices</p>
-                    <Link to="/coming-soon" onClick={closeMenu} className="flex items-center space-x-2 hover:text-primary-700">
-                        <ImEmbed2 className="text-xl text-gray-800" />
-                        <p className="font-inter text-gray-800">Get Embeddable Widget</p>
+                    <Link to="/coming-soon" onClick={closeMenu} className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/coming-soon') ? 'text-primary-500' : 'text-gray-800'}`}>
+                        <ImEmbed2 className="text-xl" />
+                        <p className="font-inter">Get Embeddable Widget</p>
                     </Link>
-                    <Link to="/coming-soon" onClick={closeMenu} className="flex items-center space-x-2 hover:text-primary-700">
-                        <FaNfcSymbol className="text-xl text-gray-800" />
-                        <p className="font-inter text-gray-800">Pair NFC device</p>
+                    <Link to="/coming-soon" onClick={closeMenu} className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/coming-soon') ? 'text-primary-500' : 'text-gray-800'}`}>
+                        <FaNfcSymbol className="text-xl" />
+                        <p className="font-inter">Pair NFC device</p>
                     </Link>
                     <hr className="border-gray-300" />
                     <p className="text-sm text-gray-600 font-inter">Account</p>
-                    <Link to="/analytics" onClick={closeMenu} className="flex items-center space-x-2 hover:text-primary-700">
-                        <FaChartBar className="text-xl text-gray-800" />
-                        <p className="font-inter text-gray-800">Analytics</p>
+                    <Link to="/" onClick={closeMenu} className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/') ? 'text-primary-500' : 'text-gray-800'}`}>
+                        <FaAddressCard className="text-xl" />
+                        <p className="font-inter">My cards</p>
                     </Link>
-                    <Link to="/account" onClick={closeMenu} className="flex items-center space-x-2 hover:text-primary-700">
-                        <IoPersonSharp className="text-xl text-gray-800" />
-                        <p className="font-inter text-gray-800">Manage account</p>
+                    <Link to="/contacts" onClick={closeMenu} className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/contacts') ? 'text-primary-500' : 'text-gray-800'}`}>
+                        <FaUserFriends className="text-xl" />
+                        <p className="font-inter">Contacts</p>
                     </Link>
-                    <div onClick={onLogout} className="flex items-center space-x-2 cursor-pointer">
-                        <IoLogOut className="text-xl text-gray-800" />
-                        <p className="font-inter text-gray-800">Logout</p>
+                    <Link to="/analytics" onClick={closeMenu} className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/analytics') ? 'text-primary-500' : 'text-gray-800'}`}>
+                        <FaChartBar className="text-xl" />
+                        <p className="font-inter">Analytics</p>
+                    </Link>
+                    <Link to="/account" onClick={closeMenu} className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/account') ? 'text-primary-500' : 'text-gray-800'}`}>
+                        <IoPersonSharp className="text-xl" />
+                        <p className="font-inter">Manage account</p>
+                    </Link>
+                    <div onClick={onLogout} className="flex items-center space-x-2 cursor-pointer text-gray-800">
+                        <IoLogOut className="text-xl" />
+                        <p className="font-inter">Logout</p>
                     </div>
                 </div>
             </nav>

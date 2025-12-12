@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Core\Request;
 use App\Models\Card;
 use App\Models\Contact;
+use App\Services\AuthService;
 
 /**
 * Handles storing shared contact details from public card viewers.
@@ -157,5 +158,77 @@ class ContactService
 
         $filtered = filter_var($value, FILTER_VALIDATE_INT);
         return $filtered === false ? null : (int) $filtered;
+    }
+
+    /**
+    * List contacts for the authenticated user with optional card filter.
+    *
+    * @param array $query
+    * @return array{status:int,body:array}
+    */
+    public function listForCurrentUser(array $query): array
+    {
+        $userId = (new AuthService())->currentUserId();
+        if (!$userId) {
+            return ['status' => 401, 'body' => ['message' => 'Unauthorized']];
+        }
+
+        $page = max(1, (int) ($query['page'] ?? 1));
+        $perPage = 30;
+        $cardId = $this->normalizeInt($query['card_id'] ?? null);
+
+        $contactModel = new Contact();
+        $result = $contactModel->paginateForUser($userId, $cardId, $page, $perPage);
+
+        return [
+            'status' => 200,
+            'body' => $result,
+        ];
+    }
+
+    /**
+    * Export contacts as CSV for authenticated user.
+    *
+    * @param array $query
+    * @return array{status:int,body:string|array}
+    */
+    public function exportForCurrentUser(array $query): array
+    {
+        $userId = (new AuthService())->currentUserId();
+        if (!$userId) {
+            return ['status' => 401, 'body' => ['message' => 'Unauthorized']];
+        }
+
+        $cardId = $this->normalizeInt($query['card_id'] ?? null);
+        $contactModel = new Contact();
+        $rows = $contactModel->allForUser($userId, $cardId, 2000);
+
+        $headers = ['Name', 'Email', 'Phone', 'Card', 'Card Slug', 'Source URL', 'Created At'];
+        $lines = [implode(',', array_map([$this, 'escapeCsv'], $headers))];
+
+        foreach ($rows as $row) {
+            $line = [
+                $this->escapeCsv($row['name'] ?? ''),
+                $this->escapeCsv($row['email'] ?? ''),
+                $this->escapeCsv($row['phone'] ?? ''),
+                $this->escapeCsv($row['card_name'] ?? ''),
+                $this->escapeCsv($row['card_slug'] ?? ''),
+                $this->escapeCsv($row['source_url'] ?? ''),
+                $this->escapeCsv($row['created_at'] ?? ''),
+            ];
+            $lines[] = implode(',', $line);
+        }
+
+        return [
+            'status' => 200,
+            'body' => implode("\n", $lines),
+        ];
+    }
+
+    protected function escapeCsv(string $value): string
+    {
+        $needsQuotes = strpbrk($value, "\",\n\r") !== false;
+        $escaped = str_replace('"', '""', $value);
+        return $needsQuotes ? "\"{$escaped}\"" : $escaped;
     }
 }

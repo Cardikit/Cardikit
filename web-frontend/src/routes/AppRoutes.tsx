@@ -11,6 +11,7 @@ import NotFound from '@/pages/NotFound';
 import ComingSoon from '@/pages/ComingSoon';
 import Account from '@/features/account/pages/Account';
 import Analytics from '@/features/analytics/pages/Analytics';
+import Contacts from '@/features/contacts/pages/Contacts';
 import { appBasePath } from '@/lib/env';
 
 /**
@@ -47,6 +48,7 @@ const AppRoutes: React.FC = () => {
                         <Route path="/editor/:id" element={<Editor />} />
                         <Route path="/account" element={<Account />} />
                         <Route path="/analytics" element={<Analytics />} />
+                        <Route path="/contacts" element={<Contacts />} />
                     </Route>
 
                     <Route path="/coming-soon" element={<ComingSoon />} />

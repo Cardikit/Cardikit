@@ -20,4 +20,26 @@ class ContactController
         $result = (new ContactService())->store($request->body(), $request);
         Response::json($result['body'], $result['status']);
     }
+
+    public function index(Request $request): void
+    {
+        $service = new ContactService();
+        $result = $service->listForCurrentUser($request->query());
+        Response::json($result['body'], $result['status']);
+    }
+
+    public function export(Request $request): void
+    {
+        $service = new ContactService();
+        $result = $service->exportForCurrentUser($request->query());
+
+        if (($result['status'] ?? 500) !== 200) {
+            Response::json($result['body'] ?? ['message' => 'Unable to export'], $result['status']);
+            return;
+        }
+
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="contacts.csv"');
+        echo $result['body'] ?? '';
+    }
 }
