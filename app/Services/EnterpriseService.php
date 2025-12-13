@@ -27,7 +27,7 @@ class EnterpriseService
     * @var array<int,array{themes:array<int,string>,name?:string}>
     */
     protected array $plans = [
-        3 => [
+        4 => [
             'name' => 'Mr Appliance',
             'themes' => ['mr_appliance'],
         ],
@@ -46,7 +46,7 @@ class EnterpriseService
         $available = array_map('strtolower', $available);
         $base = self::BASE_FREE_THEMES;
 
-        if ($role >= 3 && isset($this->plans[$role])) {
+        if ($role >= 4 && isset($this->plans[$role])) {
             $base = array_merge($base, $this->plans[$role]['themes'] ?? []);
         }
 
@@ -69,7 +69,7 @@ class EnterpriseService
             return $available; // admin: all
         }
 
-        if ($role >= 3) {
+        if ($role >= 4) {
             $themes = $this->themesForRole($role, $available);
             if (!empty($themes)) {
                 return $themes;

@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import DesktopNav from '@/features/dashboard/components/DesktopNav';
 import NavMenu from '@/features/dashboard/components/NavMenu';
 import BottomNav from '@/features/dashboard/components/BottomNav';
 import { MdOutlineMenu } from 'react-icons/md';
 import { FaCheckCircle, FaLock } from 'react-icons/fa';
+import { billingService } from '@/services/billingService';
+import { toApiError } from '@/services/httpClient';
 
 const plans = [
     {
@@ -28,8 +29,26 @@ const plans = [
 const Upgrade: React.FC = () => {
     const [openMenu, setOpenMenu] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<'annual' | 'monthly'>('annual');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const ctaLink = "/account";
+    const startCheckout = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { url } = await billingService.checkout(selectedPlan);
+            if (!url) {
+                setError('Checkout session was not created. Please try again.');
+                return;
+            }
+            window.location.href = url;
+        } catch (err) {
+            const apiErr = toApiError(err);
+            setError(apiErr.message || 'Unable to start checkout.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-dvh bg-gray-100 pt-6">
@@ -126,14 +145,19 @@ const Upgrade: React.FC = () => {
 
                 <div className="flex flex-col items-center gap-3 pb-24">
                     <p className="text-sm text-gray-700">Ready to get more from Cardikit?</p>
+                    {error && <p className="text-sm text-red-600">{error}</p>}
                 </div>
             </div>
 
             <BottomNav />
             <NavMenu open={openMenu} closeMenu={() => setOpenMenu(false)} />
-            <Link to={ctaLink} className="fixed bottom-24 right-1/2 translate-x-1/2 lg:right-43 lg:translate-x-0 z-3 bg-primary-500 hover:bg-primary-600 text-white font-bold w-11/12 lg:w-1/2 py-2 px-4 rounded flex justify-center items-center">
-                <span>Start 14-day free trial</span>
-            </Link>
+            <button
+                onClick={startCheckout}
+                disabled={loading}
+                className="fixed bottom-24 right-1/2 translate-x-1/2 lg:right-43 lg:translate-x-0 z-3 bg-primary-500 hover:bg-primary-600 disabled:bg-primary-300 disabled:cursor-not-allowed text-white font-bold w-11/12 lg:w-1/2 py-2 px-4 rounded flex justify-center items-center"
+            >
+                <span>{loading ? 'Starting checkout...' : 'Start 14-day free trial'}</span>
+            </button>
 
         </div>
     );

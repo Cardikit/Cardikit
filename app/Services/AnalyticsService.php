@@ -18,7 +18,7 @@ use App\Core\Database;
 */
 class AnalyticsService
 {
-    private const PRO_ROLE_THRESHOLD = 2;
+    private const PRO_ROLE_THRESHOLD = 3;
 
     /**
     * Record a single analytics event row.
@@ -166,7 +166,7 @@ class AnalyticsService
         $user = User::findById($userId);
         $role = isset($user['role']) ? (int) $user['role'] : 0;
 
-        return $role >= self::PRO_ROLE_THRESHOLD;
+        return $role >= self::PRO_ROLE_THRESHOLD || $role === 2;
     }
 
     /**

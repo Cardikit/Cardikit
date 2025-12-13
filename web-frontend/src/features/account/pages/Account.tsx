@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/assets/header.webp';
 import { useAuth } from '@/contexts/AuthContext';
 import Back from '@/components/Back';
 import AccountDetailsForm from '../components/AccountDetailsForm';
 import DeleteAccountSection from '../components/DeleteAccountSection';
+import { billingService } from '@/services/billingService';
+import { toApiError } from '@/services/httpClient';
 
 /**
  * Account Screen
@@ -25,10 +28,26 @@ import DeleteAccountSection from '../components/DeleteAccountSection';
 const Account: React.FC = () => {
     const { user, loading: authLoading, refresh } = useAuth();
     const navigate = useNavigate();
+    const [billingLoading, setBillingLoading] = useState(false);
+    const [billingError, setBillingError] = useState<string | null>(null);
 
     const handleUpdated = async () => {
         await refresh();
         navigate('/');
+    };
+
+    const openBillingPortal = async () => {
+        setBillingLoading(true);
+        setBillingError(null);
+        try {
+            const { url } = await billingService.portal();
+            window.location.href = url;
+        } catch (err) {
+            const apiErr = toApiError(err);
+            setBillingError(apiErr.message || 'Unable to open billing portal.');
+        } finally {
+            setBillingLoading(false);
+        }
     };
 
     const handleDeleted = async () => {
@@ -53,6 +72,17 @@ const Account: React.FC = () => {
                         </div>
 
                         <AccountDetailsForm user={user} authLoading={authLoading} onUpdated={handleUpdated} />
+
+                        <div className="space-y-3">
+                            <button
+                                onClick={openBillingPortal}
+                                disabled={billingLoading}
+                                className="w-full bg-primary-500 hover:bg-primary-600 disabled:bg-primary-300 disabled:cursor-not-allowed text-white font-semibold py-3 px-4 rounded-xl transition-colors"
+                            >
+                                {billingLoading ? 'Opening billing...' : 'Manage billing'}
+                            </button>
+                            {billingError && <p className="text-sm text-red-600 text-center">{billingError}</p>}
+                        </div>
 
                         <Link
                             to="/"

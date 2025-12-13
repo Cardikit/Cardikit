@@ -2,7 +2,8 @@ import { FaAddressCard, FaUserFriends, FaChartBar, FaCrown } from 'react-icons/f
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
-const PRO_ROLE_THRESHOLD = 2;
+const PRO_ROLE_THRESHOLD = 3;
+const ADMIN_ROLE = 2;
 
 /**
  * BottomNav
@@ -30,7 +31,8 @@ const BottomNav: React.FC = () => {
     const { user } = useAuth();
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
-    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
+    const role = user?.role ?? 0;
+    const isPro = role >= PRO_ROLE_THRESHOLD || role === ADMIN_ROLE;
 
     return (
         <div className="fixed bottom-0 w-full bg-background-100 shadow-md z-10 flex justify-around items-center py-4 border-t border-gray-200 lg:hidden">

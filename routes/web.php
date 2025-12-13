@@ -15,6 +15,7 @@ use App\Controllers\LandingController;
 use App\Controllers\PublicCardController;
 use App\Controllers\SpaController;
 use App\Controllers\UserController;
+use App\Controllers\BillingController;
 use App\Core\Router;
 use App\Routing\MiddlewareGroups;
 use App\Middleware\RateLimitMiddleware;
@@ -56,10 +57,10 @@ Router::get('/api/v1/contacts/export', [ContactController::class, 'export'], arr
 Router::post('/api/v1/register', [AuthController::class, 'register'], MiddlewareGroups::rateLimited(5, 60));
 Router::post('/api/v1/login', [AuthController::class, 'login'], MiddlewareGroups::rateLimited(5, 60));
 Router::post('/api/v1/logout', [AuthController::class, 'logout'], array_merge($auth, [new RateLimitMiddleware(20, 60)]));
-Router::get('/api/v1/csrf-token', [AuthController::class, 'csrfToken'], array_merge($auth, [new RateLimitMiddleware(30, 60)]));
+Router::get('/api/v1/csrf-token', [AuthController::class, 'csrfToken'], array_merge(MiddlewareGroups::tls(), [new RateLimitMiddleware(60, 60)]));
 
 // User
-Router::get('/api/v1/@me', [UserController::class, 'me'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));
+Router::get('/api/v1/@me', [UserController::class, 'me'], $auth);
 Router::put('/api/v1/@me', [UserController::class, 'update'], $mutating);
 Router::delete('/api/v1/@me', [UserController::class, 'delete'], $mutating);
 
@@ -70,6 +71,11 @@ Router::post('/api/v1/@me/cards', [CardController::class, 'create'], $mutating);
 Router::put('/api/v1/@me/cards/:id', [CardController::class, 'update'], $mutating);
 Router::delete('/api/v1/@me/cards/:id', [CardController::class, 'delete'], $mutating);
 Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], array_merge(MiddlewareGroups::pro(), [new CsrfMiddleware(), new RateLimitMiddleware(60, 60)]));
+
+// Billing
+Router::post('/api/v1/billing/checkout', [BillingController::class, 'checkout'], $mutating);
+Router::post('/api/v1/billing/portal', [BillingController::class, 'portal'], $mutating);
+Router::post('/api/v1/webhooks/stripe', [BillingController::class, 'webhook'], MiddlewareGroups::tls());
 
 // Themes
 Router::get('/api/v1/themes', [CardController::class, 'themes'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));

@@ -57,6 +57,13 @@ class Request
     protected array $body;
 
     /**
+    * Raw request body contents.
+    *
+    * @var string
+    */
+    protected string $rawBody = '';
+
+    /**
     * Initializes the request object by capturing method, URI, headers, 
     * query parameters, and request body.
     *
@@ -105,10 +112,12 @@ class Request
     protected function parseInput(): array
     {
         if (isset($GLOBALS['__test_body'])) {
+            $this->rawBody = json_encode($GLOBALS['__test_body']) ?: '';
             return $GLOBALS['__test_body'];
         }
 
         $input = file_get_contents('php://input');
+        $this->rawBody = $input ?: '';
         $this->headers = array_change_key_case($this->headers, CASE_LOWER);
         $contentType = $this->headers['content-type'] ?? '';
 
@@ -118,6 +127,16 @@ class Request
 
         parse_str($input, $parsed);
         return $parsed;
+    }
+
+    /**
+    * Get the raw request body string.
+    *
+    * @return string
+    */
+    public function rawBody(): string
+    {
+        return $this->rawBody;
     }
 
     /**
