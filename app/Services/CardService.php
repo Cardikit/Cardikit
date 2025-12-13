@@ -6,6 +6,7 @@ use App\Core\Config;
 use App\Core\Database;
 use App\Core\Validator;
 use App\Models\Card;
+use App\Models\User;
 use App\Services\ThemeCatalog;
 use App\Services\CardItemService;
 use App\Services\ImageStorageService;
@@ -20,6 +21,9 @@ use App\Services\QrCodeService;
 */
 class CardService
 {
+    private const PRO_ROLE_THRESHOLD = 2;
+    private const FREE_CARD_LIMIT = 4;
+
     /**
     * Retrieves a list of cards for a user.
     *
@@ -70,6 +74,24 @@ class CardService
     */
     public function create(array $payload, int $userId): array
     {
+        $user = User::findById($userId);
+        $role = isset($user['role']) ? (int) $user['role'] : 0;
+        $isPro = $role >= self::PRO_ROLE_THRESHOLD;
+        if (!$isPro) {
+            $cardCount = Card::countForUser($userId);
+            if ($cardCount >= self::FREE_CARD_LIMIT) {
+                return [
+                    'status' => 403,
+                    'body' => [
+                        'message' => 'Card limit reached for free plan',
+                        'errors' => [
+                            'plan' => ['Upgrade to create more cards.'],
+                        ],
+                    ],
+                ];
+            }
+        }
+
         // Generate a unique slug
         $payload['slug'] = Card::generateUniqueSlug();
         $payload['user_id'] = $userId;

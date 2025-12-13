@@ -19,6 +19,12 @@ namespace App\Services;
 */
 class ThemeCatalog
 {
+    private const THEME_PLANS = [
+        'minimal' => 'free',
+        'dark_glass' => 'free',
+        'mr_appliance' => 'enterprise',
+    ];
+
     /**
     * Path to the themes directory.
     *
@@ -65,6 +71,8 @@ class ThemeCatalog
                 'version' => $meta['Version'] ?? null,
                 'author' => $meta['Author'] ?? null,
                 'uri' => $meta['Theme URI'] ?? null,
+                'plan' => $this->resolvePlan($slug),
+                'is_pro' => $this->resolvePlan($slug) !== 'free',
             ];
         }
 
@@ -84,6 +92,19 @@ class ThemeCatalog
             fn($theme) => strtolower($theme['slug']),
             $this->getThemes()
         );
+    }
+
+    /**
+    * Resolve plan tier for a theme slug.
+    *
+    * @param string $slug
+    *
+    * @return string
+    */
+    protected function resolvePlan(string $slug): string
+    {
+        $key = strtolower($slug);
+        return self::THEME_PLANS[$key] ?? 'pro';
     }
 
     /**

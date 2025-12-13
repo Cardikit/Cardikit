@@ -10,7 +10,11 @@ import DesktopNav from '@/features/dashboard/components/DesktopNav';
 import { FaPaperPlane } from 'react-icons/fa';
 import { useFetchCards } from '@/features/dashboard/hooks/useFetchCards';
 import type { CardType } from '@/types/card';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+
+const PRO_ROLE_THRESHOLD = 2;
+const FREE_CARD_LIMIT = 4;
 
 /**
  * Dashboard
@@ -81,6 +85,17 @@ const Dashboard: React.FC = () => {
     }
 
     const { cards, loading, refresh } = useFetchCards();
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
+
+    const handleCreateCard = () => {
+        if (!isPro && cards.length >= FREE_CARD_LIMIT) {
+            navigate('/upgrade');
+            return;
+        }
+        navigate('/editor');
+    };
 
     return (
         <div className="h-dvh bg-gray-300 pt-16 md:pt-24 overflow-hidden">
@@ -100,6 +115,7 @@ const Dashboard: React.FC = () => {
                             setCurrentCard={setCurrentCard}
                             cardData={cards}
                             loading={loading}
+                            onCreateCard={handleCreateCard}
                         />
                     </div>
                 </div>
@@ -123,6 +139,7 @@ const Dashboard: React.FC = () => {
                         </Link>
                         <Link
                             to={`/editor`}
+                            onClick={(event) => { event.preventDefault(); handleCreateCard(); }}
                             className="w-full inline-block text-center bg-gray-100 text-gray-800 py-2 rounded-lg font-semibold cursor-pointer hover:bg-gray-200 transition-colors"
                         >
                             Create new card

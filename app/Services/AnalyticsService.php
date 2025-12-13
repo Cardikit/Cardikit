@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Core\Request;
 use App\Models\AnalyticsEvent;
 use App\Models\Card;
+use App\Models\User;
 use App\Services\AuthService;
 use App\Core\Database;
 
@@ -17,6 +18,8 @@ use App\Core\Database;
 */
 class AnalyticsService
 {
+    private const PRO_ROLE_THRESHOLD = 2;
+
     /**
     * Record a single analytics event row.
     *
@@ -48,6 +51,23 @@ class AnalyticsService
             if ($resolvedCard) {
                 $cardId = (int) $resolvedCard['id'];
             }
+        }
+
+        if ($resolvedCard === null && $cardId !== null) {
+            $resolvedCard = (new Card())->findBy('id', $cardId);
+        }
+
+        $ownerUserId = $this->normalizeInt($resolvedCard['user_id'] ?? null);
+        $isProOwner = $this->isProUser($ownerUserId);
+
+        if ($resolvedCard !== null && !$isProOwner) {
+            return [
+                'status' => 200,
+                'body' => [
+                    'message' => 'Analytics not collected for free plan.',
+                    'recorded' => false,
+                ],
+            ];
         }
 
         $target = $this->cleanString($payload['target'] ?? ($payload['button'] ?? null), 128);
@@ -128,6 +148,25 @@ class AnalyticsService
             'status' => 201,
             'body' => ['message' => 'Event recorded'],
         ];
+    }
+
+    /**
+    * Determine if a user is Pro based on their role.
+    *
+    * @param int|null $userId
+    *
+    * @return bool
+    */
+    protected function isProUser(?int $userId): bool
+    {
+        if ($userId === null) {
+            return false;
+        }
+
+        $user = User::findById($userId);
+        $role = isset($user['role']) ? (int) $user['role'] : 0;
+
+        return $role >= self::PRO_ROLE_THRESHOLD;
     }
 
     /**

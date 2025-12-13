@@ -132,6 +132,26 @@ class Card extends Model
     }
 
     /**
+     * Counts how many cards a user has.
+     *
+     * @param int $userId
+     *
+     * @return int
+     *
+     * @since 0.0.7
+     */
+    public static function countForUser(int $userId): int
+    {
+        $instance = new static();
+
+        $stmt = $instance->db->prepare('SELECT COUNT(*) AS total FROM cards WHERE user_id = :user_id');
+        $stmt->execute(['user_id' => $userId]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return (int) ($row['total'] ?? 0);
+    }
+
+    /**
     * Returns a single card with its items.
     *
     * @param int $cardId

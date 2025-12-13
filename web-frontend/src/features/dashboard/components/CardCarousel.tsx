@@ -16,6 +16,7 @@ interface CardCarouselProps {
     cardData: CardType[];
     setCurrentCard: (card: CardType) => void;
     loading: boolean;
+    onCreateCard?: () => void;
 }
 
 /**
@@ -51,7 +52,7 @@ interface CardCarouselProps {
  * @component
  * @since 0.0.2
  */
-const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, loading }) => {
+const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, loading, onCreateCard }) => {
     const [api, setApi] = useState<CarouselApi | undefined>();
 
     useEffect(() => {
@@ -93,7 +94,7 @@ const CardCarousel: React.FC<CardCarouselProps> = ({ setCurrentCard, cardData, l
                         </CarouselItem>
                     ))}
                 <CarouselItem id="create">
-                    <AddCard />
+                    <AddCard onCreateCard={onCreateCard} />
                 </CarouselItem>
             </CarouselContent>
             <CarouselPrevious className="absolute left-4 md:left-16 lg:left-48 top-1/3 transform -translate-y-1/2 z-10 size-10 cursor-pointer" />
