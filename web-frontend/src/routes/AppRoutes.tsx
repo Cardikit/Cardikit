@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import PrivateRoute from '@/routes/PrivateRoute';
+import ProRoute from '@/routes/ProRoute';
 import GuestRoute from '@/routes/GuestRoute';
 import Dashboard from '@/features/dashboard/pages/Dashboard';
 import Editor from '@/features/editor/pages/Editor';
@@ -12,6 +13,7 @@ import ComingSoon from '@/pages/ComingSoon';
 import Account from '@/features/account/pages/Account';
 import Analytics from '@/features/analytics/pages/Analytics';
 import Contacts from '@/features/contacts/pages/Contacts';
+import Upgrade from '@/features/billing/pages/Upgrade';
 import { appBasePath } from '@/lib/env';
 
 /**
@@ -47,8 +49,11 @@ const AppRoutes: React.FC = () => {
                         <Route path="/editor" element={<Editor />} />
                         <Route path="/editor/:id" element={<Editor />} />
                         <Route path="/account" element={<Account />} />
-                        <Route path="/analytics" element={<Analytics />} />
-                        <Route path="/contacts" element={<Contacts />} />
+                        <Route path="/upgrade" element={<Upgrade />} />
+                        <Route element={<ProRoute />}>
+                            <Route path="/analytics" element={<Analytics />} />
+                            <Route path="/contacts" element={<Contacts />} />
+                        </Route>
                     </Route>
 
                     <Route path="/coming-soon" element={<ComingSoon />} />

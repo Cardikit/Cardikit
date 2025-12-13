@@ -1,5 +1,8 @@
-import { FaAddressCard, FaUserFriends, FaChartBar } from 'react-icons/fa';
+import { FaAddressCard, FaUserFriends, FaChartBar, FaCrown } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+
+const PRO_ROLE_THRESHOLD = 2;
 
 /**
  * BottomNav
@@ -24,8 +27,10 @@ import { Link, useLocation } from 'react-router-dom';
  * @since 0.0.2
  */
 const BottomNav: React.FC = () => {
+    const { user } = useAuth();
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
+    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
 
     return (
         <div className="fixed bottom-0 w-full bg-background-100 shadow-md z-10 flex justify-around items-center py-4 border-t border-gray-200 lg:hidden">
@@ -41,14 +46,20 @@ const BottomNav: React.FC = () => {
                 className={`flex flex-col items-center ${isActive('/contacts') ? 'text-primary-500 cursor-default' : 'text-gray-500'}`}
             >
                 <FaUserFriends className="text-3xl" />
-                <span className="text-xs font-inter">Contacts</span>
+                <span className="text-xs font-inter flex items-center space-x-1">
+                    {!isPro && <FaCrown className="text-amber-400" aria-hidden />}
+                    <span>Contacts</span>
+                </span>
             </Link>
             <Link
                 to="/analytics"
                 className={`flex flex-col items-center ${isActive('/analytics') ? 'text-primary-500 cursor-default' : 'text-gray-500'}`}
             >
                 <FaChartBar className="text-3xl" />
-                <span className="text-xs font-inter">Analytics</span>
+                <span className="text-xs font-inter flex items-center space-x-1">
+                    {!isPro && <FaCrown className="text-amber-400" aria-hidden />}
+                    <span>Analytics</span>
+                </span>
             </Link>
         </div>
     );

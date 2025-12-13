@@ -5,9 +5,11 @@ import {
 } from '@/components/ui/drawer';
 import type { CardType } from '@/types/card';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
     FaImage,
+    FaCrown,
     FaLink,
     FaSms,
     FaEnvelope,
@@ -15,6 +17,9 @@ import {
     FaSave,
     FaQrcode,
 } from "react-icons/fa";
+import { useAuth } from '@/contexts/AuthContext';
+
+const PRO_ROLE_THRESHOLD = 2;
 
 interface EditQrDrawerProps {
     open: boolean;
@@ -66,10 +71,22 @@ interface EditQrDrawerProps {
  * @since 0.0.2
  */
 const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard, setLogoModalOpen }) => {
+    const navigate = useNavigate();
+    const { user } = useAuth();
     const [copied, setCopied] = useState(false);
+    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
 
     const cardUrl = currentCard.qr_url ?? currentCard.qr_image ?? '';
     const qrImageUrl = currentCard.qr_image ?? '';
+
+    const handleAddLogo = () => {
+        if (!isPro) {
+            navigate('/upgrade');
+            return;
+        }
+        setLogoModalOpen(true);
+        setOpen(false);
+    };
 
     const copyLink = async () => {
         if (!cardUrl) return;
@@ -164,11 +181,14 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
                         </p>
 
                         <button
-                            onClick={() => {setLogoModalOpen(true), setOpen(false)}}
+                            onClick={handleAddLogo}
                             className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 lg:w-1/3 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900"
                         >
                             <FaImage />
-                            <span>Add logo to QR Code</span>
+                            <span className="flex items-center space-x-1">
+                                {!isPro && <FaCrown className="text-amber-400" aria-hidden />}
+                                <span>Add logo to QR Code</span>
+                            </span>
                         </button>
 
                         <button onClick={copyLink} className="bg-primary-500 text-gray-100 py-2 w-full md:w-1/2 lg:w-1/3 rounded-lg font-semibold flex items-center justify-center space-x-2 cursor-pointer hover:bg-primary-900">

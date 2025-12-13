@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Core\Request;
 use App\Models\Card;
 use App\Models\Contact;
+use App\Models\User;
 use App\Services\AuthService;
 
 /**
@@ -16,6 +17,8 @@ use App\Services\AuthService;
 */
 class ContactService
 {
+    private const PRO_ROLE_THRESHOLD = 2;
+
     /**
     * Persist a contact submission for a card.
     *
@@ -54,6 +57,8 @@ class ContactService
             if ($card) {
                 $cardId = (int) $card['id'];
             }
+        } elseif ($card === null && $cardId !== null) {
+            $card = (new Card())->findBy('id', $cardId);
         }
 
         $headers = array_change_key_case($request->headers(), CASE_LOWER);
@@ -66,6 +71,15 @@ class ContactService
             'card_name' => $this->cleanString($payload['card_name'] ?? ($card['name'] ?? null), 255),
             'raw_phone' => $payload['phone'] ?? null,
         ];
+
+        $ownerUserId = $this->normalizeInt($card['user_id'] ?? null);
+        $isProOwner = $this->isProUser($ownerUserId);
+        if ($card !== null && !$isProOwner) {
+            return [
+                'status' => 200,
+                'body' => ['message' => 'Contacts not collected for free plan.', 'stored' => false],
+            ];
+        }
 
         $existing = (new Contact())->findDuplicate($cardId, $cardSlug, $name, $email, $phone);
         if ($existing) {
@@ -109,6 +123,25 @@ class ContactService
             'status' => 201,
             'body' => ['message' => 'Contact saved.', 'stored' => true],
         ];
+    }
+
+    /**
+    * Determine if a user is Pro based on their role.
+    *
+    * @param int|null $userId
+    *
+    * @return bool
+    */
+    protected function isProUser(?int $userId): bool
+    {
+        if ($userId === null) {
+            return false;
+        }
+
+        $user = User::findById($userId);
+        $role = isset($user['role']) ? (int) $user['role'] : 0;
+
+        return $role >= self::PRO_ROLE_THRESHOLD;
     }
 
     protected function cleanString(mixed $value, int $maxLength): ?string

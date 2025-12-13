@@ -2,10 +2,12 @@ import Logo from '@/assets/logo.webp';
 import { ImEmbed2 } from 'react-icons/im';
 import { FaNfcSymbol } from 'react-icons/fa6';
 import { IoPersonSharp, IoLogOut } from "react-icons/io5";
-import { FaChartBar, FaUserFriends, FaAddressCard } from 'react-icons/fa';
+import { FaChartBar, FaUserFriends, FaAddressCard, FaCrown } from 'react-icons/fa';
 import { useLogout } from '@/features/auth/hooks/useLogout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
+
+const PRO_ROLE_THRESHOLD = 2;
 
 /**
  * DesktopNav
@@ -20,10 +22,11 @@ import { Link, useLocation } from 'react-router-dom';
 const DesktopNav = () => {
 
     const { logout } = useLogout();
-    const { refresh } = useAuth();
+    const { refresh, user } = useAuth();
 
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
+    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
 
     const onLogout = async () => {
         try {
@@ -54,11 +57,17 @@ const DesktopNav = () => {
                 </Link>
                 <Link to="/contacts" className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/contacts') ? 'text-primary-500' : 'text-gray-800'}`}>
                     <FaUserFriends className="text-xl" />
-                    <p className="font-inter">Contacts</p>
+                    <p className="font-inter flex items-center space-x-1">
+                        {!isPro && <FaCrown className="text-amber-400" aria-hidden />}
+                        <span>Contacts</span>
+                    </p>
                 </Link>
                 <Link to="/analytics" className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/analytics') ? 'text-primary-500' : 'text-gray-800'}`}>
                     <FaChartBar className="text-xl" />
-                    <p className="font-inter">Analytics</p>
+                    <p className="font-inter flex items-center space-x-1">
+                        {!isPro && <FaCrown className="text-amber-400" aria-hidden />}
+                        <span>Analytics</span>
+                    </p>
                 </Link>
                 <Link to="/account" className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/account') ? 'text-primary-500' : 'text-gray-800'}`}>
                     <IoPersonSharp className="text-xl" />
