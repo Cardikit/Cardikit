@@ -6,6 +6,9 @@ use App\Core\Response;
 use App\Core\Request;
 use App\Services\AuthService;
 use App\Services\CardService;
+use App\Services\EnterpriseService;
+use App\Services\ThemeCatalog;
+use App\Models\User;
 
 /**
 * Contains methods to handle card operations.
@@ -74,11 +77,17 @@ class CardController
     */
     public function themes(): void
     {
-        // get themes
-        $themes = (new CardService())->getThemes();
+        $userId = (new AuthService())->currentUserId() ?? 0;
+        $user = $userId ? User::findById($userId) : null;
+        $role = isset($user['role']) ? (int) $user['role'] : 0;
 
-        // return themes
-        Response::json($themes);
+        $catalog = new ThemeCatalog();
+        $themes = $catalog->getThemes();
+        $allowedSlugs = (new EnterpriseService())->allowedThemesForRole($role, array_map(fn($t) => $t['slug'], $themes));
+
+        $filtered = array_values(array_filter($themes, fn($theme) => in_array(strtolower($theme['slug']), $allowedSlugs, true)));
+
+        Response::json($filtered);
     }
 
     /**

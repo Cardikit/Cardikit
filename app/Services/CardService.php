@@ -11,6 +11,7 @@ use App\Services\ThemeCatalog;
 use App\Services\CardItemService;
 use App\Services\ImageStorageService;
 use App\Services\QrCodeService;
+use App\Services\EnterpriseService;
 
 /**
 * Contains methods for creating and syncing cards.
@@ -99,7 +100,18 @@ class CardService
         // Validate theme
         $themes = new ThemeCatalog();
         $availableThemeSlugs = $themes->getSlugs();
-        $defaultTheme = $this->pickDefaultTheme($availableThemeSlugs);
+        $allowedThemeSlugs = $this->allowedThemesForRole($role, $availableThemeSlugs);
+        if (empty($allowedThemeSlugs)) {
+            return [
+                'status' => 422,
+                'body' => [
+                    'message' => 'No themes available for your plan.',
+                    'errors' => ['theme' => ['No themes available.']],
+                ],
+            ];
+        }
+
+        $defaultTheme = $this->pickDefaultTheme($allowedThemeSlugs);
         $requestedTheme = isset($payload['theme']) ? strtolower(trim((string) $payload['theme'])) : null;
         if ($requestedTheme !== null && $requestedTheme !== '' && !in_array($requestedTheme, $availableThemeSlugs, true)) {
             return [
@@ -111,9 +123,19 @@ class CardService
             ];
         }
 
+        if ($requestedTheme !== null && $requestedTheme !== '' && !in_array($requestedTheme, $allowedThemeSlugs, true)) {
+            return [
+                'status' => 403,
+                'body' => [
+                    'message' => 'Theme not available for your plan',
+                    'errors' => ['theme' => ['Upgrade to use this theme.']],
+                ],
+            ];
+        }
+
         // normalize colors and themes
         $payload['color'] = $this->normalizeColor($payload['color'] ?? null, '#1D4ED8');
-        $payload['theme'] = $this->normalizeTheme($payload['theme'] ?? null, $defaultTheme, $availableThemeSlugs);
+        $payload['theme'] = $this->normalizeTheme($payload['theme'] ?? null, $defaultTheme, $allowedThemeSlugs);
 
         // normalize banner and avatar
         $hasBanner = array_key_exists('banner_image', $payload);
@@ -233,7 +255,20 @@ class CardService
         // validate theme
         $themes = new ThemeCatalog();
         $availableThemeSlugs = $themes->getSlugs();
-        $defaultTheme = $this->pickDefaultTheme($availableThemeSlugs, $card['theme'] ?? null);
+        $user = User::findById($userId);
+        $role = isset($user['role']) ? (int) $user['role'] : 0;
+        $allowedThemeSlugs = $this->allowedThemesForRole($role, $availableThemeSlugs);
+        if (empty($allowedThemeSlugs)) {
+            return [
+                'status' => 422,
+                'body' => [
+                    'message' => 'No themes available for your plan.',
+                    'errors' => ['theme' => ['No themes available.']],
+                ],
+            ];
+        }
+
+        $defaultTheme = $this->pickDefaultTheme($allowedThemeSlugs, $card['theme'] ?? null);
         $requestedTheme = isset($payload['theme']) ? strtolower(trim((string) $payload['theme'])) : null;
         if ($requestedTheme !== null && $requestedTheme !== '' && !in_array($requestedTheme, $availableThemeSlugs, true)) {
             return [
@@ -244,8 +279,18 @@ class CardService
                 ]
             ];
         }
+        if ($requestedTheme !== null && $requestedTheme !== '' && !in_array($requestedTheme, $allowedThemeSlugs, true)) {
+            return [
+                'status' => 403,
+                'body' => [
+                    'message' => 'Theme not available for your plan',
+                    'errors' => ['theme' => ['Upgrade to use this theme.']],
+                ],
+            ];
+        }
+
         // check for theme, avatar, banner
-        $payload['theme'] = $this->normalizeTheme($payload['theme'] ?? null, $defaultTheme, $availableThemeSlugs);
+        $payload['theme'] = $this->normalizeTheme($payload['theme'] ?? null, $defaultTheme, $allowedThemeSlugs);
         $hasBanner = array_key_exists('banner_image', $payload);
         $hasAvatar = array_key_exists('avatar_image', $payload);
         $bannerPayload = $hasBanner ? ($payload['banner_image'] ?? '') : null;
@@ -497,6 +542,19 @@ class CardService
         }
 
         return $allowed[0] ?? 'default';
+    }
+
+    /**
+    * Determine allowed theme slugs for a given role.
+    *
+    * @param int $role
+    * @param array $available
+    *
+    * @return array
+    */
+    protected function allowedThemesForRole(int $role, array $available): array
+    {
+        return (new EnterpriseService())->allowedThemesForRole($role, $available);
     }
 
     /**
