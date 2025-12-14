@@ -13,7 +13,8 @@ import type { CardType } from '@/types/card';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
-const PRO_ROLE_THRESHOLD = 2;
+const PRO_ROLE_THRESHOLD = 3;
+const ADMIN_ROLE = 2;
 const FREE_CARD_LIMIT = 4;
 
 /**
@@ -87,7 +88,8 @@ const Dashboard: React.FC = () => {
     const { cards, loading, refresh } = useFetchCards();
     const { user } = useAuth();
     const navigate = useNavigate();
-    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
+    const role = user?.role ?? 0;
+    const isPro = role >= PRO_ROLE_THRESHOLD || role === ADMIN_ROLE;
 
     const handleCreateCard = () => {
         if (!isPro && cards.length >= FREE_CARD_LIMIT) {

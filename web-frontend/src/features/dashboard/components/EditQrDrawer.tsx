@@ -19,7 +19,8 @@ import {
 } from "react-icons/fa";
 import { useAuth } from '@/contexts/AuthContext';
 
-const PRO_ROLE_THRESHOLD = 2;
+const PRO_ROLE_THRESHOLD = 3;
+const ADMIN_ROLE = 2;
 
 interface EditQrDrawerProps {
     open: boolean;
@@ -74,7 +75,8 @@ const EditQrDrawer: React.FC<EditQrDrawerProps> = ({ open, setOpen, currentCard,
     const navigate = useNavigate();
     const { user } = useAuth();
     const [copied, setCopied] = useState(false);
-    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
+    const role = user?.role ?? 0;
+    const isPro = role >= PRO_ROLE_THRESHOLD || role === ADMIN_ROLE;
 
     const cardUrl = currentCard.qr_url ?? currentCard.qr_image ?? '';
     const qrImageUrl = currentCard.qr_image ?? '';

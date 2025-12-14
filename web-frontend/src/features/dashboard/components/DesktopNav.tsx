@@ -7,7 +7,24 @@ import { useLogout } from '@/features/auth/hooks/useLogout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link, useLocation } from 'react-router-dom';
 
-const PRO_ROLE_THRESHOLD = 2;
+const PRO_ROLE_THRESHOLD = 3;
+const ADMIN_ROLE = 2;
+
+const planLabel = (role: number, planStatus?: string | null) => {
+    if (role >= 4) return 'Enterprise';
+    if (planStatus === 'trialing') return 'Trial';
+    if (role >= PRO_ROLE_THRESHOLD) return 'Pro';
+    if (role === ADMIN_ROLE) return 'Admin';
+    return 'Free';
+};
+
+const planDetail = (planStatus?: string | null, planEndsAt?: string | null) => {
+    if (planStatus === 'trialing' && planEndsAt) {
+        const date = new Date(planEndsAt);
+        return `Trial ends ${date.toLocaleDateString()}`;
+    }
+    return null;
+};
 
 /**
  * DesktopNav
@@ -26,7 +43,10 @@ const DesktopNav = () => {
 
     const location = useLocation();
     const isActive = (path: string) => location.pathname === path;
-    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
+    const role = user?.role ?? 0;
+    const isPro = role >= PRO_ROLE_THRESHOLD || role === ADMIN_ROLE;
+    const statusLabel = planLabel(role, user?.plan_status);
+    const statusDetail = planDetail(user?.plan_status, user?.plan_ends_at);
 
     const onLogout = async () => {
         try {
@@ -40,6 +60,14 @@ const DesktopNav = () => {
         <div className="hidden lg:flex flex-col lg:fixed top-0 left-0 h-dvh w-60 2xl:w-80 z-50 bg-gray-100 p-4 shadow-md">
             <div className="w-full flex flex-col space-y-6">
                 <img src={Logo} alt="Cardikit Logo" className="w-12" />
+                <div className="flex flex-col space-y-1">
+                    <span className="text-xs uppercase tracking-wide text-gray-500 font-semibold">Plan</span>
+                    <div className="flex items-center space-x-2">
+                        <span className={`text-sm font-semibold ${statusLabel === 'Free' ? 'text-gray-600' : 'text-primary-500'}`}>{statusLabel}</span>
+                        {statusLabel === 'Free' && <Link to="/upgrade" className="text-sm text-primary-500 hover:underline font-semibold">Upgrade</Link>}
+                    </div>
+                    {statusDetail && <span className="text-xs text-gray-600">{statusDetail}</span>}
+                </div>
                 <p className="text-sm text-gray-600 font-inter">Connect Devices</p>
                 <Link to="/coming-soon" className={`flex items-center space-x-2 hover:text-primary-700 ${isActive('/coming-soon') ? 'text-primary-500' : 'text-gray-800'}`}>
                     <ImEmbed2 className="text-xl" />

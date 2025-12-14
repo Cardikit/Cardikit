@@ -2,7 +2,8 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Loading from '@/components/Loading';
 
-const PRO_ROLE_THRESHOLD = 2;
+const PRO_ROLE_THRESHOLD = 3;
+const ADMIN_ROLE = 2;
 
 /**
  * ProRoute
@@ -18,7 +19,8 @@ export default function ProRoute() {
 
     if (loading) return <Loading />;
 
-    const isPro = (user?.role ?? 0) >= PRO_ROLE_THRESHOLD;
+    const role = user?.role ?? 0;
+    const isPro = role >= PRO_ROLE_THRESHOLD || role === ADMIN_ROLE;
 
     return isPro
         ? <Outlet />

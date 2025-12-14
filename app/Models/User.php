@@ -27,7 +27,18 @@ class User extends Model
     *
     * @since 0.0.3
     */
-    protected array $fillable = ['name', 'email', 'password', 'role'];
+    protected array $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+        'stripe_customer_id',
+        'stripe_subscription_id',
+        'plan',
+        'plan_status',
+        'plan_ends_at',
+        'trial_used',
+    ];
 
     /**
     * Finds a user by email.
@@ -59,6 +70,12 @@ class User extends Model
             'name' => $user['name'],
             'email' => $user['email'],
             'role' => $user['role'] ?? 0,
+            'stripe_customer_id' => $user['stripe_customer_id'] ?? null,
+            'stripe_subscription_id' => $user['stripe_subscription_id'] ?? null,
+            'plan' => $user['plan'] ?? null,
+            'plan_status' => $user['plan_status'] ?? null,
+            'plan_ends_at' => $user['plan_ends_at'] ?? null,
+            'trial_used' => isset($user['trial_used']) ? (int) $user['trial_used'] : 0,
             'created_at' => $user['created_at'],
             'updated_at' => $user['updated_at']
         ];

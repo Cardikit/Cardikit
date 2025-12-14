@@ -22,7 +22,7 @@ use App\Services\EnterpriseService;
 */
 class CardService
 {
-    private const PRO_ROLE_THRESHOLD = 2;
+    private const PRO_ROLE_THRESHOLD = 3;
     private const FREE_CARD_LIMIT = 4;
 
     /**
@@ -77,7 +77,7 @@ class CardService
     {
         $user = User::findById($userId);
         $role = isset($user['role']) ? (int) $user['role'] : 0;
-        $isPro = $role >= self::PRO_ROLE_THRESHOLD;
+        $isPro = $role >= self::PRO_ROLE_THRESHOLD || $role === 2;
         if (!$isPro) {
             $cardCount = Card::countForUser($userId);
             if ($cardCount >= self::FREE_CARD_LIMIT) {
