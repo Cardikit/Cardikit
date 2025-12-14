@@ -22,6 +22,9 @@ use App\Controllers\BlogController;
 use App\Controllers\CategoryController;
 use App\Controllers\SitemapController;
 use App\Controllers\BlogImageController;
+use App\Controllers\AnalyticsController;
+use App\Controllers\ContactController;
+use App\Middleware\CsrfMiddleware;
 
 // Middleware groups
 $tls = MiddlewareGroups::tls();
@@ -40,6 +43,15 @@ Router::get('/app/:path', [SpaController::class, 'show'], $tls);
 Router::get('/app/:path/:subpath', [SpaController::class, 'show'], $tls);
 Router::get('/app/:path/:subpath/:child', [SpaController::class, 'show'], $tls);
 
+// Analytics events
+Router::post('/api/v1/analytics/events', [AnalyticsController::class, 'track'], MiddlewareGroups::rateLimited(10, 60));
+Router::get('/api/v1/analytics/summary', [AnalyticsController::class, 'summary'], array_merge(MiddlewareGroups::pro(), [new RateLimitMiddleware(60, 60)]));
+
+// Contact capture
+Router::post('/api/v1/contacts', [ContactController::class, 'store'], MiddlewareGroups::rateLimited(10, 60));
+Router::get('/api/v1/contacts', [ContactController::class, 'index'], array_merge(MiddlewareGroups::pro(), [new RateLimitMiddleware(60, 60)]));
+Router::get('/api/v1/contacts/export', [ContactController::class, 'export'], array_merge(MiddlewareGroups::pro(), [new RateLimitMiddleware(20, 60)]));
+
 // Auth
 Router::post('/api/v1/register', [AuthController::class, 'register'], MiddlewareGroups::rateLimited(5, 60));
 Router::post('/api/v1/login', [AuthController::class, 'login'], MiddlewareGroups::rateLimited(5, 60));
@@ -57,7 +69,7 @@ Router::get('/api/v1/@me/cards/:id', [CardController::class, 'show'], array_merg
 Router::post('/api/v1/@me/cards', [CardController::class, 'create'], $mutating);
 Router::put('/api/v1/@me/cards/:id', [CardController::class, 'update'], $mutating);
 Router::delete('/api/v1/@me/cards/:id', [CardController::class, 'delete'], $mutating);
-Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], $mutating);
+Router::post('/api/v1/@me/cards/:id/qr', [CardController::class, 'generateQr'], array_merge(MiddlewareGroups::pro(), [new CsrfMiddleware(), new RateLimitMiddleware(60, 60)]));
 
 // Themes
 Router::get('/api/v1/themes', [CardController::class, 'themes'], array_merge($auth, [new RateLimitMiddleware(60, 60)]));

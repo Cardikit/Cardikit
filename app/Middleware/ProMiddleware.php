@@ -9,13 +9,13 @@ use App\Services\AuthService;
 
 /**
 * Allows access to the route if the
-* user is an admin
+* user is a pro user
 *
 * @package App\Middleware
 *
-* @since 0.0.1
+* @since 0.0.5
 */
-class AdminMiddleware implements MiddlewareInterface
+class ProMiddleware implements MiddlewareInterface
 {
     public function handle(Request $request): bool
     {
@@ -34,7 +34,7 @@ class AdminMiddleware implements MiddlewareInterface
 
         $role = isset($user['role']) ? (int) $user['role'] : 0;
 
-        if ($role !== 2) {
+        if ($role < 2) {
             Response::json(['error' => 'Unauthorized'], 401);
             return false;
         }

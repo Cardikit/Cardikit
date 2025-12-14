@@ -11,6 +11,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useFetchCard } from '@/features/editor/hooks/useFetchCard';
 import { useDeleteCard } from '@/features/editor/hooks/useDeleteCard';
 import { useThemes } from '@/features/editor/hooks/useThemes';
+import { useAuth } from '@/contexts/AuthContext';
 
 /**
  * Editor
@@ -88,9 +89,11 @@ const Editor: React.FC = () => {
     const { card, setCard, loading } = useFetchCard(cardId);
     const { deleteCard } = useDeleteCard();
     const { themes } = useThemes();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const isExistingCard = Boolean(id);
     const isLoadingExisting = loading && isExistingCard;
+    const role = user?.role ?? 0;
 
     useEffect(() => {
         setFormError(null);

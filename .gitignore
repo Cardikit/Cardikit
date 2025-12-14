@@ -1,5 +1,6 @@
 /vendor/
 .env
+roles.txt
 
 /docs/_site/
 /docs/_build/

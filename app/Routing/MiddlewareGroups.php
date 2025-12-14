@@ -8,6 +8,7 @@ use App\Middleware\EnforceTlsMiddleware;
 use App\Middleware\RateLimitMiddleware;
 use App\Middleware\AdminMiddleware;
 use App\Middleware\SecurityHeadersMiddleware;
+use App\Middleware\ProMiddleware;
 
 /**
 * Groupings of middleware for
@@ -55,6 +56,19 @@ class MiddlewareGroups
     public static function admin(): array
     {
         return array_merge(self::auth(), [new AdminMiddleware()]);
+    }
+
+    /**
+    * Pro middleware group.
+    * Includes TLS, Auth and Pro middlewares.
+    *
+    * @return array
+    *
+    * @since 0.0.5
+    */
+    public static function pro(): array
+    {
+        return array_merge(self::auth(), [new ProMiddleware()]);
     }
 
     /**
